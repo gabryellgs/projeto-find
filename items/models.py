@@ -58,13 +58,10 @@ class Item(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
+            import uuid
             base_slug = slugify(self.titulo)
-            slug = base_slug
-            contador = 1
-            while Item.objects.filter(slug=slug).exists():
-                slug = f"{base_slug}-{contador}"
-                contador += 1
-            self.slug = slug
+            random_suffix = str(uuid.uuid4())[:6]
+            self.slug = f"{base_slug}-{random_suffix}"
         super().save(*args, **kwargs)
         self._gerar_image_hash()
         self._gerar_qrcode()

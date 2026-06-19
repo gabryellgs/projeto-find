@@ -86,10 +86,10 @@ def login_view(request):
         password = request.POST.get("password")
 
         # tenta achar usuário pelo email
-        try:
-            user_obj = User.objects.get(email=email_or_username)
+        user_obj = User.objects.filter(email=email_or_username).first()
+        if user_obj:
             username = user_obj.username
-        except User.DoesNotExist:
+        else:
             username = email_or_username
 
         user = authenticate(request, username=username, password=password)
@@ -187,7 +187,7 @@ def menu_search_suggestions(request):
         Q(titulo__icontains=q) |
         Q(descricao__icontains=q) |
         Q(local__icontains=q)
-    ).order_by("-id")[:8]
+    ).select_related('categoria').order_by("-id")[:8]
 
     suggestions = [
         {
@@ -207,13 +207,13 @@ def menu_view(request):
     status = _get_stripped(request, "status", "todos")
     categoria = _get_stripped(request, "categoria", "todas")
 
-    base_qs = Item.objects.all().order_by("-id")
+    base_qs = Item.objects.select_related('usuario', 'categoria').all().order_by("-id")
 
     # lista principal (com filtros)
     itens = _apply_item_filters(base_qs, q=q, status=status, categoria=categoria)
 
     # lista específica para seção devolvidos
-    itens_devolvidos = Item.objects.filter(status="devolvido").order_by("-id")[:10]
+    itens_devolvidos = Item.objects.filter(status="devolvido").select_related('usuario', 'categoria').order_by("-id")[:10]
 
     total_itens, perdidos, encontrados, devolvidos = _system_counts()
 
@@ -233,7 +233,7 @@ def menu_view(request):
 @login_required(login_url="login")
 def screen_user(request):
     user = request.user
-    itens = Item.objects.filter(usuario=user).order_by("-id")
+    itens = Item.objects.filter(usuario=user).select_related('categoria').order_by("-id")
     categorias = Categoria.objects.all()
 
     return render(request, "mainpage/user.html", {
