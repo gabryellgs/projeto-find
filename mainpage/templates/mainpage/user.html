@@ -18,75 +18,115 @@
     <!-- PERFIL -->
     <div class="col-lg-4 col-md-5">
       <div class="profile-section-card h-100">
-        <div class="profile-hero mb-4 text-center" style="background: rgba(144, 219, 244, 0.85); border-radius: 20px; padding: 2rem; color: #0B3A4A; position: relative; overflow: hidden; border: 1px solid rgba(144, 219, 244, 0.4);">
-
-          
+        <div class="profile-hero mb-0 text-center pb-5" style="background: rgba(144, 219, 244, 0.85); border-radius: 20px 20px 0 0; padding: 2rem 2rem 3rem 2rem; color: #0B3A4A; position: relative; overflow: hidden; border: 1px solid rgba(144, 219, 244, 0.4); border-bottom: none;">
           <div class="avatar mx-auto mb-3 position-relative" style="width:80px; height:80px;">
-            {# Foto do perfil com fallback #}
             {% if user.is_authenticated and user.profile and user.profile.image %}
               <img src="{{ user.profile.image.url }}" class="profile-avatar" alt="Foto de perfil" onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';" style="width:80px; height:80px; border-radius:50%; border: 3px solid rgba(255,255,255,1); object-fit:cover; box-shadow: 0 4px 12px rgba(11,58,74,0.1);">
             {% else %}
               <img src="{% static 'mainpage/img/user.webp' %}" class="profile-avatar" alt="Foto de perfil" style="width:80px; height:80px; border-radius:50%; border: 3px solid rgba(255,255,255,1); object-fit:cover; box-shadow: 0 4px 12px rgba(11,58,74,0.1);">
             {% endif %}
-
             <form action="{% url 'upload_photo' %}" method="POST" enctype="multipart/form-data" id="form-foto">
               {% csrf_token %}
-              <label for="input-foto" class="upload-badge shadow" style="position: absolute; bottom: 0; right: 0; background: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid rgba(0,0,0,0.1);">
-                <i class="bi bi-camera-fill text-dark" style="font-size: 14px;"></i>
+              <label for="input-foto" class="upload-badge shadow" style="position: absolute; bottom: 0; right: -5px; background: #0B3A4A; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid #90dbf4;">
+                <i class="bi bi-camera-fill text-white" style="font-size: 13px;"></i>
               </label>
-              <input
-                type="file"
-                name="image"
-                id="input-foto"
-                hidden
-                onchange="document.getElementById('form-foto').submit();"
-              >
+              <input type="file" name="image" id="input-foto" hidden onchange="document.getElementById('form-foto').submit();">
             </form>
           </div>
           
-          <h2 style="margin-top: 12px; font-weight:700; font-size: 1.5rem; word-break: break-word;">{{ user.first_name }} {{ user.last_name }}</h2>
-          <p style="opacity:0.8; font-size:14px; margin-bottom: 0; word-break: break-all;">{{ email }}</p>
-        </div>
-
-        <div class="row small text-start g-1 px-3">
-          <div class="col-5 text-muted fw-semibold">Telefone:</div>
-          <div class="col-7 text-dark fw-bold">
-            {% if user.profile and user.profile.telefone %}
-              {{ user.profile.telefone }}
-            {% else %}
-              ---
-            {% endif %}
-          </div>
-
-          <div class="col-5 text-muted fw-semibold">CEP:</div>
-          <div class="col-7 text-dark fw-bold">
-            {% if user.profile and user.profile.cep %}
-              {{ user.profile.cep }}
-            {% else %}
-              ---
-            {% endif %}
-          </div>
-
-          <div class="col-5 text-muted fw-semibold">Localização:</div>
-          <div class="col-7 text-dark fw-bold">
-            {% if user.profile and user.profile.cidade %}
-              {{ user.profile.cidade }}{% if user.profile.estado %} - {{ user.profile.estado }}{% endif %}
-            {% else %}
-              <span class="text-muted fst-italic">Não informada</span>
-            {% endif %}
+          <h2 style="margin-top: 12px; font-weight:700; font-size: 1.4rem; word-break: break-word; letter-spacing: -0.2px;">{{ user.first_name }} {{ user.last_name }}</h2>
+          <p style="opacity:0.75; font-size:13px; margin-bottom: 0; word-break: break-all;">{{ email }}</p>
+          <div class="d-inline-flex align-items-center mt-2 px-3 py-1" style="background: rgba(255,255,255,0.5); border-radius: 999px;">
+            <i class="bi bi-shield-check me-1" style="color: #185fa5; font-size: 12px;"></i>
+            <span style="font-size: 11px; font-weight: 600; color: #185fa5;">Conta ativa</span>
           </div>
         </div>
 
-        <div class="px-3">
-          <button
-            class="btn btn-primary w-100 rounded-pill mt-4 py-2"
-            data-bs-toggle="modal"
-            data-bs-target="#modalEditarPerfil"
-            type="button"
-            style="background: rgba(144, 219, 244, 0.85); color: #0B3A4A; border: none; font-weight: 600;"
-          >
-            <i class="bi bi-pencil-square me-2"></i> Editar perfil
-          </button>
+        <!-- Mini Stats overlayed on border -->
+        <div class="d-flex justify-content-around mx-3 position-relative" style="background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); border-radius: 14px; padding: 14px 0; margin-top: -30px; box-shadow: 0 4px 16px rgba(11,58,74,0.08); border: 1px solid rgba(255,255,255,0.6); z-index: 2;">
+          <div class="text-center w-100">
+            <div class="fs-5 fw-bold" style="color: #0B3A4A; letter-spacing: -0.5px;">{{ perdidos }}</div>
+            <div style="font-size: 11px; color: rgba(11,58,74,0.6); margin-top: 2px;">Perdidos</div>
+          </div>
+          <div style="width: 1px; background: rgba(11,58,74,0.12); margin: 4px 0;"></div>
+          <div class="text-center w-100">
+            <div class="fs-5 fw-bold" style="color: #0B3A4A; letter-spacing: -0.5px;">{{ encontrados }}</div>
+            <div style="font-size: 11px; color: rgba(11,58,74,0.6); margin-top: 2px;">Encontrados</div>
+          </div>
+          <div style="width: 1px; background: rgba(11,58,74,0.12); margin: 4px 0;"></div>
+          <div class="text-center w-100">
+            <div class="fs-5 fw-bold" style="color: #185fa5; letter-spacing: -0.5px;">{{ devolvidos }}</div>
+            <div style="font-size: 11px; color: rgba(11,58,74,0.6); margin-top: 2px;">Matches</div>
+          </div>
+        </div>
+
+        <div class="px-3 pt-4 pb-3" style="background: #F5F7FB; border-radius: 0 0 20px 20px;">
+          
+          <div class="d-flex justify-content-between align-items-center mb-2 ms-2">
+            <div style="font-size: 12px; font-weight: 600; color: #9AA3BB; text-transform: uppercase; letter-spacing: 0.8px;">Dados pessoais</div>
+            <button data-bs-toggle="modal" data-bs-target="#modalEditarPerfil" type="button" class="btn btn-sm btn-link text-decoration-none p-0 me-1" style="color: #185fa5; font-size: 13px; font-weight: 600;">Editar</button>
+          </div>
+
+          <div class="bg-white mb-3" style="border-radius: 16px; border: 0.5px solid rgba(0, 30, 100, 0.08); overflow: hidden;">
+            <div class="d-flex align-items-center px-3 py-3">
+              <div class="d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(144,219,244,0.18);">
+                <i class="bi bi-person text-primary" style="font-size: 18px; color: #0B3A4A !important;"></i>
+              </div>
+              <div class="flex-grow-1">
+                <div style="font-size: 13px; font-weight: 600; color: #0B3A4A;">Nome completo</div>
+                <div style="font-size: 14px; font-weight: 500; color: #0B0F1A; margin-top: 1px;">{{ user.first_name }} {{ user.last_name }}</div>
+              </div>
+            </div>
+            <div style="height: 0.5px; background: rgba(0, 30, 100, 0.08); margin-left: 64px;"></div>
+            
+            <div class="d-flex align-items-center px-3 py-3">
+              <div class="d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(144,219,244,0.18);">
+                <i class="bi bi-telephone text-primary" style="font-size: 18px; color: #0B3A4A !important;"></i>
+              </div>
+              <div class="flex-grow-1">
+                <div style="font-size: 13px; font-weight: 600; color: #0B3A4A;">Telefone</div>
+                <div style="font-size: 14px; font-weight: 500; color: #0B0F1A; margin-top: 1px;">{{ user.profile.telefone|default:"Não informado" }}</div>
+              </div>
+            </div>
+            <div style="height: 0.5px; background: rgba(0, 30, 100, 0.08); margin-left: 64px;"></div>
+
+            <div class="d-flex align-items-center px-3 py-3">
+              <div class="d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(144,219,244,0.18);">
+                <i class="bi bi-geo-alt text-primary" style="font-size: 18px; color: #0B3A4A !important;"></i>
+              </div>
+              <div class="flex-grow-1">
+                <div style="font-size: 13px; font-weight: 600; color: #0B3A4A;">Cidade / Estado</div>
+                <div style="font-size: 14px; font-weight: 500; color: #0B0F1A; margin-top: 1px;">{{ user.profile.cidade|default:"Não informada" }}{% if user.profile.estado %}, {{ user.profile.estado }}{% endif %}</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="font-size: 12px; font-weight: 600; color: #9AA3BB; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; margin-top: 16px; margin-left: 4px;">Informações de registro</div>
+          <div class="mb-3" style="background: #fafafa; border-radius: 16px; border: 0.5px solid rgba(0, 30, 100, 0.08); overflow: hidden;">
+            <div class="d-flex align-items-center px-3 py-3">
+              <div class="d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(144,219,244,0.18);">
+                <i class="bi bi-envelope text-primary" style="font-size: 18px; color: #9AA3BB !important;"></i>
+              </div>
+              <div class="flex-grow-1">
+                <div style="font-size: 13px; font-weight: 600; color: #5A6480;">E-mail da conta</div>
+                <div style="font-size: 14px; font-weight: 500; color: #0B0F1A; margin-top: 1px;">{{ email }}</div>
+              </div>
+              <i class="bi bi-lock-fill text-muted" style="font-size: 14px;"></i>
+            </div>
+          </div>
+          
+          <div style="font-size: 12px; font-weight: 600; color: #9AA3BB; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; margin-top: 16px; margin-left: 4px;">Conta</div>
+          <div class="bg-white mb-2" style="border-radius: 16px; border: 0.5px solid rgba(0, 30, 100, 0.08); overflow: hidden;">
+            <a href="{% url 'logout' %}" class="d-flex align-items-center px-3 py-3 text-decoration-none" style="cursor: pointer;">
+              <div class="d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; border-radius: 10px; background: #fdecea;">
+                <i class="bi bi-box-arrow-right" style="font-size: 18px; color: #b32e29;"></i>
+              </div>
+              <div class="flex-grow-1">
+                <div style="font-size: 13px; font-weight: 600; color: #b32e29;">Sair da conta</div>
+              </div>
+            </a>
+          </div>
+
         </div>
 
       </div>
@@ -216,28 +256,28 @@
       <h6 class="fw-bold mb-3">📊 Estatísticas</h6>
 
       <div class="row g-3 text-center">
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
           <div class="stat-card">
             <h3 class="fw-bold mb-0">{{ total }}</h3>
             <small>TOTAL</small>
           </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
           <div class="stat-card">
             <h3 class="fw-bold mb-0">{{ perdidos }}</h3>
             <small>PERDIDOS</small>
           </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
           <div class="stat-card">
             <h3 class="fw-bold mb-0">{{ encontrados }}</h3>
             <small>ENCONTRADOS</small>
           </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
           <div class="stat-card">
             <h3 class="fw-bold mb-0">{{ devolvidos }}</h3>
             <small>DEVOLVIDOS</small>

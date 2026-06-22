@@ -212,8 +212,10 @@ def menu_view(request):
     # lista principal (com filtros)
     itens = _apply_item_filters(base_qs, q=q, status=status, categoria=categoria)
 
-    # lista específica para seção devolvidos
+    # listas específicas para seções
     itens_devolvidos = Item.objects.filter(status="devolvido").select_related('usuario', 'categoria').order_by("-id")[:10]
+    itens_perdidos = Item.objects.filter(status="perdido").select_related('usuario', 'categoria').order_by("-id")[:10]
+    itens_achados = Item.objects.filter(status="achado").select_related('usuario', 'categoria').order_by("-id")[:10]
 
     total_itens, perdidos, encontrados, devolvidos = _system_counts()
 
@@ -221,6 +223,8 @@ def menu_view(request):
         "categorias": categorias,
         "itens": itens,
         "itens_devolvidos": itens_devolvidos,
+        "itens_perdidos": itens_perdidos,
+        "itens_achados": itens_achados,
         "total_itens": total_itens,
         "perdidos": perdidos,
         "encontrados": encontrados,

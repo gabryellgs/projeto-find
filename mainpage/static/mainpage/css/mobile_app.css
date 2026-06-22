@@ -1,0 +1,257 @@
+/* ============================================================
+   FIND — Mobile App Adaptation
+   Criando experiência nativa para smartphones e tablets
+   ============================================================ */
+
+/* ── Variáveis e Ajustes Globais ────────────────────────── */
+:root {
+  --bottom-nav-height: 70px;
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (max-width: 1024px) {
+  /* Evitar rolagem horizontal */
+  body {
+    overflow-x: hidden;
+    /* Adicionar espaço para a nav inferior apenas se autenticado */
+  }
+
+  main {
+    padding-bottom: calc(var(--bottom-nav-height) + var(--safe-area-bottom) + 30px) !important;
+  }
+
+  /* ── Footer ────────────────────────────────────────────── */
+  .find-footer {
+    padding-bottom: calc(var(--bottom-nav-height) + var(--safe-area-bottom) + 20px) !important;
+  }
+  .find-footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* ── Layout e Tipografia ───────────────────────────────── */
+  h1 { font-size: 1.8rem !important; }
+  h2 { font-size: 1.5rem !important; }
+  h3 { font-size: 1.25rem !important; }
+  
+  .home-section-title {
+    font-size: 1.4rem !important;
+  }
+
+  /* ── Componentes: Cards ────────────────────────────────── */
+  .card, .status-card, .menu-item-card, .profile-section-card {
+    border-radius: 16px !important;
+    box-shadow: 0 4px 16px rgba(11, 58, 74, 0.08) !important;
+  }
+  
+  /* ── Formulários ───────────────────────────────────────── */
+  input, select, textarea, .form-control, .form-select {
+    width: 100% !important;
+    min-height: 48px !important; /* Touch target adequado */
+    border-radius: 12px !important;
+    font-size: 16px !important; /* Previne zoom no iOS */
+  }
+  
+  .btn {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+
+  /* ── Bottom Navigation Bar (Mobile App) ────────────────── */
+  .mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(var(--bottom-nav-height) + var(--safe-area-bottom));
+    padding-bottom: var(--safe-area-bottom);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(11, 58, 74, 0.08);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 9999;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .mobile-bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: rgba(11, 58, 74, 0.5);
+    flex: 1;
+    height: 100%;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-bottom-nav .nav-item i {
+    font-size: 20px;
+    margin-bottom: 3px;
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-bottom-nav .nav-item span {
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .mobile-bottom-nav .nav-item.active {
+    color: #185FA5;
+  }
+
+  .mobile-bottom-nav .nav-item.active i {
+    font-weight: bold;
+    transform: translateY(-2px);
+  }
+
+  /* Botão Adicionar Flutuante na Navbar Inferior */
+  .nav-item-add {
+    position: relative;
+    top: -20px;
+  }
+
+  .add-button-circle {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #1eaed4 0%, #185FA5 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 8px 24px rgba(24, 95, 165, 0.3);
+    border: 4px solid #F4F7FA;
+    transition: transform 0.2s ease;
+  }
+
+  .add-button-circle i {
+    font-size: 26px !important;
+    margin-bottom: 0 !important;
+    color: white;
+  }
+
+  .nav-item-add:active .add-button-circle {
+    transform: scale(0.92);
+  }
+
+  /* Ocultar a Navbar Desktop no Mobile e usar Bottom Nav */
+  .find-nav-wrapper {
+    /* Mantenho a barra superior para o logo e Drawer Toggler, mas removo a navegação em si */
+  }
+
+  .find-navbar {
+    padding: 0 16px !important;
+    height: 60px !important;
+  }
+  
+  /* Esconder Footer no Mobile se for muito grande e a Bottom Nav resolver? Não, mantemos e ajustamos padding-bottom */
+  .find-footer-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .footer-col-links {
+    align-items: center;
+  }
+  .footer-socials {
+    justify-content: center;
+  }
+
+  /* Modais (Bottom Sheet Experience) */
+  .modal-dialog {
+    margin: 0 !important;
+    align-items: flex-end;
+    min-height: 100%;
+  }
+
+  .modal-content {
+    border-radius: 24px 24px 0 0 !important;
+    border: none;
+    padding-bottom: env(safe-area-inset-bottom);
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal-indicator {
+    width: 40px;
+    height: 5px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    margin: 12px auto;
+    display: block;
+  }
+
+  /* Swipe Carrossel Ajustes */
+  .swiper-nav {
+    display: none !important; /* Esconde setas no mobile (usa toque) */
+  }
+
+  /* Itens Horizontais (User Profile) */
+  .item-lista-horizontal {
+    flex-direction: column !important;
+    position: relative;
+    padding: 16px !important;
+  }
+  .item-col-img {
+    width: 100% !important;
+    height: 160px !important;
+    margin-bottom: 12px;
+  }
+  .item-col-info {
+    width: 100% !important;
+    margin-bottom: 12px;
+  }
+  .item-col-actions {
+    width: 100% !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .btn-ver-lista {
+    width: 100% !important;
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 414px) {
+  .search-row-wrapper {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  .search-input-field {
+    font-size: 14px !important;
+  }
+  .btn-search-filter, .btn-search-camera {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .title-gradient {
+    font-size: 1.6rem !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .title-gradient {
+    font-size: 1.4rem !important;
+  }
+  .status-row {
+    flex-direction: column;
+  }
+  .status-card {
+    width: 100%;
+  }
+}

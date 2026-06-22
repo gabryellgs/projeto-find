@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="{% static 'mainpage/css/base.css' %}">
   {# CSS novo da navbar #}
   <link rel="stylesheet" href="{% static 'mainpage/css/navbar.css' %}?v=5">
+  {# CSS Mobile App Adaptation #}
+  <link rel="stylesheet" href="{% static 'mainpage/css/mobile.css' %}?v=1.0">
 
   <link rel="icon" type="image/webp" href="{% static 'mainpage/img/find.webp' %}">
 
@@ -426,6 +428,35 @@
   </div>
 </footer>
 {% endblock %}
+
+<!-- ══════════════════════════════════════════════════════════
+     BOTTOM NAVIGATION (MOBILE ONLY)
+══════════════════════════════════════════════════════════ -->
+{% if user.is_authenticated %}
+<div class="mobile-bottom-nav d-lg-none">
+  <a href="{% url 'menu' %}" class="nav-item {% if request.resolver_match.url_name == 'menu' %}active{% endif %}">
+    <i class="bi bi-house-door-fill"></i>
+    <span>Início</span>
+  </a>
+  <a href="{% url 'item_list' %}" class="nav-item {% if request.resolver_match.url_name == 'item_list' or request.resolver_match.url_name == 'busca_visual' %}active{% endif %}">
+    <i class="bi bi-search"></i>
+    <span>Buscar</span>
+  </a>
+  <a href="#" class="nav-item nav-item-add" data-bs-toggle="modal" data-bs-target="#modalNovoItem">
+    <div class="add-button-circle shadow">
+      <i class="bi bi-plus-lg"></i>
+    </div>
+  </a>
+  <a href="{% url 'chats_list' %}" class="nav-item {% if request.resolver_match.url_name == 'chats_list' %}active{% endif %}">
+    <i class="bi bi-chat-dots-fill"></i>
+    <span>Chat</span>
+  </a>
+  <a href="{% url 'screen_user' %}" class="nav-item {% if request.resolver_match.url_name == 'screen_user' %}active{% endif %}">
+    <i class="bi bi-person-fill"></i>
+    <span>Perfil</span>
+  </a>
+</div>
+{% endif %}
 
 <!-- Modais existentes -->
 {% if user.is_authenticated %}

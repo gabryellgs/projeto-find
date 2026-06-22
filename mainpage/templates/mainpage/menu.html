@@ -13,9 +13,8 @@
 
 {% block content %}
 
-<!-- HERO -->
-<section class="hero-main py-5">
-
+<!-- HERO (DESKTOP) -->
+<section class="hero-main py-5 d-none d-md-block">
   <div class="container-fluid title-gradient text-center">
     <h1 class="fw-bold title-gradient">Perdeu algo importante?</h1>
     <p class="lead title-gradient">
@@ -24,7 +23,7 @@
     </p>
   </div>
 
-  <!-- BUSCA (GET) -->
+  <!-- BUSCA DESKTOP -->
   <div class="d-flex justify-content-center mt-4 px-3 search-row-wrapper">
     <div class="search-container-modern" style="max-width: 820px; width: 100%; position: relative;">
       <form method="GET" class="w-100">
@@ -38,85 +37,155 @@
             value="{{ q|default:'' }}"
             placeholder="Buscar itens (nome, descrição, local...)"
             autocomplete="off"
-            aria-label="Buscar itens"
           >
-
           <div class="search-actions-right">
-            <a href="{% url 'busca_visual' %}" class="btn-search-camera" title="Busca por Imagem (IA)">
-              <i class="bi bi-camera"></i>
-            </a>
-
-            <button type="button" class="btn-search-filter" data-bs-toggle="modal" data-bs-target="#filterModal" title="Filtrar itens">
-              <i class="bi bi-funnel-fill"></i>
-            </button>
+            <a href="{% url 'busca_visual' %}" class="btn-search-camera" title="Busca por Imagem (IA)"><i class="bi bi-camera"></i></a>
+            <button type="button" class="btn-search-filter" data-bs-toggle="modal" data-bs-target="#filterModal" title="Filtrar itens"><i class="bi bi-funnel-fill"></i></button>
           </div>
         </div>
       </form>
-
-      <ul class="autocomplete-list" id="searchSuggestionsList" role="listbox" aria-label="Sugestões de busca"></ul>
+      <ul class="autocomplete-list" id="searchSuggestionsListDesktop" role="listbox"></ul>
     </div>
   </div>
 
-  <!-- STATUS CARDS -->
+  <!-- STATUS CARDS DESKTOP -->
   <div class="container text-center mt-5">
     <div class="row status-row g-3 justify-content-center">
-
-    <div class="col">
-      <a href="{% url 'item_list' %}" class="status-link">
-        <div class="card status-card">
-          <i class="bi bi-box-seam icon-total"></i>
-          <h3>{{ total_itens }}</h3>
-          <p>TOTAL</p>
-        </div>
-      </a>
+      <div class="col">
+        <a href="{% url 'item_list' %}" class="status-link">
+          <div class="card status-card">
+            <i class="bi bi-box-seam icon-total"></i>
+            <h3>{{ total_itens }}</h3>
+            <p>TOTAL</p>
+          </div>
+        </a>
+      </div>
+      <div class="col">
+        <a href="{% url 'items_perdidos' %}" class="status-link">
+          <div class="card status-card">
+            <i class="bi bi-exclamation-triangle icon-perdidos"></i>
+            <h3>{{ perdidos }}</h3>
+            <p>PERDIDOS</p>
+          </div>
+        </a>
+      </div>
+      <div class="col">
+        <a href="{% url 'items_encontrados' %}" class="status-link">
+          <div class="card status-card">
+            <i class="bi bi-check-circle icon-encontrados"></i>
+            <h3>{{ encontrados }}</h3>
+            <p>ENCONTRADOS</p>
+          </div>
+        </a>
+      </div>
+      <div class="col">
+        <a href="{% url 'items_devolvidos' %}" class="status-link">
+          <div class="card status-card">
+            <i class="bi bi-arrow-repeat icon-corresp"></i>
+            <h3>{{ devolvidos }}</h3>
+            <p>DEVOLVIDOS</p>
+          </div>
+        </a>
+      </div>
     </div>
-
-    <div class="col">
-      <a href="{% url 'items_perdidos' %}" class="status-link">
-        <div class="card status-card">
-          <i class="bi bi-exclamation-triangle icon-perdidos"></i>
-          <h3>{{ perdidos }}</h3>
-          <p>PERDIDOS</p>
-        </div>
-      </a>
-    </div>
-
-    <div class="col">
-      <a href="{% url 'items_encontrados' %}" class="status-link">
-        <div class="card status-card">
-          <i class="bi bi-check-circle icon-encontrados"></i>
-          <h3>{{ encontrados }}</h3>
-          <p>ENCONTRADOS</p>
-        </div>
-      </a>
-    </div>
-
-    <div class="col">
-      <a href="{% url 'items_devolvidos' %}" class="status-link">
-        <div class="card status-card">
-          <i class="bi bi-arrow-repeat icon-corresp"></i>
-          <h3>{{ devolvidos }}</h3>
-          <p>DEVOLVIDOS</p>
-        </div>
-      </a>
-    </div>
-
   </div>
-</div>
 
-  <!-- CTA -->
-<div class="d-flex justify-content-center mt-4">
-  <button
-    type="button"
-    class="btn btn-primary btn-cadastrar-item"
-    data-bs-toggle="modal"
-    data-bs-target="#modalNovoItem"
-  >
+  <!-- CTA DESKTOP -->
+  <div class="d-flex justify-content-center mt-4">
+    <button type="button" class="btn btn-primary btn-cadastrar-item" data-bs-toggle="modal" data-bs-target="#modalNovoItem">
+      <i class="bi bi-plus-lg me-2"></i> CADASTRAR ITEM
+    </button>
+  </div>
+</section>
+
+<!-- LAYOUT MOBILE (ESTILO APP NATIVO) -->
+<div class="d-block d-md-none">
+  <!-- Mobile Blue Header -->
+  <div style="background: var(--f-primary); padding-top: 20px; padding-bottom: 24px; border-radius: 0 0 24px 24px;">
+    <!-- Greeting -->
+    <div class="d-flex justify-content-between align-items-center px-4 mb-3">
+      <div class="text-start">
+        <div style="font-size: 13px; font-weight: 600; color: rgba(11,58,74,0.7); margin-bottom: 2px;">Olá, bem-vindo(a) 👋</div>
+        <div style="font-size: 22px; font-weight: 800; color: #0B3A4A; letter-spacing: -0.5px; line-height: 1;">{{ user.first_name|default:user.username }}</div>
+      </div>
+      <a href="{% url 'screen_user' %}" class="d-block shadow-sm" style="border-radius: 50%; border: 2px solid rgba(255,255,255,0.6); overflow: hidden; width: 46px; height: 46px; background: #D1E4EC;">
+        <img src="{% if user.profile and user.profile.image %}{{ user.profile.image.url }}{% else %}{% static 'mainpage/img/user.webp' %}{% endif %}" style="width: 100%; height: 100%; object-fit: cover;" alt="Avatar">
+      </a>
+    </div>
+
+    <!-- Mobile Search -->
+    <div class="px-4">
+      <div class="d-flex align-items-center gap-2">
+        <div class="search-container-modern flex-grow-1" style="background: white; border-radius: 16px; padding: 0 16px; height: 48px; display: flex; align-items: center; box-shadow: 0 4px 16px rgba(11,58,74,0.05); border: none; position: relative;">
+          <form method="GET" class="w-100 d-flex align-items-center m-0">
+            <i class="bi bi-search" style="color: #64748B; font-size: 16px;"></i>
+            <input id="menuSearchInputMobile" type="text" name="q" value="{{ q|default:'' }}" placeholder="Buscar itens..." autocomplete="off" style="border: none; background: transparent; outline: none; width: 100%; padding: 0 12px; font-size: 15px; font-weight: 500; color: #0B0F1A;">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#filterModal" style="background: transparent; border: none; color: #0B3A4A; padding: 0;">
+              <i class="bi bi-funnel-fill" style="font-size: 18px;"></i>
+            </button>
+          </form>
+          <ul class="autocomplete-list" id="searchSuggestionsListMobile" role="listbox" style="top: 56px;"></ul>
+        </div>
+        <a href="{% url 'busca_visual' %}" class="d-flex justify-content-center align-items-center shadow-sm" style="width: 48px; height: 48px; border-radius: 16px; background: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.5); color: #0B3A4A;">
+          <i class="bi bi-camera-fill" style="font-size: 20px;"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Categories -->
+  <div class="mt-4 px-4">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h2 style="font-size: 15px; font-weight: 700; color: #0B3A4A; letter-spacing: -0.3px; margin: 0;">Categorias</h2>
+      <a href="#" data-bs-toggle="modal" data-bs-target="#filterModal" style="font-size: 12px; font-weight: 600; color: #0B3A4A; text-decoration: none;">Filtrar</a>
+    </div>
+    <div class="d-flex gap-2 overflow-auto pb-2" style="scrollbar-width: none; margin-left: -24px; padding-left: 24px; margin-right: -24px; padding-right: 24px;">
+      <a href="?categoria=todas" class="cat-chip {% if categoria == 'todas' %}active{% endif %}" style="padding: 6px 14px; font-size: 12px; white-space: nowrap; height: 34px;">Todas</a>
+      {% for cat in categorias %}
+      <a href="?categoria={{ cat.id }}" class="cat-chip {% if categoria == cat.id|stringformat:"s" %}active{% endif %}" style="padding: 6px 14px; font-size: 12px; white-space: nowrap; height: 34px;">
+        {{ cat.nome }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Mobile Stats Row -->
+  <div class="px-4 mt-3">
+    <div class="d-flex flex-column gap-2">
+      <!-- PRIMEIRA LINHA -->
+      <div class="d-flex justify-content-between gap-2">
+        <a href="{% url 'item_list' %}" class="flex-grow-1 text-center text-decoration-none" style="background: #DDF2FC; border-radius: 14px; padding: 12px 10px; border: 1px solid rgba(30, 174, 212, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <i class="bi bi-box" style="font-size: 20px; color: #F59E0B;"></i>
+          <div style="font-size: 19px; font-weight: 800; color: #0B3A4A; line-height: 1; letter-spacing: -0.5px; margin-top: 4px; margin-bottom: 2px;">{{ total_itens }}</div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; letter-spacing: 0.6px; text-transform: uppercase;">Total</div>
+        </a>
+        <a href="{% url 'items_perdidos' %}" class="flex-grow-1 text-center text-decoration-none" style="background: #DDF2FC; border-radius: 14px; padding: 12px 10px; border: 1px solid rgba(30, 174, 212, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <i class="bi bi-exclamation-triangle" style="font-size: 20px; color: #E8514A;"></i>
+          <div style="font-size: 19px; font-weight: 800; color: #0B3A4A; line-height: 1; letter-spacing: -0.5px; margin-top: 4px; margin-bottom: 2px;">{{ perdidos }}</div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; letter-spacing: 0.6px; text-transform: uppercase;">Perdidos</div>
+        </a>
+      </div>
+      <!-- SEGUNDA LINHA -->
+      <div class="d-flex justify-content-between gap-2">
+        <a href="{% url 'items_encontrados' %}" class="flex-grow-1 text-center text-decoration-none" style="background: #DDF2FC; border-radius: 14px; padding: 12px 10px; border: 1px solid rgba(30, 174, 212, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <i class="bi bi-check-circle" style="font-size: 20px; color: #10B981;"></i>
+          <div style="font-size: 19px; font-weight: 800; color: #0B3A4A; line-height: 1; letter-spacing: -0.5px; margin-top: 4px; margin-bottom: 2px;">{{ encontrados }}</div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; letter-spacing: 0.6px; text-transform: uppercase;">Encontrados</div>
+        </a>
+        <a href="{% url 'items_devolvidos' %}" class="flex-grow-1 text-center text-decoration-none" style="background: #DDF2FC; border-radius: 14px; padding: 12px 10px; border: 1px solid rgba(30, 174, 212, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <i class="bi bi-arrow-repeat" style="font-size: 20px; color: #185FA5;"></i>
+          <div style="font-size: 19px; font-weight: 800; color: #0B3A4A; line-height: 1; letter-spacing: -0.5px; margin-top: 4px; margin-bottom: 2px;">{{ devolvidos }}</div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; letter-spacing: 0.6px; text-transform: uppercase;">Devolvidos</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile CTA (flutuante garantido via CSS) -->
+  <button type="button" class="btn btn-primary btn-cadastrar-item shadow-lg" data-bs-toggle="modal" data-bs-target="#modalNovoItem">
     <i class="bi bi-plus-lg me-2"></i> CADASTRAR ITEM
   </button>
 </div>
-
-</section>
 
 <!-- FILTRO MODAL (ESTILO APP MOBILE) -->
 <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
@@ -188,10 +257,19 @@
 <!-- ===== ITENS RECENTES (CARROSSEL) ===== -->
 <section class="items-section section-pad">
   <div class="container mt-2">
-    <div class="d-flex align-items-center justify-content-between mb-2">
-      <h2 class="text-center mb-0 home-section-title title-gradient" style="flex:1;">Itens Recentes</h2>
+    <div class="d-flex align-items-center justify-content-between mb-2 px-md-0 px-3">
+      <div class="d-none d-md-block" style="flex:1;">
+        <h2 class="text-center mb-0 home-section-title title-gradient">Itens Recentes</h2>
+      </div>
+      <div class="d-block d-md-none">
+        <h2 class="home-section-title mb-0" style="font-size: 16px; font-weight: 700; color: #0B3A4A; letter-spacing: -0.4px;">Destaques Recentes</h2>
+        <div style="font-size: 12px; color: #64748B;">Últimas atualizações</div>
+      </div>
 
-      <a class="btn btn-outline-dark btn-sm rounded-pill ms-3" href="{% url 'itens_recentes' %}">
+      <a class="btn btn-outline-dark btn-sm rounded-pill ms-3 d-none d-md-block" href="{% url 'itens_recentes' %}">
+        Ver todos
+      </a>
+      <a class="btn btn-sm text-decoration-none d-block d-md-none" style="color: #0B3A4A; font-weight: 600; font-size: 13px; padding: 0;" href="{% url 'itens_recentes' %}">
         Ver todos
       </a>
     </div>
@@ -288,8 +366,8 @@
   </div>
 </section>
 
-<!-- ===== CATEGORIAS ===== -->
-<section class="section-pad">
+<!-- ===== CATEGORIAS (DESKTOP) ===== -->
+<section class="section-pad d-none d-md-block">
   <div class="container">
     <div class="position-relative mb-3 text-center">
       <h3 class="text-center home-section-title mb-0 title-gradient">Explorar por categoria</h3>
@@ -310,8 +388,8 @@
   </div>
 </section>
 
-<!-- ===== TODOS OS ITENS ===== -->
-<section class="section-pad">
+<!-- ===== TODOS OS ITENS (DESKTOP) ===== -->
+<section class="section-pad d-none d-md-block">
   <div class="container">
     <div class="position-relative mb-3">
 
@@ -410,16 +488,139 @@
   </div>
 </section>
 
+<!-- Objetos Perdidos (Mobile Only) -->
+<section class="section-pad d-block d-md-none" style="margin-top: 10px;">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between mb-2 px-md-0 px-3">
+      <div class="d-block d-md-none">
+        <h2 class="home-section-title mb-0" style="font-size: 16px; font-weight: 700; color: #B32E29; letter-spacing: -0.4px;">Objetos Perdidos</h2>
+        <div style="font-size: 12px; color: #64748B;">Comunidade procurando</div>
+      </div>
+      <a class="btn btn-sm text-decoration-none d-block d-md-none" style="color: #0B3A4A; font-weight: 600; font-size: 13px; padding: 0;" href="{% url 'items_perdidos' %}">
+        Ver todos
+      </a>
+    </div>
+    {% if itens_perdidos %}
+      <div class="swiper perdidosSwiper mt-3">
+        <div class="swiper-wrapper">
+          {% for item in itens_perdidos %}
+            <div class="swiper-slide">
+              <a href="{% url 'item_detail' item.slug %}" class="menu-item-card-link">
+                <div class="menu-item-card">
+                  <div class="menu-item-img">
+                    {% if item.imagem %}
+                      <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}" onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';">
+                    {% else %}
+                      <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
+                    {% endif %}
+                  </div>
+                  <div class="menu-item-body">
+                    <h6 class="menu-item-title">{{ item.titulo }}</h6>
+                    <p class="menu-item-desc">{{ item.descricao|truncatechars:85 }}</p>
+                    <div class="menu-item-meta">
+                      <div class="menu-item-meta-line">
+                        <span class="meta-left"><i class="bi bi-tag"></i> {{ item.categoria.nome|default:"Sem categoria" }}</span>
+                        <span class="meta-right"><i class="bi bi-geo-alt"></i> {{ item.local|default:"---" }}</span>
+                      </div>
+                      <div class="menu-item-meta-line">
+                        <span class="meta-left"><i class="bi bi-calendar3"></i> {{ item.criado_em|date:"d/m/Y" }}</span>
+                        <span class="meta-right"><i class="bi bi-clock"></i> {{ item.criado_em|time:"H:i" }}</span>
+                      </div>
+                    </div>
+                    <div class="menu-item-actions">
+                      <span class="btn-ver-item">VER ITEM</span>
+                      <span class="status-square status-red" title="Perdido">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <p class="text-center text-muted mt-2" style="font-size: 13px;">Nenhum item perdido.</p>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Objetos Encontrados (Mobile Only) -->
+<section class="section-pad d-block d-md-none" style="margin-top: 10px;">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between mb-2 px-md-0 px-3">
+      <div class="d-block d-md-none">
+        <h2 class="home-section-title mb-0" style="font-size: 16px; font-weight: 700; color: #1F7A51; letter-spacing: -0.4px;">Objetos Encontrados</h2>
+        <div style="font-size: 12px; color: #64748B;">Aguardando o dono legítimo</div>
+      </div>
+      <a class="btn btn-sm text-decoration-none d-block d-md-none" style="color: #0B3A4A; font-weight: 600; font-size: 13px; padding: 0;" href="{% url 'items_encontrados' %}">
+        Ver todos
+      </a>
+    </div>
+    {% if itens_achados %}
+      <div class="swiper achadosSwiper mt-3">
+        <div class="swiper-wrapper">
+          {% for item in itens_achados %}
+            <div class="swiper-slide">
+              <a href="{% url 'item_detail' item.slug %}" class="menu-item-card-link">
+                <div class="menu-item-card">
+                  <div class="menu-item-img">
+                    {% if item.imagem %}
+                      <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}" onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';">
+                    {% else %}
+                      <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
+                    {% endif %}
+                  </div>
+                  <div class="menu-item-body">
+                    <h6 class="menu-item-title">{{ item.titulo }}</h6>
+                    <p class="menu-item-desc">{{ item.descricao|truncatechars:85 }}</p>
+                    <div class="menu-item-meta">
+                      <div class="menu-item-meta-line">
+                        <span class="meta-left"><i class="bi bi-tag"></i> {{ item.categoria.nome|default:"Sem categoria" }}</span>
+                        <span class="meta-right"><i class="bi bi-geo-alt"></i> {{ item.local|default:"---" }}</span>
+                      </div>
+                      <div class="menu-item-meta-line">
+                        <span class="meta-left"><i class="bi bi-calendar3"></i> {{ item.criado_em|date:"d/m/Y" }}</span>
+                        <span class="meta-right"><i class="bi bi-clock"></i> {{ item.criado_em|time:"H:i" }}</span>
+                      </div>
+                    </div>
+                    <div class="menu-item-actions">
+                      <span class="btn-ver-item">VER ITEM</span>
+                      <span class="status-square status-green" title="Achado">
+                        <i class="bi bi-check-circle-fill"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <p class="text-center text-muted mt-2" style="font-size: 13px;">Nenhum item encontrado.</p>
+    {% endif %}
+  </div>
+</section>
+
 <!-- Itens devolvidos -->
 
-<section class="section-pad">
+<section class="section-pad" style="margin-top: 10px;">
   <div class="container">
-    <div class="d-flex align-items-center justify-content-between mb-2">
-      <h2 class="text-center home-section-title mb-0 title-gradient" style="flex:1;">
-        Itens Devolvidos
-      </h2>
+    <div class="d-flex align-items-center justify-content-between mb-2 px-md-0 px-3">
+      <div class="d-none d-md-block" style="flex:1;">
+        <h2 class="text-center home-section-title mb-0 title-gradient">Itens Devolvidos</h2>
+      </div>
+      <div class="d-block d-md-none">
+        <h2 class="home-section-title mb-0" style="font-size: 16px; font-weight: 700; color: #185FA5; letter-spacing: -0.4px;">Devolvidos</h2>
+        <div style="font-size: 12px; color: #64748B;">Casos solucionados</div>
+      </div>
 
-      <a class="btn btn-outline-info btn-sm rounded-pill ms-3" href="{% url 'items_devolvidos' %}">
+      <a class="btn btn-outline-info btn-sm rounded-pill ms-3 d-none d-md-block" href="{% url 'items_devolvidos' %}">
+        Ver todos
+      </a>
+      <a class="btn btn-sm text-decoration-none d-block d-md-none" style="color: #0B3A4A; font-weight: 600; font-size: 13px; padding: 0;" href="{% url 'items_devolvidos' %}">
         Ver todos
       </a>
     </div>
@@ -524,8 +725,8 @@ function initSwiper(selector) {
       clickable: true
     },
     breakpoints: {
-      320:  { slidesPerView: 1.15 },
-      576:  { slidesPerView: 1.6  },
+      320:  { slidesPerView: 'auto' },
+      576:  { slidesPerView: 'auto' },
       768:  { slidesPerView: 2.2  },
       992:  { slidesPerView: 3.1  },
       1200: { slidesPerView: 4 }
@@ -537,6 +738,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initSwiper('.mySwiper');          
   initSwiper('.todosSwiper');       
   initSwiper('.devolvidosSwiper');  
+  initSwiper('.perdidosSwiper');
+  initSwiper('.achadosSwiper');
 
   const searchInput = document.getElementById('menuSearchInput');
   const suggestionList = document.getElementById('searchSuggestionsList');

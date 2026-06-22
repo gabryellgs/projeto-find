@@ -345,13 +345,20 @@ def _get_client_ip(request):
 @permission_classes([AllowAny])
 def api_item_qr_image(request, slug):
     from django.http import HttpResponse
-    from items.models import ArquivoMidia
+    from items.models import ArquivoMidia, Item
     nome_qr = f"qr_{slug}.png"
     try:
         arquivo = ArquivoMidia.objects.get(nome=nome_qr)
         return HttpResponse(arquivo.conteudo, content_type=arquivo.content_type)
     except ArquivoMidia.DoesNotExist:
-        return Response({"ok": False, "detail": "Imagem de QR Code não encontrada para este item."}, status=404)
+        try:
+            # Se a etiqueta ainda não existe no banco, tenta gerar na hora
+            item = Item.objects.get(slug=slug)
+            item._gerar_qrcode()
+            arquivo = ArquivoMidia.objects.get(nome=nome_qr)
+            return HttpResponse(arquivo.conteudo, content_type=arquivo.content_type)
+        except Exception:
+            return Response({"ok": False, "detail": "Imagem de QR Code não encontrada para este item."}, status=404)
 
 
 @api_view(["POST"])
