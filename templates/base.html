@@ -18,7 +18,7 @@
   {# CSS base existente do projeto #}
   <link rel="stylesheet" href="{% static 'mainpage/css/base.css' %}">
   {# CSS novo da navbar #}
-  <link rel="stylesheet" href="{% static 'mainpage/css/navbar.css' %}?v=5">
+  <link rel="stylesheet" href="{% static 'mainpage/css/navbar.css' %}?v=10">
   {# CSS Mobile App Adaptation #}
   <link rel="stylesheet" href="{% static 'mainpage/css/mobile.css' %}?v=1.0">
 
@@ -71,7 +71,7 @@
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                 <polyline points="22 4 12 14.01 9 11.01"/>
               </svg>
-              Encontrados
+              Achados
             </a>
           </li>
 
@@ -90,19 +90,20 @@
           </li>
 
           <li>
-            <a href="{% url 'items_devolvidos' %}"
-               class="find-nav-link {% if request.resolver_match.url_name == 'items_devolvidos' %}active{% endif %}">
-              <!-- Repeat -->
+            <a href="{% url 'busca_visual' %}"
+               class="find-nav-link {% if request.resolver_match.url_name == 'busca_visual' %}active{% endif %}">
+              <!-- Scan/Camera icon for Match -->
               <svg class="nav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="17 1 21 5 17 9"/>
-                <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-                <polyline points="7 23 3 19 7 15"/>
-                <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                <path d="M4 4h4v4H4z"/>
+                <path d="M4 16h4v4H4z"/>
+                <path d="M16 4h4v4h-4z"/>
+                <path d="M16 16h4v4h-4z"/>
+                <path d="M10 10h4v4h-4z"/>
               </svg>
-              Devolvidos
-            </a>
-          </li>
+              Match
+        </a>
+      </li>
 
           <li>
             <a href="{% url 'chats_list' %}"
@@ -145,6 +146,12 @@
                   Estatísticas (Gráficos)
                 </a>
               </li>
+              <li>
+                <a class="dropdown-item py-2 px-3 fw-medium d-flex align-items-center text-dark" href="{% url 'iot_dashboard' %}">
+                  <i class="bi bi-cpu-fill text-primary me-2 fs-5"></i>
+                  Central IoT
+                </a>
+              </li>
               {% endif %}
             </ul>
           </li>
@@ -157,16 +164,51 @@
         <!-- Separador -->
         <div class="find-nav-sep"></div>
 
-        <!-- Notificações (opcional — linkar quando tiver a URL) -->
-        <a href="#" class="find-nav-notif" title="Notificações" aria-label="Notificações">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-        </svg>
-        <!-- Remova o .notif-dot se não houver notificações -->
-        <span class="notif-dot"></span>
-      </a>
+        <!-- Notificações Dropdown -->
+        <div class="dropdown">
+          <a href="#" class="find-nav-notif" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Notificações" aria-label="Notificações">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            {% if user_notificacoes_count > 0 %}
+            <span class="notif-dot"></span>
+            {% endif %}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end border-0 shadow rounded-4 mt-2 p-0" aria-labelledby="notifDropdown" style="width: 320px; max-height: 400px; overflow-y: auto;">
+            <li class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light rounded-top-4">
+              <span class="fw-bold text-dark">Notificações</span>
+              {% if user_notificacoes_count > 0 %}
+              <span class="badge bg-primary rounded-pill">{{ user_notificacoes_count }} novas</span>
+              {% endif %}
+            </li>
+            {% if user_notificacoes %}
+              {% for notif in user_notificacoes %}
+              <li>
+                <a class="dropdown-item p-3 border-bottom d-flex align-items-start text-wrap" href="{{ notif.link|default:'#' }}">
+                  <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3 mt-1" style="width: 36px; height: 36px; flex-shrink: 0;">
+                    <i class="bi {{ notif.icone }}"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1 fw-bold text-dark" style="font-size: 0.85rem;">{{ notif.titulo }}</h6>
+                    <p class="mb-1 text-muted" style="font-size: 0.75rem; line-height: 1.3;">{{ notif.mensagem }}</p>
+                    <small class="text-secondary" style="font-size: 0.65rem;">{{ notif.criado_em|timesince }} atrás</small>
+                  </div>
+                </a>
+              </li>
+              {% endfor %}
+              <li>
+                <a class="dropdown-item text-center p-2 text-primary fw-medium small bg-light rounded-bottom-4" href="#">Ver todas as notificações</a>
+              </li>
+            {% else %}
+              <li class="p-4 text-center text-muted">
+                <i class="bi bi-bell-slash fs-3 mb-2 d-block opacity-50"></i>
+                <span class="small">Nenhuma notificação nova.</span>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
 
       <!-- Avatar pill -->
       <a href="{% url 'screen_user' %}" class="find-nav-avatar-pill">
@@ -250,7 +292,7 @@
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
             <polyline points="22 4 12 14.01 9 11.01"/>
           </svg>
-          Encontrados
+          Achados
         </div>
       </a>
 
@@ -267,17 +309,18 @@
         </div>
       </a>
 
-      <a href="{% url 'items_devolvidos' %}"
-         class="drawer-link {% if request.resolver_match.url_name == 'items_devolvidos' %}active{% endif %}">
+      <a href="{% url 'busca_visual' %}"
+         class="drawer-link {% if request.resolver_match.url_name == 'busca_visual' %}active{% endif %}">
         <div class="drawer-link-left">
           <svg class="nav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="17 1 21 5 17 9"/>
-            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-            <polyline points="7 23 3 19 7 15"/>
-            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            <path d="M4 4h4v4H4z"/>
+            <path d="M4 16h4v4H4z"/>
+            <path d="M16 4h4v4h-4z"/>
+            <path d="M16 16h4v4h-4z"/>
+            <path d="M10 10h4v4h-4z"/>
           </svg>
-          Devolvidos
+          Match
         </div>
       </a>
 

@@ -31,6 +31,7 @@ def _item_to_dict(item, request=None):
         "categoria": item.categoria.nome if item.categoria else None,
         "categoria_id": item.categoria_id,
         "criado_em": item.criado_em.isoformat() if item.criado_em else "",
+        "rfid_uid": item.rfid_uid,
     }
 
 

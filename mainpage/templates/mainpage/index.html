@@ -56,7 +56,7 @@
       <div class="side-card float-anim-1 card-match">
         <div class="side-card-badge"><span class="badge-dot pulse"></span> Match em tempo real</div>
         <div class="side-card-title">iPhone Recuperado</div>
-        <div class="side-card-desc"><i class="bi bi-geo-alt"></i> Pinheiros, SP · há 3m</div>
+        <div class="side-card-desc"><i class="bi bi-geo-alt"></i> Natal, RN · há 3m</div>
         <div class="side-card-progress">
           <div class="side-card-progress-bar" style="width:87%"></div>
         </div>
@@ -121,7 +121,7 @@
         </div>
         <div class="trust-meta">
           <div class="trust-title-row"><i class="bi bi-heart-fill"></i> Pessoas reais. Itens reais.</div>
-          <span class="trust-subtitle">Comunidade ativa no Brasil inteiro</span>
+          <span class="trust-subtitle">A maior comunidade de achados do RN</span>
         </div>
       </div>
       <div class="pill-row">
@@ -136,7 +136,7 @@
       <div class="vertical-signal-line"></div>
       <div class="side-card float-anim-2 card-rede">
         <div class="side-card-badge success"><span class="badge-dot green pulse"></span> Rede ativa</div>
-        <div class="side-card-title">1.2k Buscas Ativas</div>
+        <div class="side-card-title">{{ total_itens }} Buscas Ativas</div>
         <div class="side-card-desc"><i class="bi bi-shield-check"></i> Cruzamento inteligente</div>
         <div class="side-card-progress" style="--bar-color: #a855f7;">
           <div class="side-card-progress-bar" style="width:74%; background: linear-gradient(90deg, #a855f7, #7c3aed);"></div>
@@ -148,11 +148,11 @@
       <div class="side-card float-anim-1 card-novo">
         <div class="side-card-badge"><span class="badge-dot pulse"></span> Novo match</div>
         <div class="side-card-title">Mochila encontrada</div>
-        <div class="side-card-desc"><i class="bi bi-geo-alt"></i> Moema, SP · agora</div>
+        <div class="side-card-desc"><i class="bi bi-geo-alt"></i> Mossoró, RN · agora</div>
       </div>
       <div class="side-mini-stat float-anim-3">
         <i class="bi bi-people-fill"></i>
-        <span class="side-mini-stat-value">120k</span>
+        <span class="side-mini-stat-value">{{ total_usuarios }}</span>
         <span class="side-mini-stat-label">membros</span>
       </div>
       <div class="vertical-signal-line"></div>
@@ -172,12 +172,12 @@
       <div class="metrics-container" style="margin:0 auto;">
         <div class="metric-item">
           <div class="stat-icon-wrap"><i class="bi bi-graph-up-arrow"></i></div>
-          <span class="metric-number-text">98<span class="metric-number-suffix">%</span></span>
+          <span class="metric-number-text">{{ taxa_recuperacao }}<span class="metric-number-suffix">%</span></span>
           <span class="stat-label">taxa de recuperação</span>
         </div>
         <div class="metric-item">
           <div class="stat-icon-wrap"><i class="bi bi-bag-heart"></i></div>
-          <span class="metric-number-text">40<span class="metric-number-suffix">K+</span></span>
+          <span class="metric-number-text">{{ encontrados }}</span>
           <span class="stat-label">itens encontrados</span>
         </div>
         <div class="metric-item">
@@ -297,52 +297,30 @@
           <div class="mockup-search-placeholder">Buscar item perdido...</div>
           <div class="mockup-search-filter-box"><i class="bi bi-sliders"></i></div>
         </div>
-        <span class="mockup-section-label">Recentes</span>
+        <span class="mockup-section-label">Recentes (Ao Vivo)</span>
+        {% for item in ultimos_itens %}
         <div class="mockup-item-card">
-          <div class="mockup-card-icon-wrap" style="background-color:var(--c-accent);">
-            <i class="bi bi-wallet2" style="color:var(--c-button);"></i>
+          <div class="mockup-card-icon-wrap" style="background-color:{% if item.status == 'perdido' %}rgba(255,100,80,0.10){% else %}var(--c-accent){% endif %};">
+            <i class="bi {% if item.categoria.nome == 'Eletrônicos' %}bi-laptop{% elif item.categoria.nome == 'Documentos' %}bi-file-earmark-person{% else %}bi-box-seam{% endif %}" style="color:{% if item.status == 'perdido' %}#e05540{% else %}var(--c-button){% endif %};"></i>
           </div>
           <div class="mockup-card-details">
-            <h4 class="mockup-card-title">Carteira preta</h4>
+            <h4 class="mockup-card-title">{{ item.titulo|truncatechars:20 }}</h4>
             <div class="mockup-card-sub-row">
               <i class="bi bi-geo-alt"></i>
-              <span class="mockup-card-sub-text">Copacabana, RJ · há 2h</span>
+              <span class="mockup-card-sub-text">
+                {% if item.local %}{{ item.local|truncatechars:15 }}{% else %}Não informada{% endif %}
+              </span>
             </div>
           </div>
-          <div class="mockup-badge" style="background-color:rgba(0,194,100,0.12);">
-            <span class="mockup-badge-text" style="color:#00a855;">Encontrado</span>
+          <div class="mockup-badge" style="background-color:{% if item.status == 'perdido' %}rgba(255,100,80,0.10){% else %}rgba(0,194,100,0.12){% endif %};">
+            <span class="mockup-badge-text" style="color:{% if item.status == 'perdido' %}#e05540{% else %}#00a855{% endif %};">{{ item.get_status_display }}</span>
           </div>
         </div>
-        <div class="mockup-item-card">
-          <div class="mockup-card-icon-wrap" style="background-color:rgba(255,100,80,0.10);">
-            <i class="bi bi-phone" style="color:#e05540;"></i>
-          </div>
-          <div class="mockup-card-details">
-            <h4 class="mockup-card-title">iPhone 15 Pro</h4>
-            <div class="mockup-card-sub-row">
-              <i class="bi bi-geo-alt"></i>
-              <span class="mockup-card-sub-text">Pinheiros, SP · há 5h</span>
-            </div>
-          </div>
-          <div class="mockup-badge" style="background-color:rgba(255,100,80,0.10);">
-            <span class="mockup-badge-text" style="color:#e05540;">Perdido</span>
-          </div>
+        {% empty %}
+        <div class="mockup-item-card" style="justify-content: center; opacity: 0.7;">
+          <span style="font-size: 12px;">Nenhum item cadastrado ainda.</span>
         </div>
-        <div class="mockup-item-card">
-          <div class="mockup-card-icon-wrap" style="background-color:var(--c-accent);">
-            <i class="bi bi-key" style="color:var(--c-button);"></i>
-          </div>
-          <div class="mockup-card-details">
-            <h4 class="mockup-card-title">Chaves Honda Civic</h4>
-            <div class="mockup-card-sub-row">
-              <i class="bi bi-geo-alt"></i>
-              <span class="mockup-card-sub-text">Moema, SP · há 1h</span>
-            </div>
-          </div>
-          <div class="mockup-badge" style="background-color:rgba(0,194,100,0.12);">
-            <span class="mockup-badge-text" style="color:#00a855;">Encontrado</span>
-          </div>
-        </div>
+        {% endfor %}
       </div>
 
       <!-- Phone Navigation & Bottom Indicators -->
@@ -490,10 +468,10 @@
         <div class="diff-secondary-card">
           <div class="diff-sec-top">
             <div class="diff-sec-icon-wrap"><i class="bi bi-people"></i></div>
-            <div class="diff-sec-badge"><i class="bi bi-people-fill"></i><span class="diff-sec-badge-text">120k+ membros</span></div>
+            <div class="diff-sec-badge"><i class="bi bi-people-fill"></i><span class="diff-sec-badge-text">{{ total_usuarios }} membros</span></div>
           </div>
           <h3 class="diff-sec-title">Comunidade ativa</h3>
-          <p class="diff-sec-desc">Mais de 120 mil usuários em todo o Brasil, criando uma rede colaborativa forte e eficiente de devolução.</p>
+          <p class="diff-sec-desc">Mais de {{ total_usuarios }} usuários no sistema, criando uma rede colaborativa forte e eficiente de devolução.</p>
           <div class="diff-sec-footer"><div class="diff-sec-footer-line"></div><i class="bi bi-chevron-right"></i></div>
         </div>
       </div>
@@ -546,9 +524,9 @@
             <div class="test-author-info">
               <h4 class="test-author-name">Ana Martins</h4>
               <div class="test-author-meta">
-                <i class="bi bi-briefcase"></i><span class="test-author-meta-text">Designer</span>
+                <i class="bi bi-briefcase"></i><span class="test-author-meta-text">Estudante (UFRN)</span>
                 <span class="test-author-dot">·</span>
-                <i class="bi bi-geo-alt"></i><span class="test-author-meta-text">São Paulo, SP</span>
+                <i class="bi bi-geo-alt"></i><span class="test-author-meta-text">Natal, RN</span>
               </div>
             </div>
             <div class="test-time-tag"><i class="bi bi-lightning-fill"></i><span class="test-time-tag-text">3h</span></div>
@@ -575,9 +553,9 @@
             <div class="test-author-info">
               <h4 class="test-author-name">Rafael Costa</h4>
               <div class="test-author-meta">
-                <i class="bi bi-briefcase"></i><span class="test-author-meta-text">Engenheiro</span>
+                <i class="bi bi-briefcase"></i><span class="test-author-meta-text">Servidor Público</span>
                 <span class="test-author-dot">·</span>
-                <i class="bi bi-geo-alt"></i><span class="test-author-meta-text">Curitiba, PR</span>
+                <i class="bi bi-geo-alt"></i><span class="test-author-meta-text">Mossoró, RN</span>
               </div>
             </div>
             <div class="test-time-tag"><i class="bi bi-lightning-fill"></i><span class="test-time-tag-text">1h</span></div>
@@ -604,9 +582,9 @@
             <div class="test-author-info">
               <h4 class="test-author-name">Juliana Santos</h4>
               <div class="test-author-meta">
-                <i class="bi bi-briefcase"></i><span class="test-author-meta-text">Gerente</span>
+                <i class="bi bi-briefcase"></i><span class="test-author-meta-text">Professora</span>
                 <span class="test-author-dot">·</span>
-                <i class="bi bi-geo-alt"></i><span class="test-author-meta-text">Rio de Janeiro, RJ</span>
+                <i class="bi bi-geo-alt"></i><span class="test-author-meta-text">Parnamirim, RN</span>
               </div>
             </div>
           </div>
@@ -630,7 +608,7 @@
       Pronto para recuperar<br>
       <span class="final-cta-title-accent">o que é seu?</span>
     </h2>
-    <p class="final-cta-sub">Mais de 40 mil itens recuperados. O seu pode ser o próximo.</p>
+    <p class="final-cta-sub">Já temos {{ encontrados }} itens encontrados. O seu pode ser o próximo.</p>
     <div class="final-cta-pills">
       <div class="final-cta-pill"><i class="bi bi-gift"></i><span class="final-cta-pill-text">Gratuito</span></div>
       <div class="final-cta-pill"><i class="bi bi-shield-check"></i><span class="final-cta-pill-text">Seguro</span></div>

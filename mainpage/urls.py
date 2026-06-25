@@ -80,4 +80,12 @@ urlpatterns = [
     path('painel/bolsista/', views.bolsista_dashboard, name='bolsista_dashboard'),
     path('painel/admin/', views.admin_dashboard, name='admin_dashboard'),
     path('painel/admin/estatisticas/', views.dashboard_admin, name='dashboard_admin'),
+
+    # Painel IoT
+    path('painel/iot/', views.iot_dashboard, name='iot_dashboard'),
+    path('painel/iot/dispositivo/<uuid:device_id>/', views.iot_device_detail, name='iot_device_detail'),
+    path('painel/iot/dispositivo/novo/', views.iot_create_device, name='iot_create_device'),
+    path('painel/iot/dispositivo/<uuid:device_id>/toggle/', views.iot_toggle_device, name='iot_toggle_device'),
+    path('painel/iot/dispositivo/<uuid:device_id>/excluir/', views.iot_delete_device, name='iot_delete_device'),
+    path('painel/iot/logs/', views.iot_logs, name='iot_logs'),
 ]

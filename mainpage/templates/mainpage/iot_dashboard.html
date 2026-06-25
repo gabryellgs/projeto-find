@@ -1,0 +1,412 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Central IoT — FIND{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mainpage/css/admin_dashboard.css' %}?v=8">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5 px-md-4 px-lg-5">
+  <div class="row g-4">
+
+    <!-- ══ SIDEBAR ══════════════════════════════════════════ -->
+    <div class="col-lg-3 col-xl-3">
+      <div class="sidebar-wrapper">
+
+        <!-- Profile -->
+        <div class="sidebar-profile">
+          <div class="profile-avatar-container">
+            <div class="profile-avatar-glow"></div>
+            <div class="profile-avatar-circle">
+              <i class="bi bi-cpu-fill"></i>
+            </div>
+          </div>
+          <h5 class="profile-name">Central IoT</h5>
+          <p class="profile-username">Módulo de Hardware</p>
+          <span class="profile-badge">
+            <i class="bi bi-broadcast"></i>
+            RFID / ESP32
+          </span>
+        </div>
+
+        <!-- Quick stats -->
+        <div class="sidebar-stats">
+          <div class="sidebar-stat-chip">
+            <span class="sidebar-stat-val">{{ total_dispositivos }}</span>
+            <span class="sidebar-stat-label">Dispositivos</span>
+          </div>
+          <div class="sidebar-stat-chip">
+            <span class="sidebar-stat-val">{{ dispositivos_ativos }}</span>
+            <span class="sidebar-stat-label">Online</span>
+          </div>
+        </div>
+
+        <!-- Nav -->
+        <div class="sidebar-menu-section">
+          <p class="menu-section-title">Módulos</p>
+          <div class="nav flex-column sidebar-nav" id="v-pills-tab-iot" role="tablist" aria-orientation="vertical">
+
+            <button class="nav-link active text-start border-0"
+                    id="v-pills-dispositivos-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#v-pills-dispositivos"
+                    type="button" role="tab"
+                    aria-controls="v-pills-dispositivos"
+                    aria-selected="true">
+              <i class="bi bi-router-fill"></i>
+              <span>Dispositivos</span>
+              <span class="badge">{{ total_dispositivos }}</span>
+            </button>
+
+            <button class="nav-link text-start border-0"
+                    id="v-pills-leituras-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#v-pills-leituras"
+                    type="button" role="tab"
+                    aria-controls="v-pills-leituras"
+                    aria-selected="false">
+              <i class="bi bi-journal-text"></i>
+              <span>Log de Leituras</span>
+              <span class="badge">{{ total_leituras }}</span>
+            </button>
+
+            <button class="nav-link text-start border-0"
+                    id="v-pills-novo-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#v-pills-novo"
+                    type="button" role="tab"
+                    aria-controls="v-pills-novo"
+                    aria-selected="false">
+              <i class="bi bi-plus-circle-fill"></i>
+              <span>Novo Dispositivo</span>
+            </button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CONTENT ══════════════════════════════════════════ -->
+    <div class="col-lg-9 col-xl-9">
+
+      {% if messages %}
+      <div class="mb-4">
+        {% for msg in messages %}
+        <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}{{ msg.tags }}{% endif %} alert-dismissible fade show" role="alert">
+          {{ msg }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="tab-content" id="v-pills-tabContent-iot">
+
+        <!-- ── TAB 1: DISPOSITIVOS ──────────────────────────── -->
+        <div class="tab-pane fade show active" id="v-pills-dispositivos" role="tabpanel">
+
+          <div class="admin-page-header">
+            <div>
+              <h2 class="admin-page-title">Dispositivos RFID</h2>
+              <p class="admin-page-subtitle">Gerenciamento de leitores ESP32 cadastrados no sistema</p>
+            </div>
+          </div>
+
+          <!-- KPI strip -->
+          <div class="kpi-strip" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
+            <div class="kpi-card" style="--kpi-accent:var(--brand-accent); --kpi-bg:var(--brand-50); --kpi-color:var(--brand-accent);">
+              <div class="kpi-icon-wrap"><i class="bi bi-router-fill"></i></div>
+              <div class="kpi-body">
+                <div class="kpi-value">{{ total_dispositivos }}</div>
+                <div class="kpi-label">Total de dispositivos</div>
+              </div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:var(--c-success); --kpi-bg:var(--c-success-bg); --kpi-color:var(--c-success);">
+              <div class="kpi-icon-wrap"><i class="bi bi-wifi"></i></div>
+              <div class="kpi-body">
+                <div class="kpi-value">{{ dispositivos_ativos }}</div>
+                <div class="kpi-label">Online / Ativos</div>
+              </div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:var(--c-info); --kpi-bg:var(--c-info-bg); --kpi-color:var(--c-info);">
+              <div class="kpi-icon-wrap"><i class="bi bi-file-text-fill"></i></div>
+              <div class="kpi-body">
+                <div class="kpi-value">{{ total_leituras }}</div>
+                <div class="kpi-label">Leituras registradas</div>
+              </div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:var(--c-success); --kpi-bg:var(--c-success-bg); --kpi-color:var(--c-success);">
+              <div class="kpi-icon-wrap"><i class="bi bi-check-circle-fill"></i></div>
+              <div class="kpi-body">
+                <div class="kpi-value">{{ leituras_sucesso }}</div>
+                <div class="kpi-label">Itens identificados</div>
+              </div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:var(--c-danger); --kpi-bg:var(--c-danger-bg); --kpi-color:var(--c-danger);">
+              <div class="kpi-icon-wrap"><i class="bi bi-x-circle-fill"></i></div>
+              <div class="kpi-body">
+                <div class="kpi-value">{{ leituras_falha }}</div>
+                <div class="kpi-label">Tags não identificadas</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lista de dispositivos -->
+          <div class="dashboard-card">
+            <div class="card-header-band">
+              <div>
+                <h5><i class="bi bi-router-fill"></i> Leitores Cadastrados</h5>
+                <p>{{ total_dispositivos }} dispositivo{% if total_dispositivos != 1 %}s{% endif %} no sistema</p>
+              </div>
+            </div>
+            <div class="p-0">
+              {% if dispositivos %}
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>Dispositivo</th>
+                      <th>Status</th>
+                      <th class="text-center">Leituras</th>
+                      <th class="text-center">Identificados</th>
+                      <th>Último contato</th>
+                      <th class="text-center">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for d in dispositivos %}
+                    <tr>
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="avatar-fallback">
+                            <i class="bi bi-cpu-fill" style="font-size:.9rem;"></i>
+                          </div>
+                          <div>
+                            <div class="fw-semibold" style="font-size:.88rem;">{{ d.nome }}</div>
+                            <div style="font-size:.73rem; color:var(--text-faint); font-family:monospace;">{{ d.id|slice:":8" }}…</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        {% if d.is_ativo %}
+                          <span class="badge bg-success-subtle">
+                            <i class="bi bi-circle-fill me-1" style="font-size:.45rem;"></i>Online
+                          </span>
+                        {% else %}
+                          <span class="badge bg-secondary-subtle">
+                            <i class="bi bi-circle me-1" style="font-size:.45rem;"></i>Inativo
+                          </span>
+                        {% endif %}
+                      </td>
+                      <td class="text-center fw-bold" style="color:var(--brand-accent);">{{ d.leituras.count }}</td>
+                      <td class="text-center fw-bold" style="color:var(--c-success);">{{ d.leituras_sucesso }}</td>
+                      <td style="font-size:.8rem; color:var(--text-muted);">
+                        {% if d.ultima_comunicacao %}
+                          <i class="bi bi-clock me-1"></i>{{ d.ultima_comunicacao|timesince }} atrás
+                        {% else %}
+                          <span style="color:var(--text-faint);">Nunca</span>
+                        {% endif %}
+                      </td>
+                      <td class="text-center">
+                        <a href="{% url 'iot_device_detail' d.id %}" class="btn btn-primary btn-sm">
+                          <i class="bi bi-eye me-1"></i>Detalhe
+                        </a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <div class="text-center py-5 px-4">
+                <i class="bi bi-router fs-1 d-block mb-3" style="color:var(--text-faint);"></i>
+                <p class="mb-0" style="color:var(--text-muted);">Nenhum dispositivo cadastrado. Use a aba "Novo Dispositivo" para começar.</p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── TAB 2: LOG DE LEITURAS ───────────────────────── -->
+        <div class="tab-pane fade" id="v-pills-leituras" role="tabpanel">
+
+          <div class="admin-page-header">
+            <div>
+              <h2 class="admin-page-title">Log de Leituras RFID</h2>
+              <p class="admin-page-subtitle">Últimas {{ leituras|length }} leituras registradas no sistema</p>
+            </div>
+            <a href="{% url 'iot_logs' %}" class="btn btn-primary">
+              <i class="bi bi-list-ul me-2"></i>Ver todos os logs
+            </a>
+          </div>
+
+          <div class="dashboard-card">
+            <div class="card-header-band">
+              <div>
+                <h5><i class="bi bi-journal-text"></i> Leituras Recentes</h5>
+                <p>Registro em tempo real das tags RFID lidas pelos dispositivos</p>
+              </div>
+            </div>
+            <div class="p-0">
+              {% if leituras %}
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>Tag RFID</th>
+                      <th>Dispositivo</th>
+                      <th>Resultado</th>
+                      <th>Item Associado</th>
+                      <th>Data / Hora</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for log in leituras %}
+                    <tr>
+                      <td>
+                        <span class="badge bg-info-subtle" style="font-family:monospace; font-size:.78rem; letter-spacing:.5px;">
+                          {{ log.rfid_uid }}
+                        </span>
+                      </td>
+                      <td style="font-size:.86rem; font-weight:600;">{{ log.dispositivo.nome|default:"—" }}</td>
+                      <td>
+                        {% if log.sucesso_identificacao %}
+                          <span class="badge bg-success-subtle">
+                            <i class="bi bi-check-circle-fill me-1"></i>Identificado
+                          </span>
+                        {% else %}
+                          <span class="badge bg-danger-subtle">
+                            <i class="bi bi-x-circle-fill me-1"></i>Não encontrado
+                          </span>
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if log.item_associado %}
+                          <a href="{% url 'item_detail' log.item_associado.slug %}"
+                             class="fw-semibold text-decoration-none"
+                             style="color:var(--brand-accent); font-size:.86rem;">
+                            {{ log.item_associado.titulo|truncatechars:30 }}
+                          </a>
+                        {% else %}
+                          <span style="color:var(--text-faint);">—</span>
+                        {% endif %}
+                      </td>
+                      <td style="font-size:.8rem; color:var(--text-muted);">
+                        <i class="bi bi-clock me-1"></i>{{ log.timestamp|date:"d/m/Y H:i" }}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <div class="text-center py-5 px-4">
+                <i class="bi bi-journal-x fs-1 d-block mb-3" style="color:var(--text-faint);"></i>
+                <p class="mb-0" style="color:var(--text-muted);">Nenhuma leitura registrada ainda.</p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── TAB 3: NOVO DISPOSITIVO ─────────────────────── -->
+        <div class="tab-pane fade" id="v-pills-novo" role="tabpanel">
+
+          <div class="admin-page-header">
+            <div>
+              <h2 class="admin-page-title">Cadastrar Dispositivo</h2>
+              <p class="admin-page-subtitle">Registre um novo leitor RFID (ESP32) no sistema</p>
+            </div>
+          </div>
+
+          <div class="row g-4">
+            <!-- Formulário -->
+            <div class="col-md-6">
+              <div class="dashboard-card">
+                <div class="card-header-band">
+                  <div>
+                    <h5><i class="bi bi-plus-circle-fill"></i> Novo Dispositivo</h5>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <form method="POST" action="{% url 'iot_create_device' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <label for="nomeDispositivo" class="form-label">Nome do dispositivo <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="nomeDispositivo" name="nome"
+                             required placeholder="Ex: Leitor RFID Recepção">
+                      <div class="form-text">Identifique o local físico onde o leitor será instalado.</div>
+                    </div>
+                    <div class="mb-4">
+                      <label for="tokenInput" class="form-label">Token de autenticação <span class="text-danger">*</span></label>
+                      <div class="d-flex gap-2">
+                        <input type="text" class="form-control" id="tokenInput" name="token_auth"
+                               required placeholder="Clique em 'Gerar' →" readonly>
+                        <button type="button" class="btn btn-primary" style="white-space:nowrap;" onclick="gerarToken()">
+                          <i class="bi bi-shuffle me-1"></i>Gerar
+                        </button>
+                      </div>
+                      <div class="form-text">Token secreto que o ESP32 usará no header <code>Authorization</code>.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                      <i class="bi bi-router-fill me-2"></i>Cadastrar Dispositivo
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- Instruções -->
+            <div class="col-md-6">
+              <div class="dashboard-card">
+                <div class="card-header-band">
+                  <div>
+                    <h5><i class="bi bi-code-slash"></i> Integração ESP32</h5>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <p style="font-size:.83rem; color:var(--text-muted); margin-bottom:16px;">
+                    Configure o firmware do ESP32 para enviar requisições ao endpoint abaixo:
+                  </p>
+                  <div style="background:#f8fafc; border:1px solid var(--bd); border-radius:10px; padding:16px; font-family:monospace; font-size:.78rem; color:#1e3a4a; line-height:1.8;">
+                    <span style="color:#888;">// Endpoint</span><br>
+                    POST /api/iot/scan/<br><br>
+                    <span style="color:#888;">// Headers</span><br>
+                    Authorization: Hardware-Token <span style="color:var(--brand-accent);">&lt;seu-token&gt;</span><br>
+                    Content-Type: application/json<br><br>
+                    <span style="color:#888;">// Body</span><br>
+                    {<br>
+                    &nbsp;&nbsp;"rfid_uid": "04 EA B1 22",<br>
+                    &nbsp;&nbsp;"acao": "scan"<br>
+                    }
+                  </div>
+                  <div class="alert alert-info mt-3 mb-0" style="font-size:.8rem;">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    O servidor retorna os dados completos do item associado à tag lida.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div><!-- /tab-content -->
+    </div><!-- /col -->
+  </div><!-- /row -->
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function gerarToken() {
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const token = Array.from({length: 48}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    document.getElementById('tokenInput').value = token;
+  }
+</script>
+{% endblock %}

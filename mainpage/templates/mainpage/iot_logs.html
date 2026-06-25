@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Todos os Logs IoT — FIND{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mainpage/css/admin_dashboard.css' %}?v=8">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5 px-md-4 px-lg-5">
+  <div class="row g-4">
+
+    <!-- ══ SIDEBAR ══════════════════════════════════════════ -->
+    <div class="col-lg-3 col-xl-3">
+      <div class="sidebar-wrapper">
+
+        <!-- Profile -->
+        <div class="sidebar-profile">
+          <div class="profile-avatar-container">
+            <div class="profile-avatar-glow"></div>
+            <div class="profile-avatar-circle">
+              <i class="bi bi-journal-text"></i>
+            </div>
+          </div>
+          <h5 class="profile-name">Logs de Leitura</h5>
+          <p class="profile-username">Histórico completo</p>
+          <span class="profile-badge">
+            <i class="bi bi-database-fill"></i>
+            {{ total }} registros
+          </span>
+        </div>
+
+        <!-- Stats -->
+        <div class="sidebar-stats">
+          <div class="sidebar-stat-chip">
+            <span class="sidebar-stat-val">{{ total }}</span>
+            <span class="sidebar-stat-label">Total</span>
+          </div>
+          <div class="sidebar-stat-chip">
+            <span class="sidebar-stat-val">{{ leituras.paginator.num_pages }}</span>
+            <span class="sidebar-stat-label">Páginas</span>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="sidebar-menu-section">
+          <p class="menu-section-title">Navegação</p>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <a href="{% url 'iot_dashboard' %}" class="btn btn-primary w-100" style="font-size:.83rem;">
+              <i class="bi bi-cpu-fill me-2"></i>Central IoT
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ CONTENT ══════════════════════════════════════════ -->
+    <div class="col-lg-9 col-xl-9">
+
+      <div class="admin-page-header">
+        <div>
+          <h2 class="admin-page-title">Histórico de Leituras RFID</h2>
+          <p class="admin-page-subtitle">{{ total }} leituras registradas por todos os dispositivos</p>
+        </div>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="card-header-band">
+          <div>
+            <h5><i class="bi bi-journal-text"></i> Log Completo</h5>
+            <p>Página {{ leituras.number }} de {{ leituras.paginator.num_pages }}</p>
+          </div>
+        </div>
+        <div class="p-0">
+          {% if leituras %}
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Tag RFID</th>
+                  <th>Dispositivo</th>
+                  <th>Resultado</th>
+                  <th>Item Associado</th>
+                  <th>Data / Hora</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for log in leituras %}
+                <tr>
+                  <td>
+                    <span class="badge bg-info-subtle" style="font-family:monospace; font-size:.78rem; letter-spacing:.5px;">
+                      {{ log.rfid_uid }}
+                    </span>
+                  </td>
+                  <td>
+                    {% if log.dispositivo %}
+                      <a href="{% url 'iot_device_detail' log.dispositivo.id %}"
+                         class="fw-semibold text-decoration-none"
+                         style="color:var(--brand-accent); font-size:.86rem;">
+                        {{ log.dispositivo.nome }}
+                      </a>
+                    {% else %}
+                      <span style="color:var(--text-faint);">Dispositivo removido</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if log.sucesso_identificacao %}
+                      <span class="badge bg-success-subtle">
+                        <i class="bi bi-check-circle-fill me-1"></i>Identificado
+                      </span>
+                    {% else %}
+                      <span class="badge bg-danger-subtle">
+                        <i class="bi bi-x-circle-fill me-1"></i>Não encontrado
+                      </span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if log.item_associado %}
+                      <a href="{% url 'item_detail' log.item_associado.slug %}"
+                         class="fw-semibold text-decoration-none"
+                         style="color:var(--brand-accent); font-size:.86rem;" target="_blank">
+                        {{ log.item_associado.titulo|truncatechars:32 }}
+                      </a>
+                    {% else %}
+                      <span style="color:var(--text-faint);">—</span>
+                    {% endif %}
+                  </td>
+                  <td style="font-size:.8rem; color:var(--text-muted);">
+                    <i class="bi bi-clock me-1"></i>{{ log.timestamp|date:"d/m/Y H:i:s" }}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          {% if leituras.has_other_pages %}
+          <div class="d-flex justify-content-center align-items-center gap-2 py-3 border-top">
+            {% if leituras.has_previous %}
+              <a href="?page={{ leituras.previous_page_number }}" class="btn btn-primary btn-sm">‹ Anterior</a>
+            {% endif %}
+            <span style="font-size:.82rem; color:var(--text-muted);">
+              Página {{ leituras.number }} de {{ leituras.paginator.num_pages }}
+            </span>
+            {% if leituras.has_next %}
+              <a href="?page={{ leituras.next_page_number }}" class="btn btn-primary btn-sm">Próxima ›</a>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          {% else %}
+          <div class="text-center py-5 px-4">
+            <i class="bi bi-journal-x fs-1 d-block mb-3" style="color:var(--text-faint);"></i>
+            <p class="mb-0" style="color:var(--text-muted);">Nenhuma leitura registrada no sistema ainda.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div><!-- /col -->
+  </div><!-- /row -->
+</div>
+{% endblock %}

@@ -38,8 +38,10 @@ def _apply_item_filters(itens_qs, q="", status="todos", categoria="todas"):
         )
 
     # suporta perdido, achado e devolvido
-    if status in ["perdido", "achado", "devolvido"]:
+    if status in ["perdido", "devolvido"]:
         itens_qs = itens_qs.filter(status=status)
+    elif status == "achado":
+        itens_qs = itens_qs.filter(status__in=["achado", "confirmado"])
 
     if categoria.isdigit():
         itens_qs = itens_qs.filter(categoria_id=int(categoria))
@@ -58,7 +60,7 @@ def _paginate_has_more(qs, page, per_page):
 def _system_counts():
     total = Item.objects.count()
     perdidos = Item.objects.filter(status="perdido").count()
-    encontrados = Item.objects.filter(status="achado").count()
+    encontrados = Item.objects.filter(status__in=["achado", "confirmado"]).count()
     devolvidos = Item.objects.filter(status="devolvido").count()
     return total, perdidos, encontrados, devolvidos
 
@@ -72,12 +74,27 @@ def _usuario_participa(chat, user):
 # -----------------------------
 def home(request):
     total, perdidos, encontrados, devolvidos = _system_counts()
+    total_usuarios = User.objects.count()
+    ultimos_itens = Item.objects.select_related('categoria').order_by('-criado_em')[:3]
+    
+    taxa_recuperacao = 0
+    if encontrados > 0:
+        taxa_recuperacao = int((devolvidos / encontrados) * 100)
+    elif devolvidos > 0 and total > 0:
+        taxa_recuperacao = int((devolvidos / total) * 100)
+        
+    # Se a taxa for 0 (sistema novo), coloca um valor padrão otimista ou 0.
+    if taxa_recuperacao == 0 and total > 0:
+        taxa_recuperacao = 100 if devolvidos == encontrados and devolvidos > 0 else 0
 
     return render(request, "mainpage/index.html", {
         "total_itens": total,
         "perdidos": perdidos,
         "encontrados": encontrados,
         "devolvidos": devolvidos,
+        "total_usuarios": total_usuarios,
+        "ultimos_itens": ultimos_itens,
+        "taxa_recuperacao": taxa_recuperacao,
     })
 
 def login_view(request):
@@ -215,7 +232,8 @@ def menu_view(request):
     # listas específicas para seções
     itens_devolvidos = Item.objects.filter(status="devolvido").select_related('usuario', 'categoria').order_by("-id")[:10]
     itens_perdidos = Item.objects.filter(status="perdido").select_related('usuario', 'categoria').order_by("-id")[:10]
-    itens_achados = Item.objects.filter(status="achado").select_related('usuario', 'categoria').order_by("-id")[:10]
+    itens_achados = Item.objects.filter(status__in=["achado", "confirmado"]).select_related('usuario', 'categoria').order_by("-id")[:10]
+
 
     total_itens, perdidos, encontrados, devolvidos = _system_counts()
 
@@ -246,7 +264,7 @@ def screen_user(request):
         "itens": itens,
         "total": itens.count(),
         "perdidos": itens.filter(status="perdido").count(),
-        "encontrados": itens.filter(status="achado").count(),
+        "encontrados": itens.filter(status__in=["achado", "confirmado"]).count(),
         "devolvidos": itens.filter(status="devolvido").count(),
         "categorias": categorias,
     })
@@ -312,12 +330,37 @@ def register_item(request):
     data_item = request.POST.get("data")
     local = request.POST.get("local") or ""
     imagem = request.FILES.get("imagem")
+    rfid_uid = (request.POST.get("rfid_uid") or "").strip().upper() or None
+
+    latitude = request.POST.get("latitude")
+    longitude = request.POST.get("longitude")
 
     if not titulo or len(titulo) < 3:
         messages.error(request, "O nome do item é obrigatório e deve ter pelo menos 3 caracteres.")
         return redirect(next_url)
 
+    # Valida se o UID RFID já está em uso por outro item
+    if rfid_uid and Item.objects.filter(rfid_uid__iexact=rfid_uid).exists():
+        messages.error(request, f"A etiqueta RFID '{rfid_uid}' já está associada a outro item.")
+        return redirect(next_url)
+
     categoria = Categoria.objects.filter(id=categoria_id).first() if categoria_id else None
+
+    # Usuários comuns:
+    # Se o item foi "achado" por eles, vai para pendente_confirmacao na COPAC.
+    # Se for "perdido", pula a COPAC e vai direto pro mural de perdidos.
+    from accounts.permissoes import check_bolsista_ou_admin
+    if not check_bolsista_ou_admin(request.user):
+        if status == "achado":
+            status = "pendente_confirmacao"
+        else:
+            status = "perdido"
+
+    try:
+        lat = float(latitude) if latitude else None
+        lng = float(longitude) if longitude else None
+    except ValueError:
+        lat = lng = None
 
     Item.objects.create(
         titulo=titulo,
@@ -328,9 +371,15 @@ def register_item(request):
         data=data_item,
         local=local,
         imagem=imagem,
+        rfid_uid=rfid_uid,
+        latitude=lat,
+        longitude=lng,
     )
 
-    messages.success(request, "Item cadastrado com sucesso!")
+    if status == "pendente_confirmacao":
+        messages.success(request, "Item cadastrado! Ele ficará pendente até a validação pela equipe da COPAC.")
+    else:
+        messages.success(request, "Item cadastrado com sucesso!")
     return redirect(next_url)
 
 
@@ -754,6 +803,24 @@ def chat_send_message(request, chat_id):
     chat.atualizado_em = timezone.now()
     chat.save(update_fields=["atualizado_em"])
 
+    # Notifica a outra parte
+    destinatario = chat.interessado if request.user == chat.item.usuario else chat.item.usuario
+    try:
+        from items.models import Notificacao
+        from django.urls import reverse
+        link_chat = reverse('chat_detail', args=[chat.id])
+        Notificacao.objects.create(
+            usuario=destinatario,
+            titulo=f"Nova mensagem de {request.user.first_name or request.user.username}",
+            mensagem=f"Sobre o item: {chat.item.titulo}",
+            icone="bi-chat-dots-fill",
+            link=link_chat
+        )
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Erro ao criar notificação de chat: {e}")
+
     return JsonResponse({
         "ok": True,
         "mensagem": {
@@ -786,18 +853,47 @@ def chat_close(request, chat_id):
     return redirect("chat_detail", chat_id=chat.id)
 
 
+import re
+from math import floor
+
+def _calcular_match_score(perdido, achado):
+    score = 0
+    # Categoria (peso 35)
+    if perdido.categoria_id and achado.categoria_id and perdido.categoria_id == achado.categoria_id:
+        score += 35
+    
+    # Palavras-chave Titulo (peso 40)
+    p_words = set(re.findall(r'\w+', perdido.titulo.lower() if perdido.titulo else ''))
+    a_words = set(re.findall(r'\w+', achado.titulo.lower() if achado.titulo else ''))
+    
+    stopwords = {'de', 'a', 'o', 'que', 'e', 'do', 'da', 'em', 'um', 'para', 'com', 'uma', 'na', 'no'}
+    p_words = p_words - stopwords
+    a_words = a_words - stopwords
+    
+    if p_words and a_words:
+        overlap = len(p_words.intersection(a_words))
+        score += min(40, (overlap / len(p_words)) * 40)
+        
+    # Palavras-chave Descrição (peso 25)
+    p_desc = set(re.findall(r'\w+', perdido.descricao.lower() if perdido.descricao else '')) - stopwords
+    a_desc = set(re.findall(r'\w+', achado.descricao.lower() if achado.descricao else '')) - stopwords
+    
+    if p_desc and a_desc:
+        overlap_desc = len(p_desc.intersection(a_desc))
+        score += min(25, (overlap_desc / len(p_desc)) * 25)
+        
+    return floor(score)
+
 @login_required(login_url="login")
 def busca_visual(request):
     resultados = []
     imagem_base64 = None
     
+    # 1. Busca por imagem (opcional, como já existia)
     if request.method == "POST" and request.FILES.get("imagem_busca"):
         imagem_file = request.FILES["imagem_busca"]
         try:
-            # Executa a busca
             resultados = Item.buscar_por_imagem(imagem_file)
-            
-            # Converte a imagem enviada para base64 para exibir como preview
             import base64
             imagem_file.seek(0)
             encoded = base64.b64encode(imagem_file.read()).decode("utf-8")
@@ -805,9 +901,34 @@ def busca_visual(request):
         except Exception as e:
             messages.error(request, f"Erro ao processar imagem: {str(e)}")
 
+    # 2. Match Automático (Smart Match) para os itens perdidos do usuário
+    matches_automaticos = []
+    meus_perdidos = Item.objects.filter(usuario=request.user, status="perdido")
+    # Busca itens que foram achados ou estão sob custódia
+    todos_achados = Item.objects.filter(status__in=["achado", "pendente_confirmacao", "confirmado"]).exclude(usuario=request.user)
+    
+    for perdido in meus_perdidos:
+        lista_matches = []
+        for achado in todos_achados:
+            score = _calcular_match_score(perdido, achado)
+            if score >= 30:  # Filtra apenas quem tem no mínimo 30% de similaridade
+                lista_matches.append({
+                    "item": achado,
+                    "score": score
+                })
+        
+        # Ordena os matches pelo maior score primeiro
+        lista_matches.sort(key=lambda x: x['score'], reverse=True)
+        
+        matches_automaticos.append({
+            "perdido": perdido,
+            "sugestoes": lista_matches[:6] # Pega até os 6 melhores matches
+        })
+
     return render(request, "mainpage/visual_search.html", {
         "resultados": resultados,
         "imagem_preview": imagem_base64,
+        "matches_automaticos": matches_automaticos,
     })
 
 
@@ -829,16 +950,39 @@ def bolsista_dashboard(request):
         if action == "confirmar" and item_id:
             item = get_object_or_404(Item, id=item_id)
             item.status = "confirmado"
-            item.save(update_fields=["status", "atualizado_em"])
+            rfid_uid = request.POST.get("rfid_uid", "").strip()
+            if rfid_uid:
+                item.rfid_uid = rfid_uid
+                item.save(update_fields=["status", "rfid_uid", "atualizado_em"])
+            else:
+                item.save(update_fields=["status", "atualizado_em"])
             
             from items.api.views import _get_client_ip
+            obs_log = f"Confirmado via Painel Web do Bolsista."
+            if rfid_uid:
+                obs_log += f" Tag RFID vinculada: {rfid_uid}"
             AcaoLog.objects.create(
                 bolsista=request.user,
                 item=item,
                 acao="confirmou",
-                observacao="Confirmado via Painel Web do Bolsista.",
+                observacao=obs_log,
                 ip_origem=_get_client_ip(request)
             )
+
+            # Notifica o usuário de que o item foi validado na COPAC
+            from items.models import Notificacao
+            from django.urls import reverse
+            try:
+                Notificacao.objects.create(
+                    usuario=item.usuario,
+                    titulo="Item Validado na COPAC! 🎉",
+                    mensagem=f"Seu item '{item.titulo}' foi verificado por nossa equipe e está sob custódia física da COPAC. Ele agora aparece no painel de achados.",
+                    icone="bi-check-circle-fill",
+                    link=reverse('item_detail', args=[item.slug]) if item.slug else "#"
+                )
+            except Exception:
+                pass
+
             messages.success(request, f"Item '{item.titulo}' confirmado com sucesso!")
             return redirect("bolsista_dashboard")
             
@@ -852,6 +996,18 @@ def bolsista_dashboard(request):
                 item = get_object_or_404(Item, id=item_id)
                 item.status = "devolvido"
                 item.save(update_fields=["status", "atualizado_em"])
+
+                # Notifica o dono que o item foi retirado
+                from items.models import Notificacao
+                try:
+                    Notificacao.objects.create(
+                        usuario=item.usuario,
+                        titulo="Item Entregue/Retirado ✅",
+                        mensagem=f"Seu item '{item.titulo}' foi retirado no balcão da COPAC por: {nome_recebedor}.",
+                        icone="bi-box-seam",
+                    )
+                except Exception:
+                    pass
                 
                 obs_log = f"Status alterado para devolvido. Recebedor: {nome_recebedor}"
                 if observacao:
@@ -868,15 +1024,60 @@ def bolsista_dashboard(request):
                 messages.success(request, f"Item '{item.titulo}' devolvido para {nome_recebedor}!")
                 return redirect("bolsista_dashboard")
 
-    pendentes = Item.objects.filter(status__in=["achado", "pendente_confirmacao"]).order_by("-criado_em")
+        elif action == "editar" and item_id:
+            item = get_object_or_404(Item, id=item_id)
+            novo_titulo    = (request.POST.get("novo_titulo") or "").strip()
+            nova_descricao = (request.POST.get("nova_descricao") or "").strip()
+            novo_local     = (request.POST.get("novo_local") or "").strip()
+            nova_categoria_id = request.POST.get("nova_categoria")
+            novo_rfid      = (request.POST.get("novo_rfid") or "").strip().upper() or None
+            nova_imagem    = request.FILES.get("nova_imagem")
+
+            if novo_titulo and len(novo_titulo) >= 3:
+                item.titulo = novo_titulo
+            if nova_descricao:
+                item.descricao = nova_descricao
+            if novo_local:
+                item.local = novo_local
+            if nova_categoria_id:
+                nova_cat = Categoria.objects.filter(id=nova_categoria_id).first()
+                if nova_cat:
+                    item.categoria = nova_cat
+            if novo_rfid:
+                # Verifica duplicata de RFID em outro item
+                if Item.objects.filter(rfid_uid__iexact=novo_rfid).exclude(id=item.id).exists():
+                    messages.error(request, f"A etiqueta RFID '{novo_rfid}' já está em uso em outro item.")
+                    return redirect("bolsista_dashboard")
+                item.rfid_uid = novo_rfid
+            if nova_imagem:
+                item.imagem = nova_imagem
+
+            item.save()
+            messages.success(request, f"Item '{item.titulo}' atualizado com sucesso!")
+            return redirect("bolsista_dashboard")
+
+        elif action == "rejeitar" and item_id:
+            item = get_object_or_404(Item, id=item_id)
+            motivo = (request.POST.get("motivo_rejeicao") or "").strip()
+            item.status = "perdido"  # Volta como perdido (visível para o usuário)
+            item.save(update_fields=["status", "atualizado_em"])
+            messages.warning(request, f"Item '{item.titulo}' rejeitado e marcado como perdido.")
+            return redirect("bolsista_dashboard")
+
+
+    categorias = Categoria.objects.all().order_by("nome")
+    pendentes = Item.objects.filter(status__in=["achado", "confirmado", "pendente_confirmacao"]).order_by("-criado_em")
     recent_actions = AcaoLog.objects.filter(bolsista=request.user).select_related("item").order_by("-timestamp")[:50]
     todos_itens = Item.objects.all().order_by("-criado_em")
-    
+
     return render(request, "mainpage/bolsista_dashboard.html", {
         "pendentes": pendentes,
         "recent_actions": recent_actions,
         "todos_itens": todos_itens,
+        "categorias": categorias,
     })
+
+
 
 
 @login_required(login_url="login")
@@ -1060,3 +1261,123 @@ def dashboard_admin(request):
         'tempo_json': json.dumps(tempo_list, cls=DjangoJSONEncoder),
     }
     return render(request, 'mainpage/dashboard_admin.html', context)
+
+
+# -----------------------------
+# IoT — Central de Dispositivos
+# -----------------------------
+@login_required(login_url="login")
+def iot_dashboard(request):
+    from iot.models import Dispositivo, LeituraLog
+
+    dispositivos = Dispositivo.objects.all().order_by("-criado_em")
+
+    # Anota leituras de sucesso por dispositivo
+    for d in dispositivos:
+        d.leituras_sucesso = d.leituras.filter(sucesso_identificacao=True).count()
+
+    total_dispositivos  = dispositivos.count()
+    dispositivos_ativos = dispositivos.filter(is_ativo=True).count()
+    total_leituras      = LeituraLog.objects.count()
+    leituras_sucesso    = LeituraLog.objects.filter(sucesso_identificacao=True).count()
+    leituras_falha      = LeituraLog.objects.filter(sucesso_identificacao=False).count()
+
+    leituras = LeituraLog.objects.select_related("dispositivo", "item_associado").order_by("-timestamp")[:30]
+
+    return render(request, "mainpage/iot_dashboard.html", {
+        "dispositivos": dispositivos,
+        "total_dispositivos": total_dispositivos,
+        "dispositivos_ativos": dispositivos_ativos,
+        "total_leituras": total_leituras,
+        "leituras_sucesso": leituras_sucesso,
+        "leituras_falha": leituras_falha,
+        "leituras": leituras,
+    })
+
+
+@login_required(login_url="login")
+def iot_device_detail(request, device_id):
+    from iot.models import Dispositivo, LeituraLog
+    from django.core.paginator import Paginator
+
+    dispositivo    = get_object_or_404(Dispositivo, id=device_id)
+    total_leituras = dispositivo.leituras.count()
+    leituras_sucesso = dispositivo.leituras.filter(sucesso_identificacao=True).count()
+    leituras_falha   = dispositivo.leituras.filter(sucesso_identificacao=False).count()
+    taxa_sucesso     = round(leituras_sucesso / total_leituras * 100) if total_leituras else 0
+
+    leituras_qs = dispositivo.leituras.select_related("item_associado").order_by("-timestamp")
+    paginator   = Paginator(leituras_qs, 20)
+    page        = request.GET.get("page", 1)
+    leituras    = paginator.get_page(page)
+
+    return render(request, "mainpage/iot_device_detail.html", {
+        "dispositivo": dispositivo,
+        "total_leituras": total_leituras,
+        "leituras_sucesso": leituras_sucesso,
+        "leituras_falha": leituras_falha,
+        "taxa_sucesso": taxa_sucesso,
+        "leituras": leituras,
+    })
+
+
+@login_required(login_url="login")
+@require_POST
+def iot_create_device(request):
+    from iot.models import Dispositivo
+
+    nome       = (request.POST.get("nome") or "").strip()
+    token_auth = (request.POST.get("token_auth") or "").strip()
+
+    if not nome or not token_auth:
+        messages.error(request, "Nome e token são obrigatórios.")
+        return redirect("iot_dashboard")
+
+    if Dispositivo.objects.filter(token_auth=token_auth).exists():
+        messages.error(request, "Esse token já está em uso. Gere um novo.")
+        return redirect("iot_dashboard")
+
+    Dispositivo.objects.create(nome=nome, token_auth=token_auth)
+    messages.success(request, f'Dispositivo "{nome}" cadastrado com sucesso!')
+    return redirect("iot_dashboard")
+
+
+@login_required(login_url="login")
+@require_POST
+def iot_toggle_device(request, device_id):
+    from iot.models import Dispositivo
+
+    dispositivo = get_object_or_404(Dispositivo, id=device_id)
+    dispositivo.is_ativo = not dispositivo.is_ativo
+    dispositivo.save(update_fields=["is_ativo"])
+    estado = "ativado" if dispositivo.is_ativo else "desativado"
+    messages.success(request, f'Dispositivo "{dispositivo.nome}" {estado}.')
+    return redirect("iot_device_detail", device_id=device_id)
+
+
+@login_required(login_url="login")
+@require_POST
+def iot_delete_device(request, device_id):
+    from iot.models import Dispositivo
+    dispositivo = get_object_or_404(Dispositivo, id=device_id)
+    nome = dispositivo.nome
+    dispositivo.delete()
+    messages.success(request, f'Dispositivo "{nome}" excluído.')
+    return redirect("iot_dashboard")
+
+
+@login_required(login_url="login")
+def iot_logs(request):
+    """Tela de todos os logs de leitura com paginação."""
+    from iot.models import LeituraLog
+    from django.core.paginator import Paginator
+
+    logs_qs  = LeituraLog.objects.select_related("dispositivo", "item_associado").order_by("-timestamp")
+    paginator = Paginator(logs_qs, 40)
+    page     = request.GET.get("page", 1)
+    leituras = paginator.get_page(page)
+
+    return render(request, "mainpage/iot_logs.html", {
+        "leituras": leituras,
+        "total": logs_qs.count(),
+    })

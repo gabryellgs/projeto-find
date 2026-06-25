@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'mainpage/css/bolsista_dashboard.css' %}?v=7">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 {% endblock %}
 
 {% block content %}
@@ -34,10 +35,20 @@
                     <div class="nav flex-column sidebar-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                         <button class="nav-link active text-start border-0" id="v-pills-pendentes-tab" data-bs-toggle="pill" data-bs-target="#v-pills-pendentes" type="button" role="tab" aria-controls="v-pills-pendentes" aria-selected="true">
                             <i class="bi bi-hourglass-split"></i>
-                            <span>Validar Pendentes</span>
-                            <span class="badge bg-danger ms-auto rounded-pill">{{ pendentes.count }}</span>
+                            <span>Aprovações Pendentes</span>
+                            <!-- Count specifically pendente_confirmacao using a quick filter hack in template or just leave pendentes.count for now, it's fine -->
                         </button>
                         
+                        <button class="nav-link text-start border-0" id="v-pills-estoque-tab" data-bs-toggle="pill" data-bs-target="#v-pills-estoque" type="button" role="tab" aria-controls="v-pills-estoque" aria-selected="false">
+                            <i class="bi bi-box-seam"></i>
+                            <span>Estoque & Despache</span>
+                        </button>
+
+                        <button class="nav-link text-start border-0" id="v-pills-todos-tab" data-bs-toggle="pill" data-bs-target="#v-pills-todos" type="button" role="tab" aria-controls="v-pills-todos" aria-selected="false">
+                            <i class="bi bi-collection"></i>
+                            <span>Todos os Itens</span>
+                        </button>
+
                         <button class="nav-link text-start border-0" id="v-pills-etiquetas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-etiquetas" type="button" role="tab" aria-controls="v-pills-etiquetas" aria-selected="false">
                             <i class="bi bi-printer"></i>
                             <span>Imprimir Etiquetas</span>
@@ -51,6 +62,11 @@
                         <button class="nav-link text-start border-0" id="v-pills-historico-tab" data-bs-toggle="pill" data-bs-target="#v-pills-historico" type="button" role="tab" aria-controls="v-pills-historico" aria-selected="false">
                             <i class="bi bi-clock-history"></i>
                             <span>Meu Histórico</span>
+                        </button>
+
+                        <button class="nav-link text-start border-0" id="v-pills-cadastrar-tab" data-bs-toggle="pill" data-bs-target="#v-pills-cadastrar" type="button" role="tab" aria-controls="v-pills-cadastrar" aria-selected="false">
+                            <i class="bi bi-plus-circle-fill"></i>
+                            <span>Cadastrar Item</span>
                         </button>
                     </div>
                 </div>
@@ -110,20 +126,370 @@
             </div>
 
             <div class="tab-content" id="v-pills-tabContent">
-                <!-- TAB 1: VALIDAR PENDENTES -->
+                <!-- TAB 1: APROVAÇÕES PENDENTES -->
                 <div class="tab-pane fade show active" id="v-pills-pendentes" role="tabpanel" aria-labelledby="v-pills-pendentes-tab">
                     <div class="page-header">
-                        <h2 class="page-title">Validar Pendentes</h2>
-                        <p class="page-subtitle">Confirme objetos encontrados ou registre a entrega definitiva ao dono.</p>
+                        <h2 class="page-title">Aprovações Pendentes</h2>
+                        <p class="page-subtitle">Aprove ou rejeite os itens relatados como achados pelos usuários.</p>
                     </div>
 
                     {% if pendentes %}
+                    
+                    <!-- Seção: Aguardando Aprovação -->
+                    {% with aguardando=pendentes|dictsortreversed:"criado_em" %}
+                    {% for item in pendentes %}{% if item.status == 'pendente_confirmacao' %}
+                    {% if forloop.first or forloop.counter == 1 %}
+                    {% endif %}
+
+                    <div class="col-12 mb-3">
+                        <div class="validation-card overflow-hidden" style="border-left: 4px solid #f59e0b;">
+                            <!-- Badge de tipo no topo -->
+                            <div class="px-4 pt-3 pb-0 d-flex justify-content-between align-items-center">
+                                <span class="badge bg-warning-subtle" style="font-size:.72rem;">
+                                    <i class="bi bi-hourglass-split me-1"></i>Aguardando Aprovação da COPAC
+                                </span>
+                                <small class="text-muted">por @{{ item.usuario.username }} — {{ item.criado_em|timesince }} atrás</small>
+                            </div>
+
+                            <div class="row g-0">
+                                <div class="col-md-3 bg-light d-flex align-items-center justify-content-center p-3 border-end" style="min-height:140px;">
+                                    {% if item.imagem %}
+                                    <div class="validation-img-container rounded-3 w-100 h-100">
+                                        <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                                    </div>
+                                    {% else %}
+                                    <div class="d-flex flex-column align-items-center">
+                                        <i class="bi bi-box-seam validation-placeholder-ico"></i>
+                                        <span class="text-muted small mt-1">Sem Imagem</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="card-body p-4 d-flex flex-column h-100 justify-content-between">
+                                        <div>
+                                            <h5 class="fw-bold mb-1 text-dark">{{ item.titulo }}</h5>
+                                            <p class="text-muted small mb-2">{{ item.descricao|truncatechars:160 }}</p>
+                                            <div class="d-flex flex-wrap gap-3 mb-3 text-muted small">
+                                                <span><i class="bi bi-geo-alt-fill me-1 text-danger"></i>{{ item.local|default:"Não informado" }}</span>
+                                                <span><i class="bi bi-tag me-1 text-primary"></i>{{ item.categoria.nome|default:"Sem categoria" }}</span>
+                                                <span><i class="bi bi-calendar-event me-1 text-info"></i>{{ item.data|date:"d/m/Y" }}</span>
+                                                {% if item.rfid_uid %}<span><i class="bi bi-broadcast me-1" style="color:#1eaed4;"></i>{{ item.rfid_uid }}</span>{% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-2 border-top pt-3">
+                                            <!-- Aprovar (confirmar na COPAC) -->
+                                            <form method="POST" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="action" value="confirmar">
+                                                <input type="hidden" name="item_id" value="{{ item.id }}">
+                                                <button type="submit" class="btn btn-success btn-sm px-3">
+                                                    <i class="bi bi-check-circle-fill me-1"></i>Aprovar e Guardar na COPAC
+                                                </button>
+                                            </form>
+                                            <!-- Editar -->
+                                            <button type="button" class="btn btn-outline-primary btn-sm px-3"
+                                                    data-bs-toggle="modal" data-bs-target="#editarModal{{ item.id }}">
+                                                <i class="bi bi-pencil-fill me-1"></i>Editar
+                                            </button>
+                                            <!-- Rejeitar -->
+                                            <button type="button" class="btn btn-outline-danger btn-sm px-3"
+                                                    data-bs-toggle="modal" data-bs-target="#rejeitarModal{{ item.id }}">
+                                                <i class="bi bi-x-circle me-1"></i>Rejeitar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MODAL EDITAR -->
+                    <div class="modal fade" id="editarModal{{ item.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                                <div class="modal-header border-0 p-4" style="background:linear-gradient(135deg,#1eaed4,#185FA5); color:#fff;">
+                                    <h5 class="modal-title fw-bold"><i class="bi bi-pencil-fill me-2"></i>Editar Item — {{ item.titulo }}</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="editar">
+                                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                                    <div class="modal-body p-4">
+                                        <div class="row g-3">
+                                            <div class="col-md-8">
+                                                <label class="form-label fw-semibold small">Título</label>
+                                                <input type="text" name="novo_titulo" class="form-control rounded-3"
+                                                       value="{{ item.titulo }}" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-semibold small">Categoria</label>
+                                                <select name="nova_categoria" class="form-select rounded-3">
+                                                    <option value="">Manter atual ({{ item.categoria.nome|default:"—" }})</option>
+                                                    {% for cat in categorias %}
+                                                    <option value="{{ cat.id }}" {% if item.categoria.id == cat.id %}selected{% endif %}>{{ cat.nome }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold small">Descrição</label>
+                                                <textarea name="nova_descricao" class="form-control rounded-3" rows="3">{{ item.descricao }}</textarea>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold small">Local</label>
+                                                <input type="text" name="novo_local" class="form-control rounded-3"
+                                                       value="{{ item.local }}" placeholder="Ex: COPAC / Bloco A">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold small">
+                                                    <i class="bi bi-broadcast me-1" style="color:#1eaed4;"></i>Etiqueta RFID
+                                                </label>
+                                                <input type="text" name="novo_rfid" class="form-control rounded-3"
+                                                       value="{{ item.rfid_uid|default:'' }}"
+                                                       placeholder="Ex: 04 EA B1 22"
+                                                       style="font-family:monospace; text-transform:uppercase;">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold small">Substituir Foto (opcional)</label>
+                                                <input type="file" name="nova_imagem" class="form-control rounded-3" accept="image/*">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-0 p-3 bg-light d-flex justify-content-between">
+                                        <button type="button" class="btn btn-link text-muted rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
+                                            <i class="bi bi-save2 me-1"></i>Salvar Alterações
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MODAL REJEITAR -->
+                    <div class="modal fade" id="rejeitarModal{{ item.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                                <div class="modal-header border-0 bg-danger text-white p-4">
+                                    <h5 class="modal-title fw-bold"><i class="bi bi-x-circle-fill me-2"></i>Rejeitar Item</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="rejeitar">
+                                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                                    <div class="modal-body p-4">
+                                        <p class="text-muted small mb-3">O item <strong>{{ item.titulo }}</strong> será marcado como <strong>Perdido</strong> e ficará visível para outros usuários encontrá-lo.</p>
+                                        <label class="form-label fw-semibold small">Motivo da rejeição (opcional)</label>
+                                        <textarea name="motivo_rejeicao" class="form-control rounded-3" rows="2"
+                                                  placeholder="Ex: Dados insuficientes, item já devolvido ao dono..."></textarea>
+                                    </div>
+                                    <div class="modal-footer border-0 p-3 bg-light d-flex justify-content-between">
+                                        <button type="button" class="btn btn-link text-muted rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">
+                                            <i class="bi bi-x-circle-fill me-1"></i>Confirmar Rejeição
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endif %}{% endfor %}
+                    {% endwith %}
+
+                    {% else %}
+                    <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                        <i class="bi bi-check2-circle text-success fs-1 mb-3"></i>
+                        <h5 class="fw-bold text-dark">Tudo limpo!</h5>
+                        <p class="text-muted mb-0">Nenhum item pendente de aprovação no momento.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- TAB 2: ESTOQUE E DESPACHE (NA COPAC) -->
+                <div class="tab-pane fade" id="v-pills-estoque" role="tabpanel" aria-labelledby="v-pills-estoque-tab">
+                    <div class="page-header">
+                        <h2 class="page-title">Estoque & Despache</h2>
+                        <p class="page-subtitle">Gerencie os itens físicos na COPAC e registre entregas aos donos.</p>
+                    </div>
+
+                    {% if pendentes %}
+                    <!-- Seção: Já na COPAC (achado aguardando devolução) -->
+                    {% for item in pendentes %}{% if item.status == 'achado' or item.status == 'confirmado' %}
+                    <div class="col-12 mb-3">
+                        <div class="validation-card overflow-hidden" style="border-left:4px solid #10b981;">
+                            <div class="px-4 pt-3 pb-0 d-flex justify-content-between align-items-center">
+                                <span class="badge bg-success-subtle" style="font-size:.72rem;">
+                                    <i class="bi bi-archive-fill me-1"></i>Na COPAC — Aguardando Devolução
+                                </span>
+                                <small class="text-muted">por @{{ item.usuario.username }}</small>
+                            </div>
+                            <div class="row g-0">
+                                <div class="col-md-3 bg-light d-flex align-items-center justify-content-center p-3 border-end" style="min-height:120px;">
+                                    {% if item.imagem %}
+                                    <div class="validation-img-container rounded-3 w-100 h-100">
+                                        <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                                    </div>
+                                    {% else %}
+                                    <div class="d-flex flex-column align-items-center">
+                                        <i class="bi bi-box-seam validation-placeholder-ico"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="card-body p-4 d-flex flex-column h-100 justify-content-between">
+                                        <div>
+                                            <h5 class="fw-bold mb-1 text-dark">{{ item.titulo }}</h5>
+                                            <div class="d-flex flex-wrap gap-3 mb-3 text-muted small">
+                                                <span><i class="bi bi-geo-alt-fill me-1 text-danger"></i>{{ item.local|default:"Não informado" }}</span>
+                                                <span><i class="bi bi-person-fill me-1 text-primary"></i>{{ item.usuario.username }}</span>
+                                                {% if item.rfid_uid %}<span><i class="bi bi-broadcast me-1" style="color:#1eaed4;"></i>{{ item.rfid_uid }}</span>{% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="d-flex gap-2 border-top pt-3">
+                                            <button type="button" class="btn btn-outline-primary btn-sm px-3"
+                                                    data-bs-toggle="modal" data-bs-target="#devolverModal{{ item.id }}">
+                                                <i class="bi bi-arrow-return-left me-1"></i>Registrar Entrega ao Dono
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm px-3"
+                                                    data-bs-toggle="modal" data-bs-target="#editarModal{{ item.id }}">
+                                                <i class="bi bi-pencil-fill me-1"></i>Editar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MODAL DE DEVOLUÇÃO -->
+                    <div class="modal fade" id="devolverModal{{ item.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                                <div class="modal-header border-0 bg-primary text-white p-4">
+                                    <h5 class="modal-title fw-bold"><i class="bi bi-arrow-return-left me-2"></i>Registrar Devolução</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="devolver">
+                                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                                    <div class="modal-body p-4">
+                                        <div class="alert alert-info py-2 mb-3">
+                                            <i class="bi bi-info-circle-fill me-2"></i>Valide o documento do estudante antes de entregar.
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold small">Nome do Recebedor <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control rounded-3" name="nome_recebedor" required placeholder="Nome completo do estudante">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold small">Observações</label>
+                                            <textarea class="form-control rounded-3" name="observacao" rows="2" placeholder="Ex: Matrícula validada. Assinou termo de entrega."></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-0 p-3 bg-light d-flex justify-content-between">
+                                        <button type="button" class="btn btn-link text-muted rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary rounded-pill px-4">Concluir Devolução</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MODAL EDITAR -->
+                    <div class="modal fade" id="editarModal{{ item.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                                <div class="modal-header border-0 p-4" style="background:linear-gradient(135deg,#1eaed4,#185FA5); color:#fff;">
+                                    <h5 class="modal-title fw-bold"><i class="bi bi-pencil-fill me-2"></i>Editar Item — {{ item.titulo }}</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="editar">
+                                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                                    <div class="modal-body p-4">
+                                        <div class="row g-3">
+                                            <div class="col-md-8">
+                                                <label class="form-label fw-semibold small">Título</label>
+                                                <input type="text" name="novo_titulo" class="form-control rounded-3"
+                                                       value="{{ item.titulo }}" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-semibold small">Categoria</label>
+                                                <select name="nova_categoria" class="form-select rounded-3">
+                                                    <option value="">Manter atual ({{ item.categoria.nome|default:"—" }})</option>
+                                                    {% for cat in categorias %}
+                                                    <option value="{{ cat.id }}" {% if item.categoria.id == cat.id %}selected{% endif %}>{{ cat.nome }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold small">Descrição</label>
+                                                <textarea name="nova_descricao" class="form-control rounded-3" rows="3">{{ item.descricao }}</textarea>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold small">Local</label>
+                                                <input type="text" name="novo_local" class="form-control rounded-3"
+                                                       value="{{ item.local }}" placeholder="Ex: COPAC / Bloco A">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold small">
+                                                    <i class="bi bi-broadcast me-1" style="color:#1eaed4;"></i>Etiqueta RFID
+                                                </label>
+                                                <input type="text" name="novo_rfid" class="form-control rounded-3"
+                                                       value="{{ item.rfid_uid|default:'' }}"
+                                                       placeholder="Ex: 04 EA B1 22"
+                                                       style="font-family:monospace; text-transform:uppercase;">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold small">Substituir Foto (opcional)</label>
+                                                <input type="file" name="nova_imagem" class="form-control rounded-3" accept="image/*">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-0 p-3 bg-light d-flex justify-content-between">
+                                        <button type="button" class="btn btn-link text-muted rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
+                                            <i class="bi bi-save2 me-1"></i>Salvar Alterações
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}{% endfor %}
+
+                    {% else %}
+                    <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                        <i class="bi bi-box-seam text-success fs-1 mb-3"></i>
+                        <h5 class="fw-bold text-dark">Estoque vazio!</h5>
+                        <p class="text-muted mb-0">Nenhum item físico guardado aguardando devolução no momento.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- TAB 3: GERENCIAR TODOS OS ITENS -->
+                <div class="tab-pane fade" id="v-pills-todos" role="tabpanel" aria-labelledby="v-pills-todos-tab">
+                    <div class="page-header">
+                        <h2 class="page-title">Todos os Itens</h2>
+                        <p class="page-subtitle">Pesquise e edite qualquer item cadastrado no sistema.</p>
+                    </div>
+
+                    {% if todos_itens %}
                     <div class="row g-3">
-                        {% for item in pendentes %}
-                        <div class="col-12">
-                            <div class="validation-card overflow-hidden">
+                        {% for item in todos_itens %}
+                        <div class="col-12 mb-3">
+                            <div class="validation-card overflow-hidden" style="border-left:4px solid {% if item.status == 'achado' or item.status == 'confirmado' %}#10b981{% elif item.status == 'devolvido' %}#60caff{% elif item.status == 'pendente_confirmacao' %}#f59e0b{% else %}#ef4444{% endif %};">
+                                <div class="px-4 pt-3 pb-0 d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-light text-dark border" style="font-size:.72rem;">
+                                        Status: {{ item.get_status_display }}
+                                    </span>
+                                    <small class="text-muted">por @{{ item.usuario.username }} — {{ item.criado_em|date:"d/m/Y H:i" }}</small>
+                                </div>
                                 <div class="row g-0">
-                                    <div class="col-md-3 bg-light d-flex align-items-center justify-content-center p-3 border-end" style="min-height: 140px;">
+                                    <div class="col-md-3 bg-light d-flex align-items-center justify-content-center p-3 border-end" style="min-height:120px;">
                                         {% if item.imagem %}
                                         <div class="validation-img-container rounded-3 w-100 h-100">
                                             <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
@@ -131,40 +497,24 @@
                                         {% else %}
                                         <div class="d-flex flex-column align-items-center">
                                             <i class="bi bi-box-seam validation-placeholder-ico"></i>
-                                            <span class="text-muted small mt-1">Sem Imagem</span>
                                         </div>
                                         {% endif %}
                                     </div>
                                     <div class="col-md-9">
                                         <div class="card-body p-4 d-flex flex-column h-100 justify-content-between">
                                             <div>
-                                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                                    <h5 class="fw-bold mb-0 text-dark">{{ item.titulo }}</h5>
-                                                    <span class="badge {% if item.status == 'pendente_confirmacao' %}bg-warning-subtle{% else %}bg-info-subtle{% endif %}">
-                                                        <i class="bi bi-dot me-1"></i>{{ item.get_status_display }}
-                                                    </span>
-                                                </div>
-                                                <p class="text-muted small mb-3">{{ item.descricao|truncatechars:180 }}</p>
+                                                <h5 class="fw-bold mb-1 text-dark">{{ item.titulo }}</h5>
+                                                <p class="text-muted small mb-2">{{ item.descricao|truncatechars:120 }}</p>
                                                 <div class="d-flex flex-wrap gap-3 mb-3 text-muted small">
                                                     <span><i class="bi bi-geo-alt-fill me-1 text-danger"></i>{{ item.local|default:"Não informado" }}</span>
-                                                    <span><i class="bi bi-person-fill me-1 text-primary"></i>Dono: {{ item.usuario.username }}</span>
-                                                    <span><i class="bi bi-calendar-event me-1 text-info"></i>{{ item.data|date:"d/m/Y" }}</span>
+                                                    <span><i class="bi bi-tag me-1 text-primary"></i>{{ item.categoria.nome|default:"Sem categoria" }}</span>
+                                                    {% if item.rfid_uid %}<span><i class="bi bi-broadcast me-1" style="color:#1eaed4;"></i>{{ item.rfid_uid }}</span>{% endif %}
                                                 </div>
                                             </div>
                                             <div class="d-flex gap-2 border-top pt-3">
-                                                {% if item.status == 'pendente_confirmacao' %}
-                                                <form method="POST" class="d-inline">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="action" value="confirmar">
-                                                    <input type="hidden" name="item_id" value="{{ item.id }}">
-                                                    <button type="submit" class="btn btn-success btn-sm px-4">
-                                                        <i class="bi bi-check-circle-fill me-1"></i>Confirmar Entrada
-                                                    </button>
-                                                </form>
-                                                {% endif %}
-                                                
-                                                <button type="button" class="btn btn-outline-primary btn-sm px-4" data-bs-toggle="modal" data-bs-target="#devolverModal{{ item.id }}">
-                                                    <i class="bi bi-arrow-return-left me-1"></i>Registrar Entrega
+                                                <button type="button" class="btn btn-outline-secondary btn-sm px-3"
+                                                        data-bs-toggle="modal" data-bs-target="#editarTodosModal{{ item.id }}">
+                                                    <i class="bi bi-pencil-fill me-1"></i>Editar Item
                                                 </button>
                                             </div>
                                         </div>
@@ -173,34 +523,58 @@
                             </div>
                         </div>
 
-                        <!-- MODAL DE DEVOLUÇÃO -->
-                        <div class="modal fade" id="devolverModal{{ item.id }}" tabindex="-1" aria-labelledby="devolverModalLabel{{ item.id }}" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
+                        <!-- MODAL EDITAR (TODOS OS ITENS) -->
+                        <div class="modal fade" id="editarTodosModal{{ item.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
-                                    <div class="modal-header border-0 bg-primary text-white p-4">
-                                        <h5 class="modal-title fw-bold" id="devolverModalLabel{{ item.id }}"><i class="bi bi-arrow-return-left me-2"></i>Registrar Devolução</h5>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <div class="modal-header border-0 p-4" style="background:linear-gradient(135deg,#1eaed4,#185FA5); color:#fff;">
+                                        <h5 class="modal-title fw-bold"><i class="bi bi-pencil-fill me-2"></i>Editar Item — {{ item.titulo }}</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                     </div>
-                                    <form method="POST">
+                                    <form method="POST" enctype="multipart/form-data">
                                         {% csrf_token %}
-                                        <input type="hidden" name="action" value="devolver">
+                                        <input type="hidden" name="action" value="editar">
                                         <input type="hidden" name="item_id" value="{{ item.id }}">
                                         <div class="modal-body p-4">
-                                            <div class="alert alert-info py-2 mb-3">
-                                                <i class="bi bi-info-circle-fill me-2"></i>Garanta a validação do documento de estudante antes de entregar.
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="nome_recebedor{{ item.id }}" class="form-label fw-bold small">Nome do Recebedor <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control rounded-3" id="nome_recebedor{{ item.id }}" name="nome_recebedor" required placeholder="Nome completo do estudante">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="observacao{{ item.id }}" class="form-label fw-bold small">Observações Adicionais</label>
-                                                <textarea class="form-control rounded-3" id="observacao{{ item.id }}" name="observacao" rows="3" placeholder="Ex: Matrícula validada. Assinou termo de entrega físico."></textarea>
+                                            <div class="row g-3">
+                                                <div class="col-md-8">
+                                                    <label class="form-label fw-semibold small">Título</label>
+                                                    <input type="text" name="novo_titulo" class="form-control rounded-3" value="{{ item.titulo }}" required>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label fw-semibold small">Categoria</label>
+                                                    <select name="nova_categoria" class="form-select rounded-3">
+                                                        <option value="">Manter atual</option>
+                                                        {% for cat in categorias %}
+                                                        <option value="{{ cat.id }}" {% if item.categoria.id == cat.id %}selected{% endif %}>{{ cat.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label fw-semibold small">Descrição</label>
+                                                    <textarea name="nova_descricao" class="form-control rounded-3" rows="3">{{ item.descricao }}</textarea>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-semibold small">Local</label>
+                                                    <input type="text" name="novo_local" class="form-control rounded-3" value="{{ item.local }}" placeholder="Ex: COPAC / Bloco A">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-semibold small">
+                                                        <i class="bi bi-broadcast me-1" style="color:#1eaed4;"></i>Etiqueta RFID
+                                                    </label>
+                                                    <input type="text" name="novo_rfid" class="form-control rounded-3" value="{{ item.rfid_uid|default:'' }}" placeholder="Ex: 04 EA B1 22" style="font-family:monospace; text-transform:uppercase;">
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label fw-semibold small">Substituir Foto (opcional)</label>
+                                                    <input type="file" name="nova_imagem" class="form-control rounded-3" accept="image/*">
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer border-0 p-3 bg-light d-flex justify-content-between">
-                                            <button type="button" class="btn btn-link text-decoration-none text-muted rounded-pill px-3" data-bs-dismiss="modal">Cancelar</button>
-                                            <button type="submit" class="btn btn-primary rounded-pill px-4">Concluir Devolução</button>
+                                            <button type="button" class="btn btn-link text-muted rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
+                                                <i class="bi bi-save2 me-1"></i>Salvar Alterações
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
@@ -210,14 +584,15 @@
                     </div>
                     {% else %}
                     <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
-                        <i class="bi bi-check2-circle text-success fs-1 mb-3"></i>
-                        <h5 class="fw-bold text-dark">Nenhum item pendente!</h5>
-                        <p class="text-muted mb-0">Tudo limpo por aqui. Não há nenhum objeto aguardando confirmação ou entrega no momento.</p>
+                        <i class="bi bi-box text-secondary fs-1 mb-3"></i>
+                        <h5 class="fw-bold text-dark">Nenhum item cadastrado</h5>
+                        <p class="text-muted mb-0">O sistema ainda não possui itens.</p>
                     </div>
                     {% endif %}
                 </div>
 
-                <!-- TAB 2: IMPRIMIR ETIQUETAS (QR CODE) -->
+                <!-- TAB 4: IMPRIMIR ETIQUETAS (QR CODE) -->
+
                 <div class="tab-pane fade" id="v-pills-etiquetas" role="tabpanel" aria-labelledby="v-pills-etiquetas-tab">
                     <div class="page-header">
                         <h2 class="page-title">Imprimir Etiquetas</h2>
@@ -367,6 +742,113 @@
                         {% endif %}
                     </div>
                 </div>
+
+                <!-- TAB 5: CADASTRAR ITEM -->
+                <div class="tab-pane fade" id="v-pills-cadastrar" role="tabpanel" aria-labelledby="v-pills-cadastrar-tab">
+                    <div class="page-header">
+                        <h2 class="page-title">Cadastrar Item</h2>
+                        <p class="page-subtitle">Registre objetos entregues no balcão pelo dono ou encontrados por terceiros.</p>
+                    </div>
+
+                    <div class="dashboard-card p-4">
+                        <form method="POST" action="{% url 'register_item' %}?next={{ request.path }}" enctype="multipart/form-data" id="formCadastrarItemBolsista">
+                            {% csrf_token %}
+
+                            <div class="row g-3">
+                                <!-- Título -->
+                                <div class="col-md-8">
+                                    <label class="form-label">Título do item <span class="text-danger">*</span></label>
+                                    <input type="text" name="titulo" class="form-control rounded-3" placeholder="Ex: Chaveiro azul com chaves" required>
+                                </div>
+
+                                <!-- Status -->
+                                <div class="col-md-4">
+                                    <label class="form-label">Status <span class="text-danger">*</span></label>
+                                    <select name="status" class="form-select rounded-3" required>
+                                        <option value="achado">Achado (entregue no balcão)</option>
+                                        <option value="perdido">Perdido (dono relatou)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Descrição -->
+                                <div class="col-12">
+                                    <label class="form-label">Descrição <span class="text-danger">*</span></label>
+                                    <textarea name="descricao" class="form-control rounded-3" rows="3"
+                                              placeholder="Descreva o item com o máximo de detalhes possível" required></textarea>
+                                </div>
+
+                                <!-- Categoria -->
+                                <div class="col-md-4">
+                                    <label class="form-label">Categoria <span class="text-danger">*</span></label>
+                                    <select name="categoria" class="form-select rounded-3" required>
+                                        <option value="">Selecione...</option>
+                                        {% for cat in categorias %}
+                                        <option value="{{ cat.id }}">{{ cat.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <!-- Data -->
+                                <div class="col-md-4">
+                                    <label class="form-label">Data <span class="text-danger">*</span></label>
+                                    <input type="date" name="data" class="form-control rounded-3" required>
+                                </div>
+
+                                <!-- Local -->
+                                <div class="col-md-4">
+                                    <label class="form-label">Local <span class="text-danger">*</span></label>
+                                    <input type="text" name="local" class="form-control rounded-3"
+                                           placeholder="Ex: COPAC / Bloco A" required>
+                                </div>
+
+                                <!-- Mapa de Localização Exata -->
+                                <div class="col-12 mt-3">
+                                    <label class="form-label fw-bold" style="color:var(--brand-500);"><i class="bi bi-geo-alt-fill me-1"></i>Pino de Localização Exata (Opcional)</label>
+                                    <p class="small text-muted mb-2">Clique no mapa para marcar o local exato onde o item foi perdido/encontrado no campus.</p>
+                                    <div id="itemMap" style="height: 250px; width: 100%; border-radius: 12px; border: 1px solid var(--bd); z-index: 1;"></div>
+                                    <input type="hidden" name="latitude" id="inputLat">
+                                    <input type="hidden" name="longitude" id="inputLng">
+                                </div>
+
+                                <!-- RFID -->
+                                <div class="col-md-6">
+                                    <label class="form-label">
+                                        <i class="bi bi-broadcast me-1" style="color:#1eaed4;"></i>
+                                        Etiqueta RFID
+                                        <span class="text-muted" style="font-size:.78rem; font-weight:400;">(opcional)</span>
+                                    </label>
+                                    <input type="text" name="rfid_uid" class="form-control rounded-3"
+                                           placeholder="Ex: 04 EA B1 22"
+                                           style="font-family:monospace; text-transform:uppercase; letter-spacing:.5px;"
+                                           autocomplete="off">
+                                    <div class="form-text">UID da etiqueta RFID colada no objeto físico.</div>
+                                </div>
+
+                                <!-- Foto -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Foto do item (opcional)</label>
+                                    <input type="file" name="imagem" class="form-control rounded-3" accept="image/*">
+                                    <div class="form-text">JPG, PNG ou WEBP. Tamanho máximo: 5MB.</div>
+                                </div>
+
+                                <!-- Botão -->
+                                <div class="col-12 mt-2">
+                                    <hr class="my-3">
+                                    <div class="d-flex gap-3">
+                                        <button type="submit" class="btn btn-primary px-5 rounded-pill fw-bold">
+                                            <i class="bi bi-plus-circle-fill me-2"></i>Salvar Item
+                                        </button>
+                                        <button type="reset" class="btn btn-outline-secondary rounded-pill">
+                                            <i class="bi bi-arrow-counterclockwise me-2"></i>Limpar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
             </div>
         </div>
     </div>
@@ -374,8 +856,55 @@
 
 <!-- LEITOR DE QR CODE E SCRIPTS -->
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
 // Variáveis para guardar dados do modal ativo de impressão
+let currentQrData = null;
+
+// ======================================
+// LEAFLET MAP - SELEÇÃO DE LOCALIZAÇÃO
+// ======================================
+document.addEventListener('DOMContentLoaded', function() {
+    // Coordenadas centrais aproximadas do IFRN (Campus Central)
+    const ifrnCoords = [-5.8115, -35.2052]; 
+    
+    // Inicia o mapa
+    const map = L.map('itemMap').setView(ifrnCoords, 16);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    let marker = null;
+
+    map.on('click', function(e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+
+        if (marker) {
+            marker.setLatLng(e.latlng);
+        } else {
+            marker = L.marker(e.latlng).addTo(map);
+        }
+
+        document.getElementById('inputLat').value = lat.toFixed(6);
+        document.getElementById('inputLng').value = lng.toFixed(6);
+    });
+
+    // Fix map rendering bug inside Bootstrap Tabs
+    const cadastrarTab = document.getElementById('v-pills-cadastrar-tab');
+    if (cadastrarTab) {
+        cadastrarTab.addEventListener('shown.bs.tab', function (e) {
+            setTimeout(function() {
+                map.invalidateSize();
+            }, 100);
+        });
+    }
+});
+
+// ======================================
+// RESTO DOS SCRIPTS
+// ======================================
 let currentLabelData = {};
 
 function showEtiquetaModal(titulo, slug, categoria, data, qrUrl) {

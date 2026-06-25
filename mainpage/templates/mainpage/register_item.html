@@ -2,6 +2,8 @@
 <link rel="stylesheet" href="{% static 'mainpage/css/modal-item.css' %}?v={% now 'U' %}">
 <!-- Cropper.js CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
 <div class="modal fade" id="modalNovoItem" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -103,7 +105,57 @@
                          placeholder="Onde o item foi perdido ou encontrado"
                          required>
                 </div>
+                </div>
               </div>
+
+              <!-- MAPA EXATO -->
+              <div class="mb-3">
+                <label class="form-label" style="color:var(--brand-500); font-weight:600;">
+                  <i class="bi bi-geo-alt-fill me-1"></i>Pino no Mapa (Opcional)
+                </label>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: -6px; margin-bottom: 8px;">
+                  Clique no mapa para marcar o local exato no IFRN onde perdeu ou achou o item.
+                </div>
+                <div id="userItemMap" style="height: 200px; width: 100%; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); z-index: 1;"></div>
+                <input type="hidden" name="latitude" id="userInputLat">
+                <input type="hidden" name="longitude" id="userInputLng">
+              </div>
+
+              {% if is_bolsista_user or is_admin_user %}
+              <!-- RFID (apenas bolsistas/admins) -->
+              <div class="mb-2">
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                  <label class="form-label mb-0">
+                    <i class="bi bi-broadcast" style="color:#1eaed4; margin-right:5px;"></i>
+                    Etiqueta RFID
+                    <span style="font-size:.68rem; color:#94a3b8; font-weight:400; margin-left:4px;">(opcional)</span>
+                  </label>
+                  <button type="button"
+                          style="background:none; border:none; padding:0; font-size:.72rem; color:#1eaed4; cursor:pointer;"
+                          data-bs-toggle="collapse" data-bs-target="#rfidFieldWrap" aria-expanded="false">
+                    + Vincular etiqueta
+                  </button>
+                </div>
+                <div class="collapse" id="rfidFieldWrap">
+                  <div class="input-group-custom" style="border:1.5px dashed rgba(30,174,212,0.35); border-radius:12px; background:rgba(30,174,212,0.03);">
+                    <span class="input-icon"><i class="bi bi-cpu" style="color:#1eaed4;"></i></span>
+                    <input type="text"
+                           id="rfidUidInput"
+                           name="rfid_uid"
+                           class="form-control"
+                           placeholder="Ex: 04 EA B1 22"
+                           style="text-transform:uppercase; font-family:monospace; letter-spacing:.5px;"
+                           autocomplete="off">
+                  </div>
+                  <div style="font-size:.71rem; color:#94a3b8; margin-top:5px; padding-left:4px;">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Digite o UID impresso na etiqueta ou lido pelo leitor RFID. Deixe em branco se não houver etiqueta física.
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+
+
 
               <!-- IMAGEM -->
               <div class="mb-2">
@@ -257,6 +309,7 @@ function updateChipSelection(radioInput) {
   });
 
   // 2. Sincronização de data
+  // 2. Sincronização de data
   form.querySelector('input[name="data"]').addEventListener('change', function() {
     if (this.value) {
       const parts = this.value.split('-');
@@ -342,9 +395,15 @@ function updateChipSelection(radioInput) {
           viewMode: 1,
           autoCropArea: 0.9,
           responsive: true,
-          ready: function() {
-            updatePreviewImage();
-          },
+          ready: function applyCrop() {
+    if (!cropperInstance) return;
+    updatePreviewImage();
+    const modalEl = document.getElementById('modalNovoItem');
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    if (modalInstance && cropperContainer.classList.contains('d-none') === false) {
+      cropperContainer.classList.add('d-none');
+    }
+  },
           cropend: function() {
             updatePreviewImage();
           }
@@ -439,4 +498,48 @@ function updateChipSelection(radioInput) {
     }, 'image/jpeg', 0.8);
   });
 })();
+</script>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+  // Inicialização do Mapa para o modal de usuário
+  document.addEventListener('DOMContentLoaded', function() {
+      const ifrnCoords = [-5.8115, -35.2052];
+      let mapUser = null;
+      let markerUser = null;
+
+      // O modalNovoItem precisa inicializar/ajustar o mapa quando for aberto
+      const modalElement = document.getElementById('modalNovoItem');
+      if (modalElement) {
+          modalElement.addEventListener('shown.bs.modal', function () {
+              if (!mapUser) {
+                  mapUser = L.map('userItemMap').setView(ifrnCoords, 16);
+
+                  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                      attribution: '&copy; OpenStreetMap contributors'
+                  }).addTo(mapUser);
+
+                  mapUser.on('click', function(e) {
+                      const lat = e.latlng.lat;
+                      const lng = e.latlng.lng;
+
+                      if (markerUser) {
+                          markerUser.setLatLng(e.latlng);
+                      } else {
+                          markerUser = L.marker(e.latlng).addTo(mapUser);
+                      }
+
+                      document.getElementById('userInputLat').value = lat.toFixed(6);
+                      document.getElementById('userInputLng').value = lng.toFixed(6);
+                  });
+              } else {
+                  // Se já existia, só invalida o tamanho para forçar re-renderização
+                  setTimeout(function() {
+                      mapUser.invalidateSize();
+                  }, 100);
+              }
+          });
+      }
+  });
 </script>

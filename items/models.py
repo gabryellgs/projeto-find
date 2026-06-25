@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ArquivoMidia(models.Model):
@@ -48,6 +51,9 @@ class Item(models.Model):
     data = models.DateField()
     imagem = models.ImageField(upload_to='itens/', blank=True, null=True)
     image_hash = models.CharField(max_length=64, blank=True, null=True, db_index=True)
+    rfid_uid = models.CharField(max_length=50, blank=True, null=True, db_index=True, help_text="UID da etiqueta RFID associada ao item")
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='itens')
@@ -84,7 +90,8 @@ class Item(models.Model):
             if self.image_hash != phash:
                 Item.objects.filter(pk=self.pk).update(image_hash=phash)
                 self.image_hash = phash
-        except Exception:
+        except Exception as e:
+            logger.error(f"Erro ao gerar hash da imagem do item {self.id}: {e}")
             try:
                 self.imagem.close()
             except Exception:
@@ -121,7 +128,8 @@ class Item(models.Model):
                     'tamanho': len(conteudo_png),
                 }
             )
-        except Exception:
+        except Exception as e:
+            logger.error(f"Erro ao gerar QR Code para o item {self.slug}: {e}")
             pass
 
     @staticmethod
@@ -192,7 +200,8 @@ class Item(models.Model):
                         
                         resultados.sort(key=lambda x: x[1], reverse=True)
                         return resultados
-            except Exception:
+            except Exception as e:
+                logger.error(f"Erro ao consultar Gemini API para busca visual: {e}")
                 pass # Se falhar a API por qualquer motivo, cai no fallback local
 
         # Fallback Local: Algoritmo Híbrido pHash + Histograma de Cores HSV
@@ -209,7 +218,8 @@ class Item(models.Model):
             sum_query = hist_query.sum()
             if sum_query > 0:
                 hist_query /= sum_query
-        except Exception:
+        except Exception as e:
+            logger.error(f"Erro ao carregar imagem original para fallback de busca: {e}")
             return []
 
         itens_com_hash = Item.objects.exclude(
@@ -239,7 +249,8 @@ class Item(models.Model):
                             
                         # Intersecção de histograma normalizado (0 a 100%)
                         sim_cor = float(np.minimum(hist_query, hist_item).sum()) * 100
-                    except Exception:
+                    except Exception as e:
+                        logger.error(f"Erro na conversão HSV do item fallback {item.id}: {e}")
                         sim_cor = 50.0  # fallback neutro caso dê erro ao ler imagem
                 else:
                     sim_cor = 50.0
@@ -249,7 +260,8 @@ class Item(models.Model):
                 
                 if similaridade_final >= 30:
                     resultados.append((item, round(similaridade_final, 1)))
-            except Exception:
+            except Exception as e:
+                logger.error(f"Erro geral ao processar item {item.id} na busca fallback: {e}")
                 try:
                     item.imagem.close()
                 except Exception:
@@ -283,3 +295,20 @@ class AcaoLog(models.Model):
 
     def __str__(self):
         return f"{self.bolsista} → {self.acao} em {self.item} ({self.timestamp})"
+
+
+class Notificacao(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notificacoes')
+    titulo = models.CharField(max_length=100)
+    mensagem = models.TextField()
+    lida = models.BooleanField(default=False)
+    link = models.CharField(max_length=255, blank=True, null=True, help_text="URL para onde a notificação deve redirecionar")
+    icone = models.CharField(max_length=50, default="bi-bell-fill", help_text="Classe de ícone do Bootstrap Icons")
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'find_notificacao'
+        ordering = ['-criado_em']
+
+    def __str__(self):
+        return f"{self.titulo} - {self.usuario.username}"

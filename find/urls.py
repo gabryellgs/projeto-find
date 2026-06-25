@@ -8,6 +8,7 @@ urlpatterns = [
     path('api/', include('accounts.api.urls')),
     path('api/', include('items.api.urls')),
     path('api/', include('chats.api.urls')),
+    path('api/iot/', include('iot.api.urls')),
 
     # Site web
     path('', include('mainpage.urls')),

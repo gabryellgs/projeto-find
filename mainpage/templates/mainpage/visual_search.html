@@ -132,16 +132,107 @@
 
   /* AI Badge */
   .ai-sparkle-badge {
-    background: rgba(124, 58, 237, 0.1);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(30, 174, 212, 0.15) 100%);
     color: #7c3aed;
     border-radius: 99px;
-    padding: 4px 12px;
-    font-size: 0.8rem;
+    padding: 6px 16px;
+    font-size: 0.85rem;
     font-weight: 800;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    margin-bottom: 12px;
+    gap: 6px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.1);
+  }
+
+  /* Smart Match Premium Card */
+  .smart-match-wrapper {
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(248, 252, 255, 0.6) 100%);
+    border-radius: 28px;
+    border: 1px solid rgba(30, 174, 212, 0.15);
+    box-shadow: 0 12px 40px rgba(11, 58, 74, 0.04), inset 0 2px 0 rgba(255,255,255,1);
+    padding: 32px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .smart-match-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(144, 219, 244, 0.4) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .smart-match-header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed rgba(11, 58, 74, 0.1);
+  }
+
+  .smart-match-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #1eaed4 0%, #0B3A4A 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 20px rgba(30, 174, 212, 0.3);
+  }
+
+  .smart-match-group {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(11, 58, 74, 0.02);
+  }
+
+  .smart-match-reason {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--find-dark);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .smart-match-reason span {
+    color: #1eaed4;
+    background: rgba(30, 174, 212, 0.1);
+    padding: 4px 12px;
+    border-radius: 8px;
+  }
+
+  .match-score-high {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  }
+  
+  .match-score-medium {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
   }
 
   /* Results styles */
@@ -421,11 +512,74 @@
     <!-- HEADER -->
     <div class="visual-header">
       <div class="ai-sparkle-badge">
-        <i class="bi bi-sparkles"></i> Inteligência Artificial
+        <i class="bi bi-cpu"></i> Powered by AI
       </div>
-      <h2 class="visual-title">Busca Visual IA</h2>
-      <p class="visual-subtitle">Tire uma foto ou envie uma imagem para encontrar objetos semelhantes cadastrados na plataforma</p>
+      <h2 class="visual-title">Match</h2>
+      <p class="visual-subtitle">Encontre o seu objeto perdido de forma rápida e inteligente.</p>
     </div>
+
+    <!-- MATCHES AUTOMÁTICOS (Baseados nos itens perdidos do usuário) -->
+    {% if matches_automaticos %}
+      <div class="smart-match-wrapper">
+        <div class="smart-match-header">
+          <div class="smart-match-icon">
+            <i class="bi bi-radar"></i>
+          </div>
+          <div>
+            <h3 class="fw-bold text-dark mb-1" style="font-size: 1.6rem; letter-spacing: -0.5px;">Seus Matches</h3>
+            <span class="text-muted" style="font-size: 0.95rem;">Análise em tempo real do nosso acervo com o seu perfil.</span>
+          </div>
+        </div>
+        
+        {% for match_group in matches_automaticos %}
+          <div class="smart-match-group">
+            <div class="smart-match-reason">
+              <i class="bi bi-search text-primary"></i> Busca pelo item: <span>"{{ match_group.perdido.titulo }}"</span>
+            </div>
+            
+            <div class="results-list">
+              {% for match in match_group.sugestoes %}
+                <a href="{% url 'item_detail' match.item.slug %}" class="visual-result-card" style="box-shadow: none; border: 1px solid rgba(11, 58, 74, 0.08); padding: 12px; background: white;">
+                  <div class="result-img-container" style="width: 85px; height: 85px; border-radius: 14px;">
+                    {% if match.item.imagem %}
+                      <img src="{{ match.item.imagem.url }}" alt="{{ match.item.titulo }}">
+                    {% else %}
+                      <img src="{% static 'mainpage/img/item-default.png' %}" alt="Padrão">
+                    {% endif %}
+                  </div>
+      
+                  <div class="result-body justify-content-center">
+                    <div class="result-top mb-1">
+                      <div>
+                        <h5 class="result-item-title mb-0" style="font-size: 1.1rem;">{{ match.item.titulo }}</h5>
+                      </div>
+                      <div class="similarity-badge {% if match.score >= 70 %}match-score-high{% else %}match-score-medium{% endif %}" title="Probabilidade de ser o seu item">
+                        <i class="bi bi-bullseye"></i> {{ match.score }}% Match
+                      </div>
+                    </div>
+                    <div class="result-meta" style="flex-direction: row; gap: 16px;">
+                      <small><i class="bi bi-geo-alt"></i> {{ match.item.local|default:"Campus" }}</small>
+                      <small><i class="bi bi-tag"></i> {{ match.item.categoria.nome|default:"Objeto" }}</small>
+                    </div>
+                  </div>
+                </a>
+              {% empty %}
+                <div class="text-center text-muted small py-4 opacity-75">
+                  <i class="bi bi-hourglass-split fs-3 mb-2 d-block text-primary"></i>
+                  Nenhuma correspondência exata encontrada ainda. Fique de olho, notificaremos você!
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      
+      <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
+        <hr class="w-25 border-secondary opacity-25">
+        <span class="text-muted fw-bold small" style="letter-spacing: 1px;">OU BUSQUE COM UMA FOTO</span>
+        <hr class="w-25 border-secondary opacity-25">
+      </div>
+    {% endif %}
 
     <!-- FORMULARIO DE UPLOAD -->
     <form method="POST" enctype="multipart/form-data" id="visualSearchForm">

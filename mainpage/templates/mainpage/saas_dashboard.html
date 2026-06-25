@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Painel SaaS Master - FIND{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    --saas-bg: #f8fafc;
+    --saas-dark: #0f172a;
+    --saas-primary: #3b82f6;
+    --saas-success: #10b981;
+    --saas-warning: #f59e0b;
+    --saas-card: #ffffff;
+    --saas-border: #e2e8f0;
+  }
+
+  body {
+    background-color: var(--saas-bg);
+  }
+
+  .saas-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: white;
+    padding: 60px 0 80px 0;
+    margin-bottom: -40px;
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+  }
+
+  .saas-stat-card {
+    background: var(--saas-card);
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid var(--saas-border);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.2s;
+  }
+  
+  .saas-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.06);
+  }
+
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: white;
+  }
+
+  .bg-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+  .bg-green { background: linear-gradient(135deg, #10b981, #059669); }
+  .bg-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+  .company-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid var(--saas-border);
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .company-logo-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #64748b;
+    font-size: 1.2rem;
+  }
+
+  .badge-active {
+    background: #dcfce7;
+    color: #166534;
+    padding: 6px 12px;
+    border-radius: 99px;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  .badge-inactive {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 6px 12px;
+    border-radius: 99px;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="saas-header">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <span class="badge bg-primary bg-opacity-25 text-white mb-2 py-2 px-3 rounded-pill" style="font-size: 0.85rem;">
+          <i class="bi bi-shield-lock-fill me-1"></i> Modo Super Admin
+        </span>
+        <h1 class="fw-bold mb-1">Painel Master FIND SaaS</h1>
+        <p class="text-white-50 fs-5 mb-0">Controle e faturamento de todas as empresas clientes.</p>
+      </div>
+      <div>
+        <button class="btn btn-light btn-lg rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#novaEmpresaModal">
+          <i class="bi bi-plus-lg me-1"></i> Nova Empresa
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="position: relative; z-index: 10;">
+  <!-- Estatísticas Gerais -->
+  <div class="row g-4 mb-5">
+    <div class="col-md-4">
+      <div class="saas-stat-card">
+        <div class="stat-icon bg-blue"><i class="bi bi-buildings"></i></div>
+        <div>
+          <h3 class="fw-bold mb-0 text-dark">{{ empresas.count|default:"0" }}</h3>
+          <span class="text-muted fw-medium">Empresas Ativas</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="saas-stat-card">
+        <div class="stat-icon bg-green"><i class="bi bi-people"></i></div>
+        <div>
+          <h3 class="fw-bold mb-0 text-dark">{{ total_usuarios|default:"0" }}</h3>
+          <span class="text-muted fw-medium">Usuários Globais</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="saas-stat-card">
+        <div class="stat-icon bg-purple"><i class="bi bi-box-seam"></i></div>
+        <div>
+          <h3 class="fw-bold mb-0 text-dark">{{ total_itens|default:"0" }}</h3>
+          <span class="text-muted fw-medium">Itens Processados</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de Empresas -->
+  <div class="card border-0 shadow-sm rounded-4 mb-5">
+    <div class="card-header bg-white border-bottom pt-4 pb-3 px-4 d-flex justify-content-between align-items-center rounded-top-4">
+      <h4 class="fw-bold mb-0 text-dark">Suas Empresas (Inquilinos)</h4>
+      <div class="input-group" style="width: 250px;">
+        <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+        <input type="text" class="form-control bg-light border-start-0 ps-0" placeholder="Buscar empresa...">
+      </div>
+    </div>
+    <div class="card-body p-4">
+      
+      {% for emp in empresas %}
+      <div class="company-card">
+        <div class="d-flex align-items-center gap-3">
+          {% if emp.logo %}
+            <img src="{{ emp.logo.url }}" alt="{{ emp.nome }}" style="width: 50px; height: 50px; border-radius: 12px; object-fit: cover;">
+          {% else %}
+            <div class="company-logo-placeholder">{{ emp.nome|first|upper }}</div>
+          {% endif %}
+          <div>
+            <h5 class="fw-bold mb-1 text-dark">{{ emp.nome }}</h5>
+            <div class="d-flex align-items-center gap-2">
+              <span class="text-muted small"><i class="bi bi-link-45deg"></i> find.app/{{ emp.slug }}</span>
+              <span class="text-muted small mx-1">•</span>
+              <span class="text-muted small"><i class="bi bi-people"></i> {{ emp.usuarios.count }} usuários</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="d-flex align-items-center gap-4">
+          {% if emp.ativa %}
+            <span class="badge-active"><i class="bi bi-check-circle me-1"></i> Ativo</span>
+          {% else %}
+            <span class="badge-inactive"><i class="bi bi-x-circle me-1"></i> Bloqueado</span>
+          {% endif %}
+          
+          <button class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold">Gerenciar</button>
+        </div>
+      </div>
+      {% empty %}
+      <div class="text-center py-5">
+        <div class="display-1 text-muted opacity-25 mb-3"><i class="bi bi-buildings"></i></div>
+        <h4 class="text-dark fw-bold">Nenhuma empresa cadastrada</h4>
+        <p class="text-muted">Você ainda não adicionou nenhum cliente SaaS.</p>
+        <button class="btn btn-primary rounded-pill mt-2" data-bs-toggle="modal" data-bs-target="#novaEmpresaModal">
+          Adicionar Primeiro Cliente
+        </button>
+      </div>
+      {% endfor %}
+      
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nova Empresa -->
+<div class="modal fade" id="novaEmpresaModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow">
+      <div class="modal-header border-bottom-0 pb-0 pt-4 px-4">
+        <h5 class="modal-title fw-bold">Cadastrar Novo Cliente</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="POST" action="{% url 'saas_dashboard' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-body p-4">
+          <div class="mb-3">
+            <label class="form-label fw-bold text-muted small">Nome da Instituição/Empresa</label>
+            <input type="text" name="nome" class="form-control form-control-lg bg-light border-0" placeholder="Ex: Shopping Midway Mall" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold text-muted small">Subdomínio (Link)</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-0 text-muted">find.app/</span>
+              <input type="text" name="slug" class="form-control form-control-lg bg-light border-0" placeholder="midway" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold text-muted small">Cor Principal do Painel</label>
+            <input type="color" name="cor_primaria" class="form-control form-control-color w-100" value="#1eaed4" title="Escolha a cor da marca do cliente">
+          </div>
+        </div>
+        <div class="modal-footer border-top-0 pt-0 pb-4 px-4">
+          <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Criar Empresa</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

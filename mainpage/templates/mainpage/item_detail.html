@@ -6,6 +6,7 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'mainpage/css/item_detail.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
 <div class="container my-5">
   <div class="row g-4 align-items-start">
@@ -86,8 +87,28 @@
             </div>
           </div>
 
+          {% if item.rfid_uid %}
+          <div class="info-box" style="border:1.5px solid rgba(30,174,212,0.2); background:rgba(30,174,212,0.04);">
+            <div class="info-icon" style="background:rgba(30,174,212,0.12); color:#1eaed4;">
+              <i class="bi bi-broadcast"></i>
+            </div>
+            <div class="info-text">
+              <span class="info-label">Etiqueta RFID</span>
+              <span class="info-value" style="font-family:monospace; font-size:.82rem; color:#1eaed4; letter-spacing:.5px;">{{ item.rfid_uid }}</span>
+            </div>
+          </div>
+          {% endif %}
+
         </div>
         <!-- /Info Grid -->
+
+        {% if item.latitude and item.longitude %}
+        <!-- Mapa de Localização Exata -->
+        <div class="mt-4 pt-3 border-top">
+          <h6 class="fw-bold mb-3" style="color:var(--brand-500);"><i class="bi bi-geo-alt-fill me-1"></i>Localização Exata no Campus</h6>
+          <div id="viewMap" style="height: 250px; width: 100%; border-radius: 12px; border: 1px solid var(--bd); z-index: 1;"></div>
+        </div>
+        {% endif %}
 
       </div>
     </div>
@@ -240,13 +261,33 @@
   </div>
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-  // Auto-submit ao clicar em qualquer opção do segmented control
-  document.querySelectorAll('.status-option label').forEach(label => {
-    label.addEventListener('click', function () {
-      const form = this.closest('.status-form');
-      if (form) form.submit();
+  // Script original do switcher de status
+  document.querySelectorAll('input[name="status_switch"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      this.closest('form').submit();
     });
   });
+
+  // Inicialização do Mapa (se existirem coordenadas)
+  {% if item.latitude and item.longitude %}
+  document.addEventListener('DOMContentLoaded', function() {
+      const lat = parseFloat("{{ item.latitude }}".replace(',', '.'));
+      const lng = parseFloat("{{ item.longitude }}".replace(',', '.'));
+      
+      if (!isNaN(lat) && !isNaN(lng)) {
+          const map = L.map('viewMap').setView([lat, lng], 17);
+
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '&copy; OpenStreetMap contributors'
+          }).addTo(map);
+
+          L.marker([lat, lng]).addTo(map)
+              .bindPopup('<b>{{ item.titulo|escapejs }}</b><br>Local: {{ item.local|escapejs }}')
+              .openPopup();
+      }
+  });
+  {% endif %}
 </script>
 {% endblock %}

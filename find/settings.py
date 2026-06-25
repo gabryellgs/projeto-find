@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'items.apps.ItemsConfig',
     'chats.apps.ChatsConfig',
+    'iot.apps.IotConfig',
     # app principal
     'mainpage.apps.MainpageConfig',
     # allauth (login social)
@@ -210,3 +211,5 @@ SOCIALACCOUNT_PROVIDERS = {
 # ─── Gemini API (Busca Visual Inteligente) ──────────────────────
 GEMINI_API_KEY = config('GEMINI_API_KEY', default='')
 
+# ─── Autenticação de Hardware (ESP32/RFID) ──────────────────────
+HARDWARE_API_TOKEN = config('HARDWARE_API_TOKEN', default='esp32-secret-token-find-ifrn')

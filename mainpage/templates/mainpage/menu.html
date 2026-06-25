@@ -72,9 +72,9 @@
       <div class="col">
         <a href="{% url 'items_encontrados' %}" class="status-link">
           <div class="card status-card">
-            <i class="bi bi-check-circle icon-encontrados"></i>
+            <i class="bi bi-box-seam icon-encontrados"></i>
             <h3>{{ encontrados }}</h3>
-            <p>ENCONTRADOS</p>
+            <p>NA COPAC</p>
           </div>
         </a>
       </div>
@@ -168,9 +168,9 @@
       <!-- SEGUNDA LINHA -->
       <div class="d-flex justify-content-between gap-2">
         <a href="{% url 'items_encontrados' %}" class="flex-grow-1 text-center text-decoration-none" style="background: #DDF2FC; border-radius: 14px; padding: 12px 10px; border: 1px solid rgba(30, 174, 212, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          <i class="bi bi-check-circle" style="font-size: 20px; color: #10B981;"></i>
+          <i class="bi bi-box-seam" style="font-size: 20px; color: #10B981;"></i>
           <div style="font-size: 19px; font-weight: 800; color: #0B3A4A; line-height: 1; letter-spacing: -0.5px; margin-top: 4px; margin-bottom: 2px;">{{ encontrados }}</div>
-          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; letter-spacing: 0.6px; text-transform: uppercase;">Encontrados</div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; letter-spacing: 0.6px; text-transform: uppercase;">Na COPAC</div>
         </a>
         <a href="{% url 'items_devolvidos' %}" class="flex-grow-1 text-center text-decoration-none" style="background: #DDF2FC; border-radius: 14px; padding: 12px 10px; border: 1px solid rgba(30, 174, 212, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center;">
           <i class="bi bi-arrow-repeat" style="font-size: 20px; color: #185FA5;"></i>
@@ -223,8 +223,8 @@
             </label>
             <label class="option-chip {% if status == 'achado' %}selected{% endif %}">
               <input type="radio" name="status" value="achado" {% if status == 'achado' %}checked{% endif %} class="d-none" onchange="updateChipSelection(this)">
-              <i class="bi bi-check-circle chip-icon"></i>
-              <span>Encontrado</span>
+              <i class="bi bi-box-seam chip-icon"></i>
+              <span>Na COPAC</span>
             </label>
             <label class="option-chip {% if status == 'devolvido' %}selected{% endif %}">
               <input type="radio" name="status" value="devolvido" {% if status == 'devolvido' %}checked{% endif %} class="d-none" onchange="updateChipSelection(this)">
@@ -328,9 +328,9 @@
                   <div class="menu-item-actions">
                     <span class="btn-ver-item">VER ITEM</span>
 
-                    {% if item.status == "achado" %}
-                      <span class="status-square status-green" title="Achado">
-                        <i class="bi bi-check-circle-fill"></i>
+                    {% if item.status == "achado" or item.status == "confirmado" %}
+                      <span class="status-square status-green" title="Na COPAC">
+                        <i class="bi bi-box-seam"></i>
                       </span>
                     {% elif item.status == "devolvido" %}
                       <span class="status-square" style="background:#60caff;color: #fff;" title="Devolvido">
@@ -455,9 +455,9 @@
                   <div class="menu-item-actions">
                     <span class="btn-ver-item">VER ITEM</span>
 
-                    {% if item.status == "achado" %}
-                      <span class="status-square status-green" title="Achado">
-                        <i class="bi bi-check-circle-fill"></i>
+                    {% if item.status == "achado" or item.status == "confirmado" %}
+                      <span class="status-square status-green" title="Na COPAC">
+                        <i class="bi bi-box-seam"></i>
                       </span>
                     {% elif item.status == "devolvido" %}
                       <span class="status-square" style="background:#60caff;color: #fff;" title="Devolvido">
@@ -546,12 +546,12 @@
   </div>
 </section>
 
-<!-- Objetos Encontrados (Mobile Only) -->
+<!-- Objetos na COPAC (Mobile Only) -->
 <section class="section-pad d-block d-md-none" style="margin-top: 10px;">
   <div class="container">
     <div class="d-flex align-items-center justify-content-between mb-2 px-md-0 px-3">
       <div class="d-block d-md-none">
-        <h2 class="home-section-title mb-0" style="font-size: 16px; font-weight: 700; color: #1F7A51; letter-spacing: -0.4px;">Objetos Encontrados</h2>
+        <h2 class="home-section-title mb-0" style="font-size: 16px; font-weight: 700; color: #1F7A51; letter-spacing: -0.4px;">Itens na COPAC</h2>
         <div style="font-size: 12px; color: #64748B;">Aguardando o dono legítimo</div>
       </div>
       <a class="btn btn-sm text-decoration-none d-block d-md-none" style="color: #0B3A4A; font-weight: 600; font-size: 13px; padding: 0;" href="{% url 'items_encontrados' %}">
@@ -587,8 +587,8 @@
                     </div>
                     <div class="menu-item-actions">
                       <span class="btn-ver-item">VER ITEM</span>
-                      <span class="status-square status-green" title="Achado">
-                        <i class="bi bi-check-circle-fill"></i>
+                      <span class="status-square status-green" title="Na COPAC">
+                        <i class="bi bi-box-seam"></i>
                       </span>
                     </div>
                   </div>
