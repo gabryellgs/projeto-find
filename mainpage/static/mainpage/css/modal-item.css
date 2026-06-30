@@ -524,23 +524,24 @@
 /* ===== PREVIEW CARD (MESMO ESTILO DO MENU) ===== */
 .preview-card-wrapper .menu-item-card {
   background: #DDF2FC;
-  border: 1px solid rgba(11, 58, 74, 0.09);
+  border: 1px solid rgba(11, 58, 74, 0.08);
   border-radius: 16px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(11,58,74,0.06);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 6px 16px rgba(11, 58, 74, 0.04);
 }
 
 .preview-card-wrapper .menu-item-img {
   position: relative;
-  width: 100%;
-  padding-top: 58%;
-  background: #ffffff;
+  width: auto;
+  margin: 12px 12px 0 12px;
+  padding-top: 56%;
+  background: #D1E4EC;
+  border-radius: 12px;
   overflow: hidden;
   flex-shrink: 0;
-  border-bottom: 1px solid rgba(11, 58, 74, 0.09);
 }
 
 .preview-card-wrapper .menu-item-img img {
@@ -597,10 +598,10 @@
 }
 
 .preview-card-wrapper .btn-ver-item {
-  background: linear-gradient(135deg, #1eaed4, #0B3A4A);
-  color: white !important;
+  background: #90dbf4 !important;
+  color: #0B3A4A !important;
   font-size: 0.75rem;
-  font-weight: 800;
+  font-weight: 800 !important;
   padding: 8px 0;
   border-radius: 8px;
   text-align: center;

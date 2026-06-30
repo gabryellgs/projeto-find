@@ -33,6 +33,15 @@
   overflow: hidden; /* garante que a imagem respeite o radius */
 }
 
+.item-detail-card:hover {
+  transform: none !important;
+}
+
+/* Evita que QUALQUER card na página de detalhes pule no hover (herança) */
+.card:hover {
+  transform: none !important;
+}
+
 /* ══════════════════════════════════════════════════════════
    2. IMAGEM — efeito hero
    ══════════════════════════════════════════════════════════ */
@@ -170,7 +179,6 @@
 .info-box:hover {
   background: #ffffff;
   box-shadow: 0 4px 18px rgba(11, 58, 74, 0.08);
-  transform: translateY(-2px);
 }
 
 .info-icon {
@@ -225,8 +233,10 @@
   border-radius: var(--radius-card);
   border: 1px solid var(--brand-glass-border);
   box-shadow: var(--shadow-card);
-  position: sticky;
-  top: 24px; /* cola no topo ao rolar */
+}
+
+.contact-detail-card:hover {
+  transform: none !important;
 }
 
 .contact-title {
@@ -432,8 +442,9 @@
   border-radius: var(--radius-card);
   border: 1px solid var(--brand-glass-border);
   box-shadow: var(--shadow-card);
-  position: sticky;
-
+}
+.status-card:hover {
+  transform: none !important;
 }
 
 .status-card-title {
@@ -552,4 +563,134 @@
   .item-title {
     font-size: 1.3rem;
   }
+}
+
+/* ══════════════════════════════════════════════════════════
+   11. CHAT DRAWER (MODAL DESLIZANTE)
+   ══════════════════════════════════════════════════════════ */
+.chat-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 42, 53, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1040;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+.chat-drawer-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.chat-drawer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  width: 100%;
+  max-width: 500px;
+  height: 85vh;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -10px 40px rgba(0, 42, 53, 0.15);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  border-bottom: none;
+}
+.chat-drawer.open {
+  transform: translate(-50%, 0);
+}
+
+.chat-drawer-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0, 42, 53, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 24px 24px 0 0;
+}
+
+.chat-drawer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0B3A4A 0%, #1eaed4 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.chat-drawer-close {
+  background: rgba(0, 42, 53, 0.05);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0B3A4A;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chat-drawer-close:hover {
+  background: rgba(0, 42, 53, 0.1);
+}
+
+.chat-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(171, 232, 255, 0.15);
+}
+
+.chat-drawer-bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  position: relative;
+}
+
+.chat-drawer-bubble.other {
+  align-self: flex-start;
+  background: white;
+  color: var(--brand-dark);
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 42, 53, 0.05);
+}
+
+.chat-drawer-bubble.me {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #0B3A4A 0%, #185FA5 100%);
+  color: white;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 4px 12px rgba(11, 58, 74, 0.2);
+}
+
+.chat-meta {
+  font-size: 0.65rem;
+  opacity: 0.7;
+  margin-top: 4px;
+  text-align: right;
+}
+
+.chat-drawer-footer {
+  padding: 14px 20px;
+  border-top: 1px solid rgba(0, 42, 53, 0.08);
+  background: rgba(255, 255, 255, 0.8);
 }

@@ -1,0 +1,80 @@
+# ─────────────────────────────────────────────────────────────
+#  Find – Docker Compose (Desenvolvimento Local)
+#  Serviços: web (Django) + db (MySQL) + redis
+# ─────────────────────────────────────────────────────────────
+
+services:
+
+  # ── Banco de dados MySQL ────────────────────────────────────
+  db:
+    image: mysql:8.4
+    container_name: find_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: find_db
+      MYSQL_USER: find_user
+      MYSQL_PASSWORD: find_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3307:3306"        # 3307 no host p/ não conflitar com MySQL local
+    volumes:
+      - find_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis (Django Channels) ─────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: find_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - find_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ── Aplicação Django ────────────────────────────────────────
+  web:
+    build: .
+    container_name: find_web
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Sobrescreve as variáveis de DB para apontar ao container
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: find_db
+      DB_USER: find_user
+      DB_PASSWORD: find_password
+      REDIS_URL: redis://redis:6379/1
+      # Força uso do MySQL mesmo fora do Render
+      RENDER: "true"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app               # hot-reload: monta o código local
+      - find_media:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: >
+      sh -c "
+        python manage.py migrate &&
+        python manage.py criar_categorias &&
+        gunicorn find.wsgi:application --bind 0.0.0.0:8000 --workers 2 --reload
+      "
+
+volumes:
+  find_db_data:
+  find_redis_data:
+  find_media:

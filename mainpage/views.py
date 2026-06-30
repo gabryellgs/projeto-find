@@ -707,6 +707,9 @@ def chat_start(request, item_id):
         chat.status = "ativo"
         chat.save(update_fields=["status"])
 
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({"chat_id": chat.id})
+
     return redirect("chat_detail", chat_id=chat.id)
 
 
@@ -803,8 +806,24 @@ def chat_send_message(request, chat_id):
     chat.atualizado_em = timezone.now()
     chat.save(update_fields=["atualizado_em"])
 
+    # Notifica o WebSocket
+    from channels.layers import get_channel_layer
+    from asgiref.sync import async_to_sync
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"chat_{chat.id}",
+        {
+            "type": "chat_message",
+            "id": m.id,
+            "message": m.conteudo,
+            "remetente": m.remetente.username,
+            "remetente_id": m.remetente.id,
+            "data_envio": m.data_envio.strftime("%d/%m/%Y %H:%M"),
+        }
+    )
+
     # Notifica a outra parte
-    destinatario = chat.interessado if request.user == chat.item.usuario else chat.item.usuario
+    destinatario = chat.criado_por if request.user == chat.dono_item else chat.dono_item
     try:
         from items.models import Notificacao
         from django.urls import reverse
@@ -1381,3 +1400,12 @@ def iot_logs(request):
         "leituras": leituras,
         "total": logs_qs.count(),
     })
+
+# -----------------------------
+# Páginas Legais e Institucionais
+# -----------------------------
+def privacy(request):
+    return render(request, "mainpage/privacy.html")
+
+def terms(request):
+    return render(request, "mainpage/terms.html")

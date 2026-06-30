@@ -15,6 +15,8 @@ urlpatterns = [
     path('menu/', views.menu_view, name='menu'),
     path('menu/suggestions/', views.menu_search_suggestions, name='menu_search_suggestions'),
     path('tela/', views.screen_user, name='screen_user'),
+    path('privacidade/', views.privacy, name='privacy'),
+    path('termos/', views.terms, name='terms'),
 
     # RESET DE SENHA
     path(

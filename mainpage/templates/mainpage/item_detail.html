@@ -4,7 +4,7 @@
 {% block title %}{{ item.titulo }} - FIND{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'mainpage/css/item_detail.css' %}">
+<link rel="stylesheet" href="{% static 'mainpage/css/item_detail.css' %}?v=2.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
@@ -114,8 +114,9 @@
     </div>
     <!-- /CARD ITEM -->
 
-    <!-- ── CARD CONTATO ───────────────────────────────────── -->
+    <!-- ── CARD CONTATO E STATUS ───────────────────────────────────── -->
     <div class="col-lg-4">
+      <div style="position: sticky; top: 24px; z-index: 10;">
       <div class="card contact-detail-card p-4">
 
         <h6 class="contact-title">Contato</h6>
@@ -143,12 +144,13 @@
 
         {% if user.is_authenticated and user.id != item.usuario_id %}
           {% if item.status != "devolvido" %}
-            <a
-              href="{% url 'chat_list' item.id %}?next={{ request.get_full_path|urlencode }}"
+            <button
+              id="btnOpenChat"
+              data-item-id="{{ item.id }}"
               class="btn-chat mt-3"
             >
               <i class="bi bi-chat-dots-fill me-2"></i> Iniciar conversa
-            </a>
+            </button>
           {% else %}
             <button class="btn-chat mt-3" disabled>
               <i class="bi bi-check2-circle me-2"></i> Item já devolvido
@@ -255,39 +257,170 @@
       </div><!-- /status-card -->
       <!-- /CARD STATUS -->
 
+      </div><!-- /sticky sidebar -->
     </div>
-    <!-- /CARD CONTATO -->
+    <!-- /CARD CONTATO E STATUS -->
 
+  </div>
+</div>
+
+<!-- ── CHAT DRAWER (MODAL DESLIZANTE) ──────────────────────────────── -->
+<div class="chat-drawer-overlay" id="chatDrawerOverlay"></div>
+<div class="chat-drawer" id="chatDrawer">
+  <div class="chat-drawer-header">
+    <div class="d-flex align-items-center gap-2">
+      <div class="chat-drawer-avatar">
+        <i class="bi bi-person-fill"></i>
+      </div>
+      <div>
+        <h6 class="mb-0 fw-bold" style="color:var(--brand-dark);">
+          {{ item.usuario.get_full_name|default:item.usuario.username }}
+        </h6>
+        <small class="text-muted" id="chatStatusText">Conectando...</small>
+      </div>
+    </div>
+    <button class="chat-drawer-close" id="btnCloseChat">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+  
+  <div class="chat-drawer-body" id="chatMessagesBox">
+    <!-- Mensagens injetadas via JS -->
+  </div>
+  
+  <div class="chat-drawer-footer">
+    <form id="chatForm" class="d-flex w-100 gap-2">
+      <input type="text" id="chatInput" class="form-control rounded-pill" placeholder="Digite uma mensagem..." autocomplete="off">
+      <button type="submit" class="btn btn-chat rounded-circle" id="chatSendBtn" style="width:42px; height:42px; padding:0; flex-shrink:0;">
+        <i class="bi bi-send-fill" style="margin:0;"></i>
+      </button>
+    </form>
   </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-  // Script original do switcher de status
-  document.querySelectorAll('input[name="status_switch"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-      this.closest('form').submit();
-    });
-  });
+  // ── LOGICA DO CHAT SLIDE UP ────────────────────────────────────
+  const btnOpenChat = document.getElementById("btnOpenChat");
+  const chatDrawer = document.getElementById("chatDrawer");
+  const chatOverlay = document.getElementById("chatDrawerOverlay");
+  const btnCloseChat = document.getElementById("btnCloseChat");
+  const chatMessagesBox = document.getElementById("chatMessagesBox");
+  const chatForm = document.getElementById("chatForm");
+  const chatInput = document.getElementById("chatInput");
+  const chatStatusText = document.getElementById("chatStatusText");
+  const chatSendBtn = document.getElementById("chatSendBtn");
 
-  // Inicialização do Mapa (se existirem coordenadas)
-  {% if item.latitude and item.longitude %}
-  document.addEventListener('DOMContentLoaded', function() {
-      const lat = parseFloat("{{ item.latitude }}".replace(',', '.'));
-      const lng = parseFloat("{{ item.longitude }}".replace(',', '.'));
-      
-      if (!isNaN(lat) && !isNaN(lng)) {
-          const map = L.map('viewMap').setView([lat, lng], 17);
+  let chatSocket = null;
+  let currentChatId = null;
 
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-              attribution: '&copy; OpenStreetMap contributors'
-          }).addTo(map);
+  function closeChat() {
+    chatDrawer.classList.remove("open");
+    chatOverlay.classList.remove("open");
+    if (chatSocket) {
+      chatSocket.close();
+      chatSocket = null;
+    }
+  }
 
-          L.marker([lat, lng]).addTo(map)
-              .bindPopup('<b>{{ item.titulo|escapejs }}</b><br>Local: {{ item.local|escapejs }}')
-              .openPopup();
+  if (btnOpenChat) {
+    btnOpenChat.addEventListener("click", async () => {
+      // Abre a UI
+      chatDrawer.classList.add("open");
+      chatOverlay.classList.add("open");
+      chatMessagesBox.innerHTML = '<div class="text-center text-muted my-4"><div class="spinner-border spinner-border-sm"></div> Carregando...</div>';
+      chatInput.disabled = true;
+
+      try {
+        // Inicia ou recupera chat
+        const startRes = await fetch(`/chats/iniciar/{{ item.id }}/`, {
+          method: "GET",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest"
+          }
+        });
+        const startData = await startRes.json();
+        currentChatId = startData.chat_id;
+
+        // Recupera historico
+        const histRes = await fetch(`/chats/${currentChatId}/mensagens/`, {
+          headers: { "X-Requested-With": "XMLHttpRequest" }
+        });
+        const histData = await histRes.json();
+        
+        chatStatusText.innerText = histData.status === "ativo" ? "Online" : "Fechado";
+        
+        // Renderiza
+        chatMessagesBox.innerHTML = "";
+        if (histData.mensagens.length === 0) {
+          chatMessagesBox.innerHTML = '<div class="text-center text-muted my-4" id="emptyChat"><i class="bi bi-chat-dots fs-3 d-block mb-2"></i>Mande um "Oi!" para combinar a entrega.</div>';
+        } else {
+          histData.mensagens.forEach(appendMessage);
+        }
+
+        // Conecta WS
+        if (histData.status === "ativo") {
+          chatInput.disabled = false;
+          const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+          chatSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/chat/${currentChatId}/`);
+          
+          chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const empty = document.getElementById("emptyChat");
+            if (empty) empty.remove();
+            appendMessage(data.message_data || data); // compatibility with ws backend
+          };
+        } else {
+          chatInput.placeholder = "O chat está encerrado.";
+        }
+        
+      } catch (err) {
+        chatMessagesBox.innerHTML = '<div class="text-center text-danger my-4">Erro ao carregar chat.</div>';
       }
-  });
-  {% endif %}
+    });
+  }
+
+  if (btnCloseChat) btnCloseChat.addEventListener("click", closeChat);
+  if (chatOverlay) chatOverlay.addEventListener("click", closeChat);
+
+  function appendMessage(msg) {
+    // msg.is_me , msg.conteudo, msg.data_envio
+    const isMe = msg.is_me;
+    const bubbleClass = isMe ? 'me' : 'other';
+    const html = `
+      <div class="chat-drawer-bubble ${bubbleClass}">
+        <div class="chat-txt">${msg.conteudo || msg.message}</div>
+        <div class="chat-meta">${msg.data_envio || ''}</div>
+      </div>
+    `;
+    chatMessagesBox.insertAdjacentHTML("beforeend", html);
+    chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+  }
+
+  if (chatForm) {
+    chatForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const txt = chatInput.value.trim();
+      if (!txt || !chatSocket || chatSocket.readyState !== WebSocket.OPEN) return;
+
+      // Desabilita momentaneamente
+      chatInput.disabled = true;
+      chatSendBtn.disabled = true;
+
+      try {
+        // Envia direto via WebSocket (Consumer cuidará do banco e do broadcast)
+        chatSocket.send(JSON.stringify({
+            'message': txt
+        }));
+        chatInput.value = "";
+      } catch (err) {
+        console.error("Erro ao enviar mensagem WS:", err);
+      } finally {
+        chatInput.disabled = false;
+        chatSendBtn.disabled = false;
+        chatInput.focus();
+      }
+    });
+  }
 </script>
 {% endblock %}

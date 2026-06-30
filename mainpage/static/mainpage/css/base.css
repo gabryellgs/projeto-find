@@ -21,8 +21,8 @@
 
   /* Links na Navbar (contraste escuro sobre o azul claro) */
   --link-hover-bg:       rgba(11, 58, 74, 0.06);
-  --link-active-bg:      #0B3A4A;
-  --link-active-color:   #ffffff;
+  --link-active-bg:      rgba(255, 255, 255, 0.75);
+  --link-active-color:   #0B3A4A;
 
   /* Footer */
   --footer-bg:      rgba(235, 245, 251, 0.90);  /* surface-alt do app */
@@ -42,7 +42,12 @@
 
 body {
   min-height: 100vh;
-  background: #F4F7FA;  /* bg do app */
+  background: linear-gradient(
+    160deg,
+    rgba(144, 219, 244, 0.18) 0%,
+    rgba(221, 242, 252, 0.35) 50%,
+    rgba(144, 219, 244, 0.12) 100%
+  );
   font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
   color: #052E3B;   /* textDark do app */
   margin: 0; padding: 0;

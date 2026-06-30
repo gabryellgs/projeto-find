@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Política de Privacidade | FIND{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mainpage/css/legal.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="legal-page">
+
+  <!-- ── Hero ──────────────────────────────────────────────── -->
+  <div class="legal-hero">
+    <div class="legal-hero-badge">
+      <i class="bi bi-shield-lock-fill"></i>
+      LGPD — Lei nº 13.709/2018
+    </div>
+    <h1 class="legal-hero-title">Política de Privacidade</h1>
+    <p class="legal-hero-subtitle">
+      Transparência total sobre como coletamos, usamos e protegemos seus dados pessoais na plataforma FIND.
+    </p>
+    <div class="legal-meta-row">
+      <span class="legal-meta-item"><i class="bi bi-calendar3"></i> Última atualização: 27 de junho de 2026</span>
+      <span class="legal-meta-item"><i class="bi bi-clock"></i> Leitura estimada: 5 min</span>
+      <span class="legal-meta-item"><i class="bi bi-geo-alt-fill"></i> Brasil</span>
+    </div>
+  </div>
+
+  <!-- ── Layout ────────────────────────────────────────────── -->
+  <div class="legal-layout">
+
+    <!-- Índice lateral -->
+    <nav class="legal-toc" aria-label="Índice da Política de Privacidade">
+      <p class="legal-toc-title">Nesta página</p>
+      <ul class="legal-toc-list">
+        <li><a href="#introducao"><i class="bi bi-info-circle-fill"></i> Introdução</a></li>
+        <li><a href="#dados-coletados"><i class="bi bi-database-fill"></i> Dados Coletados</a></li>
+        <li><a href="#finalidade"><i class="bi bi-bullseye"></i> Finalidade</a></li>
+        <li><a href="#compartilhamento"><i class="bi bi-share-fill"></i> Compartilhamento</a></li>
+        <li><a href="#cookies"><i class="bi bi-cookie"></i> Cookies</a></li>
+        <li><a href="#retencao"><i class="bi bi-archive-fill"></i> Retenção</a></li>
+        <li><a href="#direitos"><i class="bi bi-person-check-fill"></i> Seus Direitos</a></li>
+        <li><a href="#seguranca"><i class="bi bi-lock-fill"></i> Segurança</a></li>
+        <li><a href="#menores"><i class="bi bi-people-fill"></i> Menores</a></li>
+        <li><a href="#contato"><i class="bi bi-envelope-fill"></i> Contato</a></li>
+      </ul>
+    </nav>
+
+    <!-- Conteúdo -->
+    <main class="legal-content">
+
+      <!-- 1. Introdução -->
+      <section class="legal-section" id="introducao">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-info-circle-fill"></i></div>
+          <div>
+            <p class="legal-section-num">Seção 1</p>
+            <h2 class="legal-section-title">Introdução</h2>
+          </div>
+        </div>
+        <p>
+          Bem-vindo ao <strong>FIND</strong> — plataforma inteligente de achados e perdidos desenvolvida para conectar pessoas e devolver o que importa. Esta Política de Privacidade descreve como coletamos, utilizamos, armazenamos e protegemos suas informações pessoais, em total conformidade com a <span class="legal-law-tag"><i class="bi bi-shield-check-fill"></i> LGPD — Lei nº 13.709/2018</span>.
+        </p>
+        <p>
+          Ao utilizar o FIND, você concorda com as práticas descritas neste documento. Recomendamos a leitura completa antes de usar nossos serviços.
+        </p>
+        <div class="legal-alert">
+          <i class="bi bi-info-circle-fill"></i>
+          <span>O FIND foi desenvolvido no Instituto Federal do Rio Grande do Norte (IFRN) como projeto acadêmico. O tratamento de dados segue os princípios da LGPD: finalidade, adequação, necessidade, transparência, segurança e prestação de contas.</span>
+        </div>
+      </section>
+
+      <!-- 2. Dados Coletados -->
+      <section class="legal-section" id="dados-coletados">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-database-fill"></i></div>
+          <div>
+            <p class="legal-section-num">Seção 2</p>
+            <h2 class="legal-section-title">Dados Coletados</h2>
+          </div>
+        </div>
+        <p>Coletamos apenas os dados estritamente necessários para o funcionamento da plataforma:</p>
+        <ul class="legal-list">
+          <li><span><strong>Dados de Cadastro:</strong> nome completo, endereço de e-mail, senha (criptografada com hash seguro) e data de nascimento.</span></li>
+          <li><span><strong>Dados de Perfil (opcionais):</strong> foto de perfil, número de telefone, cidade e estado.</span></li>
+          <li><span><strong>Dados de Uso:</strong> itens registrados (perdidos ou encontrados), imagens de itens, descrições e localização aproximada.</span></li>
+          <li><span><strong>Dados de Comunicação:</strong> mensagens trocadas via chat interno entre usuários (somente para fins de moderação de segurança).</span></li>
+          <li><span><strong>Dados Técnicos:</strong> endereço IP, tipo de dispositivo e navegador, data/hora de acesso e páginas visitadas.</span></li>
+          <li><span><strong>Autenticação Social (opcional):</strong> se você optar pelo login com Google, recebemos nome, e-mail e foto do perfil público da conta Google.</span></li>
+        </ul>
+      </section>
+
+      <!-- 3. Finalidade -->
+      <section class="legal-section" id="finalidade">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-bullseye"></i></div>
+          <div>
+            <p class="legal-section-num">Seção 3</p>
+            <h2 class="legal-section-title">Finalidade da Coleta</h2>
+          </div>
+        </div>
+        <p>Utilizamos seus dados exclusivamente para as seguintes finalidades:</p>
+        <ul class="legal-list">
+          <li><span>Criar e gerenciar sua conta de usuário na plataforma.</span></li>
+          <li><span>Conectar quem perdeu um item a quem o encontrou, possibilitando a devolução.</span></li>
+          <li><span>Enviar notificações sobre atividades relevantes aos seus itens cadastrados.</span></li>
+          <li><span>Realizar a correspondência inteligente (matching) entre itens perdidos e achados.</span></li>
+          <li><span>Garantir a segurança e prevenir fraudes na plataforma.</span></li>
+          <li><span>Melhorar nossos serviços com base em dados analíticos agregados e anonimizados (somente com seu consentimento).</span></li>
+        </ul>
+        <div class="legal-alert">
+          <i class="bi bi-check-circle-fill"></i>
+          <span><strong>Não utilizamos seus dados para publicidade</strong> de terceiros nem os vendemos ou comercializamos sob nenhuma circunstância.</span>
+        </div>
+      </section>
+
+      <!-- 4. Compartilhamento -->
+      <section class="legal-section" id="compartilhamento">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-share-fill"></i></div>
+          <div>
+            <p class="legal-section-num">Seção 4</p>
+            <h2 class="legal-section-title">Compartilhamento de Dados</h2>
+          </div>
+        </div>
+        <p>O FIND <strong>não vende</strong> e <strong>não comercializa</strong> seus dados pessoais. O compartilhamento ocorre apenas nas seguintes situações:</p>
+        <ul class="legal-list">
+          <li><span><strong>Entre usuários da plataforma:</strong> informações básicas do perfil (nome e foto) são visíveis a outros usuários apenas quando há interação relacionada a um item.</span></li>
+          <li><span><strong>Provedores de serviço:</strong> serviços de hospedagem (Render), banco de dados (Railway/MySQL), armazenamento de imagens (Cloudinary) e autenticação (Google OAuth) — todos contratualmente obrigados a proteger seus dados.</span></li>
+          <li><span><strong>Autoridades legais:</strong> apenas quando exigido por lei, decisão judicial ou requisição de autoridade competente.</span></li>
+        </ul>
+        <div class="legal-alert">
+          <i class="bi bi-building-fill"></i>
+          <span>Todos os parceiros de tecnologia utilizados pelo FIND seguem políticas rigorosas de proteção de dados compatíveis com a LGPD e o GDPR europeu.</span>
+        </div>
+      </section>
+
+      <!-- 5. Cookies -->
+      <section class="legal-section" id="cookies">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-cookie"></i></div>
+          <div>
+            <p class="legal-section-num">Seção 5</p>
+            <h2 class="legal-section-title">Cookies e Rastreamento</h2>
+          </div>
+        </div>
+        <p>Utilizamos cookies para garantir o funcionamento da plataforma e melhorar sua experiência. As categorias são:</p>
+        <ul class="legal-list">
+          <li><span><strong>Essenciais (obrigatórios):</strong> necessários para autenticação (<code>sessionid</code>) e segurança (<code>csrftoken</code>). Não podem ser desativados.</span></li>
+          <li><span><strong>Analíticos (opcionais):</strong> coletam dados agregados de uso para melhorar o serviço. Requerem seu consentimento.</span></li>
+          <li><span><strong>Funcionais (opcionais):</strong> lembram suas preferências de interface. Requerem seu consentimento.</span></li>
+        </ul>
+        <p>Você pode gerenciar ou revogar suas preferências de cookies a qualquer momento através do link <strong>"Cookies"</strong> no rodapé da página.</p>
+      </section>
+
+      <!-- 6. Retenção -->
+      <section class="legal-section" id="retencao">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-archive-fill"></i></div>
+          <div>
+            <p class="legal-section-num">Seção 6</p>
+            <h2 class="legal-section-title">Retenção de Dados</h2>
+          </div>
+        </div>
+        <p>Mantemos seus dados pelo tempo necessário para a prestação dos serviços:</p>
+        <ul class="legal-list">
+          <li><span><strong>Conta ativa:</strong> dados mantidos enquanto sua conta estiver ativa.</span></li>
+          <li><span><strong>Após exclusão da conta:</strong> dados são anonimizados ou excluídos em até <strong>30 dias</strong>, exceto quando a retenção for exigida por obrigação legal.</span></li>
+          <li><span><strong>Logs de segurança:</strong> mantidos por até <strong>12 meses</strong> para fins de auditoria e prevenção de fraudes.</span></li>
+        </ul>
+      </section>
+
+      <!-- 7. Seus Direitos -->
+      <section class="legal-section" id="direitos">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-person-check-fill"></i></div>
+          <div>
+            <p class="legal-section-num">Seção 7</p>
+            <h2 class="legal-section-title">Seus Direitos (LGPD — Art. 18)</h2>
+          </div>
+        </div>
+        <p>Como titular de dados, você possui os seguintes direitos garantidos pela LGPD:</p>
+        <ul class="legal-rights-list">
+          <li><i class="bi bi-eye-fill"></i><span><strong>Acesso:</strong> visualizar todos os dados pessoais que temos sobre você.</span></li>
+          <li><i class="bi bi-pencil-fill"></i><span><strong>Correção:</strong> atualizar dados incompletos, inexatos ou desatualizados a qualquer momento no seu Perfil.</span></li>
+          <li><i class="bi bi-trash-fill"></i><span><strong>Eliminação:</strong> solicitar a exclusão definitiva da sua conta e de todos os seus dados.</span></li>
+          <li><i class="bi bi-box-arrow-right"></i><span><strong>Portabilidade:</strong> receber seus dados em formato estruturado para transferência a outro serviço.</span></li>
+          <li><i class="bi bi-x-circle-fill"></i><span><strong>Revogação do consentimento:</strong> retirar o consentimento para uso de cookies opcionais a qualquer momento.</span></li>
+          <li><i class="bi bi-info-circle-fill"></i><span><strong>Informação:</strong> saber com quais entidades seus dados são compartilhados.</span></li>
+          <li><i class="bi bi-chat-left-text-fill"></i><span><strong>Oposição:</strong> opor-se ao tratamento de dados realizado sem seu consentimento.</span></li>
+        </ul>
+        <div class="legal-alert" style="margin-top: 16px;">
+          <i class="bi bi-envelope-fill"></i>
+          <span>Para exercer qualquer um desses direitos, entre em contato pelo e-mail de suporte disponível no rodapé. Responderemos em até <strong>15 dias úteis</strong>.</span>
+        </div>
+      </section>
+
+      <!-- 8. Segurança -->
+      <section class="legal-section" id="seguranca">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-lock-fill"></i></div>
+          <div>
+            <p class="legal-section-num">Seção 8</p>
+            <h2 class="legal-section-title">Segurança dos Dados</h2>
+          </div>
+        </div>
+        <p>Adotamos medidas técnicas e organizacionais para proteger seus dados:</p>
+        <ul class="legal-list">
+          <li><span>Transmissão criptografada via <strong>HTTPS/TLS</strong> em toda a comunicação.</span></li>
+          <li><span>Senhas armazenadas com <strong>hash criptográfico</strong> (nunca em texto puro).</span></li>
+          <li><span>Proteção contra ataques <strong>CSRF, XSS e SQL Injection</strong> via Django Security.</span></li>
+          <li><span>Tokens de autenticação <strong>JWT</strong> com expiração configurada.</span></li>
+          <li><span>Logs de segurança para rastrear acessos suspeitos.</span></li>
+        </ul>
+        <div class="legal-alert legal-alert-danger">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>Apesar de todas as medidas adotadas, nenhum sistema é 100% invulnerável. Em caso de incidente de segurança que afete seus dados, você será notificado dentro do prazo estabelecido pela LGPD.</span>
+        </div>
+      </section>
+
+      <!-- 9. Menores -->
+      <section class="legal-section" id="menores">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-people-fill"></i></div>
+          <div>
+            <p class="legal-section-num">Seção 9</p>
+            <h2 class="legal-section-title">Menores de Idade</h2>
+          </div>
+        </div>
+        <p>
+          O FIND é destinado a usuários com <strong>13 anos ou mais</strong>. Não coletamos intencionalmente dados de crianças menores de 13 anos sem consentimento dos pais ou responsáveis legais, conforme a LGPD (art. 14).
+        </p>
+        <p>
+          Se identificarmos que coletamos dados de uma criança sem autorização, excluiremos imediatamente essas informações.
+        </p>
+      </section>
+
+      <!-- 10. Contato -->
+      <section class="legal-section" id="contato">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-envelope-fill"></i></div>
+          <div>
+            <p class="legal-section-num">Seção 10</p>
+            <h2 class="legal-section-title">Contato e DPO</h2>
+          </div>
+        </div>
+        <p>
+          Para dúvidas, solicitações ou para exercer seus direitos como titular de dados, entre em contato com nosso <strong>Encarregado de Proteção de Dados (DPO)</strong>:
+        </p>
+        <ul class="legal-list">
+          <li><span><strong>E-mail:</strong> privacidade@find-sitema.onrender.com</span></li>
+          <li><span><strong>Instituição:</strong> IFRN — Instituto Federal do Rio Grande do Norte</span></li>
+          <li><span><strong>Prazo de resposta:</strong> até 15 dias úteis</span></li>
+        </ul>
+      </section>
+
+      <!-- Rodapé de ação -->
+      <div class="legal-footer-card">
+        <div class="legal-footer-card-text">
+          <h3>Tem dúvidas sobre privacidade?</h3>
+          <p>Verifique também nossos Termos de Uso ou gerencie suas preferências de cookies.</p>
+        </div>
+        <div class="legal-footer-card-actions">
+          <a href="{% url 'terms' %}" class="legal-btn legal-btn-white">
+            <i class="bi bi-file-text-fill"></i> Termos de Uso
+          </a>
+          <a href="#" onclick="window.showCookieBanner(event)" class="legal-btn legal-btn-outline">
+            <i class="bi bi-sliders"></i> Cookies
+          </a>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /legal-layout -->
+</div><!-- /legal-page -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  /* Índice: destaca o link ativo conforme scroll */
+  (function () {
+    const sections = document.querySelectorAll('.legal-section[id]');
+    const links    = document.querySelectorAll('.legal-toc-list a');
+
+    if (!sections.length || !links.length) return;
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const active = document.querySelector(`.legal-toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  }());
+</script>
+{% endblock %}

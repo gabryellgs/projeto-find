@@ -12,6 +12,11 @@ urlpatterns = [
     path("profile/resize-photo/", views.api_resize_photo, name="api_resize_photo"),
     path("profile/photo-sizes/", views.api_photo_sizes, name="api_photo_sizes"),
 
+    # Notificações
+    path("notificacoes/", views.api_notificacoes, name="api_notificacoes"),
+    path("notificacoes/<int:notif_id>/lida/", views.api_notificacao_lida, name="api_notificacao_lida"),
+    path("notificacoes/marcar-todas-lidas/", views.api_notificacoes_marcar_todas_lidas, name="api_notificacoes_marcar_todas_lidas"),
+
     # Admin Panel
     path("admin/bolsistas/", views.api_admin_bolsistas, name="api_admin_bolsistas"),
     path("admin/bolsistas/adicionar/", views.api_admin_bolsistas_adicionar, name="api_admin_bolsistas_adicionar"),
@@ -19,3 +24,4 @@ urlpatterns = [
     path("admin/relatorio/", views.api_admin_relatorio, name="api_admin_relatorio"),
     path("admin/log/", views.api_admin_log, name="api_admin_log"),
 ]
+

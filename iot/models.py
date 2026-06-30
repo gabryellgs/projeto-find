@@ -1,5 +1,6 @@
-from django.db import models
 import uuid
+import secrets
+from django.db import models
 
 class Dispositivo(models.Model):
     """
@@ -8,10 +9,15 @@ class Dispositivo(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nome = models.CharField(max_length=100, help_text="Ex: Leitor RFID COPAC Balcão")
-    token_auth = models.CharField(max_length=64, unique=True, help_text="Token secreto que este dispositivo usa para se autenticar")
+    token_auth = models.CharField(max_length=64, unique=True, blank=True, help_text="Token secreto que este dispositivo usa para se autenticar")
     is_ativo = models.BooleanField(default=True)
     ultima_comunicacao = models.DateTimeField(null=True, blank=True)
     criado_em = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.token_auth:
+            self.token_auth = secrets.token_hex(16)  # Gera um token seguro de 32 caracteres
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.nome} ({'Ativo' if self.is_ativo else 'Inativo'})"

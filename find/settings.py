@@ -18,7 +18,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-only')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,*', cast=Csv())
 # Render injeta este env automaticamente no deploy
 RENDER_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_HOSTNAME:
@@ -26,6 +26,7 @@ if RENDER_HOSTNAME:
 
 # ─── Apps instalados ──────────────────────────────────────────
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -36,7 +37,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'whitenoise.runserver_nostatic',
+    # 'whitenoise.runserver_nostatic', (Removido para permitir hot-reload do CSS em dev)
     # apps do projeto (modular)
     'accounts.apps.AccountsConfig',
     'items.apps.ItemsConfig',
@@ -50,7 +51,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.apple',
+    # Apple OAuth removido — não configurado
 ]
 
 SITE_ID = 1
@@ -89,6 +90,24 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'find.wsgi.application'
+ASGI_APPLICATION = 'find.asgi.application'
+
+if os.getenv("RENDER"):
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [(config("REDIS_URL", default="redis://127.0.0.1:6379/1"))],
+            },
+        },
+    }
+else:
+    # Dev local: sem necessidade de Redis
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer",
+        },
+    }
 
 # ─── Banco de dados ───────────────────────────────────────────
 if os.getenv("RENDER"):

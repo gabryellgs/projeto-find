@@ -455,16 +455,16 @@ section[id], .items-section, .section-pad {
 }
 
 .btn-filtrar {
-  background: var(--f-dark);
-  color: var(--f-primary); border: none;
+  background: #90dbf4 !important;
+  color: #0B3A4A !important; border: none;
   border-radius: var(--f-radius-sm);
-  font-weight: 700; font-size: 0.82rem;
+  font-weight: 800 !important; font-size: 0.82rem;
   letter-spacing: 0.05em; height: 42px;
   transition: var(--f-transition);
 }
 .btn-filtrar:hover {
-  background: var(--f-info);
-  color: #fff;
+  background: #6ccffb !important;
+  color: #0B3A4A !important;
 }
 
 
@@ -512,21 +512,21 @@ section[id], .items-section, .section-pad {
 }
 
 .menu-item-card {
-  background: var(--f-card-bg);       /* E3F6FC — idêntico ao app */
-  border: 1px solid rgba(11, 58, 74, 0.06);
+  background: #DDF2FC;
+  border: 1px solid rgba(11, 58, 74, 0.08);
   border-radius: var(--f-radius-md);
   overflow: hidden;
   display: flex; flex-direction: column;
   height: 100%;
-  transition: var(--f-transition);
-  box-shadow: var(--f-shadow-sm);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 6px 16px rgba(11, 58, 74, 0.04);
   min-width: 240px;
 }
 
 .menu-item-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--f-shadow-lg);
-  border-color: var(--f-border-accent);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(11, 58, 74, 0.12);
+  border-color: rgba(144, 219, 244, 0.8);
 }
 
 /* Imagem */
@@ -589,9 +589,13 @@ section[id], .items-section, .section-pad {
 .meta-left, .meta-right {
   display: flex; align-items: center; gap: 4px;
   color: var(--f-text-muted);
-  font-size: 0.7rem; font-weight: 600;
+  font-size: 0.65rem; font-weight: 700;
   white-space: nowrap; overflow: hidden;
   text-overflow: ellipsis; max-width: 55%;
+  background: rgba(144, 219, 244, 0.15);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(144, 219, 244, 0.2);
 }
 
 /* Ações do card */
@@ -606,18 +610,19 @@ section[id], .items-section, .section-pad {
 .btn-ver-item {
   display: inline-flex; align-items: center;
   justify-content: center;
-  background: var(--f-dark);
-  color: var(--f-primary);
+  background: #90dbf4 !important;
+  color: #0B3A4A !important;
   border: none; border-radius: 99px;
   padding: 6px 14px;
-  font-size: 0.72rem; font-weight: 700;
+  font-size: 0.72rem; font-weight: 800 !important;
   text-decoration: none; letter-spacing: 0.04em;
   transition: var(--f-transition);
   white-space: nowrap;
+  flex: 1;
 }
 .btn-ver-item:hover {
-  background: var(--f-info);
-  color: #fff;
+  background: #6ccffb !important;
+  color: #0B3A4A !important;
   transform: scale(1.03);
 }
 

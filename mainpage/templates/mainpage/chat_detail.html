@@ -115,6 +115,58 @@
 
     const textarea = document.getElementById("conteudo");
     const sendBtn = document.getElementById("sendBtn");
+    const msgForm = document.getElementById("msgForm");
+
+    {% if chat.status == 'ativo' %}
+    const chatId = "{{ chat.id }}";
+    const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const chatSocket = new WebSocket(
+        wsScheme + "://" + window.location.host + "/ws/chat/" + chatId + "/"
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        
+        // Remove empty state if it exists
+        const emptyState = document.querySelector('.chat-empty');
+        if (emptyState) emptyState.remove();
+
+        const bubbleClass = data.is_me ? 'me' : 'other';
+        const checkIcon = data.is_me ? '<span><i class="bi bi-check"></i></span>' : '';
+        
+        const msgHtml = `
+          <div class="chat-bubble ${bubbleClass}">
+            ${data.message.replace(/\n/g, '<br>')}
+            <div class="chat-bubble-meta">
+              <span>${data.data_envio}</span>
+              ${checkIcon}
+            </div>
+          </div>
+        `;
+        
+        messagesBox.insertAdjacentHTML('beforeend', msgHtml);
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    if (msgForm) {
+      msgForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const message = textarea.value.trim();
+          if (message) {
+              chatSocket.send(JSON.stringify({
+                  'message': message
+              }));
+              textarea.value = '';
+              textarea.style.height = 'auto';
+              sendBtn.disabled = true;
+          }
+      });
+    }
+    {% endif %}
 
     if (textarea) {
       textarea.addEventListener("input", function () {
@@ -127,7 +179,7 @@
         if (e.key === "Enter" && !e.shiftKey) {
           e.preventDefault();
           if (this.value.trim()) {
-            document.getElementById("msgForm").submit();
+            if (msgForm) msgForm.dispatchEvent(new Event('submit'));
           }
         }
       });

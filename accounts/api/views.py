@@ -360,3 +360,50 @@ def api_admin_log(request):
         })
 
     return Response({"ok": True, "results": results})
+
+
+# ─── Notificações ─────────────────────────────────────────────────────────────
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def api_notificacoes(request):
+    """Lista todas as notificações do usuário autenticado."""
+    from items.models import Notificacao
+    qs = Notificacao.objects.filter(usuario=request.user).order_by("-criado_em")[:50]
+    results = []
+    for n in qs:
+        results.append({
+            "id": n.id,
+            "titulo": n.titulo,
+            "mensagem": n.mensagem,
+            "lida": n.lida,
+            "link": n.link or "",
+            "icone": n.icone,
+            "criado_em": n.criado_em.isoformat(),
+        })
+    nao_lidas = Notificacao.objects.filter(usuario=request.user, lida=False).count()
+    return Response({"ok": True, "results": results, "nao_lidas": nao_lidas})
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def api_notificacao_lida(request, notif_id):
+    """Marca uma notificação específica como lida."""
+    from items.models import Notificacao
+    try:
+        notif = Notificacao.objects.get(id=notif_id, usuario=request.user)
+        notif.lida = True
+        notif.save(update_fields=["lida"])
+        return Response({"ok": True, "detail": "Notificação marcada como lida."})
+    except Notificacao.DoesNotExist:
+        return Response({"ok": False, "detail": "Notificação não encontrada."}, status=404)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def api_notificacoes_marcar_todas_lidas(request):
+    """Marca todas as notificações do usuário como lidas."""
+    from items.models import Notificacao
+    Notificacao.objects.filter(usuario=request.user, lida=False).update(lida=True)
+    return Response({"ok": True, "detail": "Todas as notificações foram marcadas como lidas."})
+

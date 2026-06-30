@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Termos de Uso | FIND{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mainpage/css/legal.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="legal-page">
+
+  <!-- ── Hero ──────────────────────────────────────────────── -->
+  <div class="legal-hero">
+    <div class="legal-hero-badge">
+      <i class="bi bi-file-text-fill"></i>
+      Termos e Condições
+    </div>
+    <h1 class="legal-hero-title">Termos de Uso</h1>
+    <p class="legal-hero-subtitle">
+      Ao utilizar o FIND, você concorda com as condições abaixo. Leia com atenção antes de usar a plataforma.
+    </p>
+    <div class="legal-meta-row">
+      <span class="legal-meta-item"><i class="bi bi-calendar3"></i> Última atualização: 27 de junho de 2026</span>
+      <span class="legal-meta-item"><i class="bi bi-clock"></i> Leitura estimada: 4 min</span>
+      <span class="legal-meta-item"><i class="bi bi-geo-alt-fill"></i> Brasil</span>
+    </div>
+  </div>
+
+  <!-- ── Layout ────────────────────────────────────────────── -->
+  <div class="legal-layout">
+
+    <!-- Índice lateral -->
+    <nav class="legal-toc" aria-label="Índice dos Termos de Uso">
+      <p class="legal-toc-title">Nesta página</p>
+      <ul class="legal-toc-list">
+        <li><a href="#aceitacao"><i class="bi bi-check-circle-fill"></i> Aceitação</a></li>
+        <li><a href="#servico"><i class="bi bi-search-heart"></i> O Serviço</a></li>
+        <li><a href="#cadastro"><i class="bi bi-person-fill-add"></i> Cadastro</a></li>
+        <li><a href="#conduta"><i class="bi bi-hand-thumbs-up-fill"></i> Conduta</a></li>
+        <li><a href="#conteudo"><i class="bi bi-images"></i> Conteúdo</a></li>
+        <li><a href="#propriedade"><i class="bi bi-c-circle-fill"></i> Propriedade Int.</a></li>
+        <li><a href="#responsabilidade"><i class="bi bi-shield-exclamation"></i> Responsabilidade</a></li>
+        <li><a href="#suspensao"><i class="bi bi-slash-circle-fill"></i> Suspensão</a></li>
+        <li><a href="#modificacoes"><i class="bi bi-arrow-repeat"></i> Modificações</a></li>
+        <li><a href="#legislacao"><i class="bi bi-bank2"></i> Legislação</a></li>
+      </ul>
+    </nav>
+
+    <!-- Conteúdo -->
+    <main class="legal-content">
+
+      <!-- 1. Aceitação -->
+      <section class="legal-section" id="aceitacao">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-check-circle-fill"></i></div>
+          <div>
+            <p class="legal-section-num">Cláusula 1</p>
+            <h2 class="legal-section-title">Aceitação dos Termos</h2>
+          </div>
+        </div>
+        <p>
+          Ao acessar, se cadastrar ou utilizar o <strong>FIND</strong>, você declara que leu, compreendeu e concordou integralmente com estes Termos de Uso e com a nossa <a href="{% url 'privacy' %}" style="color:#185FA5;font-weight:600;">Política de Privacidade</a>.
+        </p>
+        <p>
+          Se você não concordar com qualquer parte destes termos, por favor, não utilize a plataforma. O uso contínuo do FIND após alterações nos Termos constitui aceitação das novas condições.
+        </p>
+        <div class="legal-alert">
+          <i class="bi bi-info-circle-fill"></i>
+          <span>Estes Termos de Uso constituem um contrato legal vinculativo entre você (usuário) e o FIND, operado no contexto do IFRN — Instituto Federal do Rio Grande do Norte.</span>
+        </div>
+      </section>
+
+      <!-- 2. O Serviço -->
+      <section class="legal-section" id="servico">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-search-heart"></i></div>
+          <div>
+            <p class="legal-section-num">Cláusula 2</p>
+            <h2 class="legal-section-title">O Serviço FIND</h2>
+          </div>
+        </div>
+        <p>
+          O <strong>FIND</strong> é uma plataforma digital colaborativa que facilita o reencontro de objetos perdidos e achados, atuando como intermediário entre a pessoa que <strong>perdeu</strong> um item e a que o <strong>encontrou</strong>. Nossos principais recursos incluem:
+        </p>
+        <ul class="legal-list">
+          <li><span>Cadastro e publicação de itens perdidos e encontrados com fotos e descrição.</span></li>
+          <li><span>Sistema de matching inteligente baseado em similaridade de imagens.</span></li>
+          <li><span>Chat interno seguro para comunicação entre usuários interessados.</span></li>
+          <li><span>Notificações automáticas sobre correspondências entre itens.</span></li>
+          <li><span>Integração com dispositivos IoT (RFID) para rastreamento de objetos cadastrados.</span></li>
+        </ul>
+        <p>
+          O FIND não garante a recuperação de nenhum item, pois depende da boa-fé e participação voluntária dos usuários.
+        </p>
+      </section>
+
+      <!-- 3. Cadastro -->
+      <section class="legal-section" id="cadastro">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-person-fill-add"></i></div>
+          <div>
+            <p class="legal-section-num">Cláusula 3</p>
+            <h2 class="legal-section-title">Cadastro e Conta do Usuário</h2>
+          </div>
+        </div>
+        <p>Para acessar as funcionalidades completas do FIND, é necessário criar uma conta. Ao se cadastrar, você se compromete a:</p>
+        <ul class="legal-list">
+          <li><span>Fornecer informações <strong>verdadeiras, precisas e completas</strong> no momento do registro.</span></li>
+          <li><span>Manter a <strong>confidencialidade</strong> de suas credenciais (e-mail e senha) de acesso.</span></li>
+          <li><span>Ser o <strong>único responsável</strong> por todas as atividades realizadas com sua conta.</span></li>
+          <li><span>Ter <strong>13 anos ou mais</strong> para utilizar a plataforma; menores de 16 anos necessitam de autorização dos responsáveis legais.</span></li>
+          <li><span>Notificar imediatamente o FIND em caso de <strong>uso não autorizado</strong> da sua conta.</span></li>
+        </ul>
+        <div class="legal-alert legal-alert-danger">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>É proibido criar múltiplas contas para um mesmo indivíduo, contas falsas ou automatizadas (bots). Contas deste tipo serão encerradas sem aviso prévio.</span>
+        </div>
+      </section>
+
+      <!-- 4. Conduta -->
+      <section class="legal-section" id="conduta">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-hand-thumbs-up-fill"></i></div>
+          <div>
+            <p class="legal-section-num">Cláusula 4</p>
+            <h2 class="legal-section-title">Regras de Conduta</h2>
+          </div>
+        </div>
+        <p>Ao utilizar o FIND, você concorda em <strong>NÃO</strong>:</p>
+        <ul class="legal-list">
+          <li><span>Publicar itens falsos, inexistentes ou com informações enganosas.</span></li>
+          <li><span>Usar a plataforma para fins ilegais, fraudulentos ou que violem direitos de terceiros.</span></li>
+          <li><span>Assediar, ameaçar, insultar ou discriminar outros usuários no chat ou em qualquer parte do sistema.</span></li>
+          <li><span>Tentar acessar dados de outros usuários sem autorização ou explorar vulnerabilidades do sistema.</span></li>
+          <li><span>Usar robôs, scrapers ou qualquer meio automatizado para acessar ou coletar dados da plataforma.</span></li>
+          <li><span>Usar a plataforma para spam, marketing não solicitado ou atividades comerciais não autorizadas.</span></li>
+          <li><span>Solicitar pagamento pela devolução de itens — o FIND promove a devolução voluntária e gratuita.</span></li>
+        </ul>
+        <div class="legal-alert">
+          <i class="bi bi-shield-check-fill"></i>
+          <span>Recomendamos fortemente que os encontros para devolução de itens ocorram em <strong>locais públicos e movimentados</strong>, como portarias de prédios, postos de polícia ou shopping centers. O FIND não se responsabiliza por encontros presenciais.</span>
+        </div>
+      </section>
+
+      <!-- 5. Conteúdo -->
+      <section class="legal-section" id="conteudo">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-images"></i></div>
+          <div>
+            <p class="legal-section-num">Cláusula 5</p>
+            <h2 class="legal-section-title">Conteúdo do Usuário</h2>
+          </div>
+        </div>
+        <p>
+          Ao publicar fotos, descrições ou qualquer conteúdo no FIND, você declara que:
+        </p>
+        <ul class="legal-list">
+          <li><span>Você possui os <strong>direitos necessários</strong> sobre o conteúdo publicado.</span></li>
+          <li><span>O conteúdo não viola direitos autorais, marcas registradas ou privacidade de terceiros.</span></li>
+          <li><span>O conteúdo não contém material ilegal, violento, discriminatório ou sexualmente explícito.</span></li>
+        </ul>
+        <p>
+          Ao publicar conteúdo, você concede ao FIND uma licença não exclusiva, mundial e gratuita para exibir, armazenar e processar esse conteúdo <strong>exclusivamente para fins de operação da plataforma</strong>. Você mantém todos os direitos sobre seu conteúdo.
+        </p>
+        <p>
+          O FIND reserva o direito de remover qualquer conteúdo que viole estes Termos, sem aviso prévio.
+        </p>
+      </section>
+
+      <!-- 6. Propriedade Intelectual -->
+      <section class="legal-section" id="propriedade">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-c-circle-fill"></i></div>
+          <div>
+            <p class="legal-section-num">Cláusula 6</p>
+            <h2 class="legal-section-title">Propriedade Intelectual</h2>
+          </div>
+        </div>
+        <p>
+          Todo o código-fonte, design, logotipos, interface gráfica, algoritmos e demais elementos da plataforma FIND são propriedade intelectual de seus criadores e estão protegidos pela legislação brasileira de direitos autorais (Lei nº 9.610/1998).
+        </p>
+        <p>
+          É expressamente proibido copiar, reproduzir, modificar, distribuir ou criar obras derivadas da plataforma sem autorização prévia e por escrito dos desenvolvedores do FIND.
+        </p>
+      </section>
+
+      <!-- 7. Responsabilidade -->
+      <section class="legal-section" id="responsabilidade">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-shield-exclamation"></i></div>
+          <div>
+            <p class="legal-section-num">Cláusula 7</p>
+            <h2 class="legal-section-title">Isenção de Responsabilidade</h2>
+          </div>
+        </div>
+        <p>O FIND atua como intermediário e, portanto, <strong>não se responsabiliza por</strong>:</p>
+        <ul class="legal-list">
+          <li><span>A <strong>veracidade das informações</strong> publicadas pelos usuários sobre os itens.</span></li>
+          <li><span>A <strong>devolução bem-sucedida</strong> de qualquer item cadastrado na plataforma.</span></li>
+          <li><span>Quaisquer <strong>danos ou prejuízos</strong> decorrentes de encontros presenciais entre usuários.</span></li>
+          <li><span>Indisponibilidade temporária do serviço por razões técnicas, manutenção ou casos de força maior.</span></li>
+          <li><span>Conteúdo publicado por usuários que viole direitos de terceiros.</span></li>
+        </ul>
+        <div class="legal-alert">
+          <i class="bi bi-info-circle-fill"></i>
+          <span>A plataforma é fornecida "como está" (<em>as is</em>), sem garantias de disponibilidade ininterrupta ou adequação a um propósito específico.</span>
+        </div>
+      </section>
+
+      <!-- 8. Suspensão -->
+      <section class="legal-section" id="suspensao">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-slash-circle-fill"></i></div>
+          <div>
+            <p class="legal-section-num">Cláusula 8</p>
+            <h2 class="legal-section-title">Suspensão e Encerramento de Conta</h2>
+          </div>
+        </div>
+        <p>O FIND reserva o direito de suspender ou encerrar sua conta, com ou sem aviso prévio, nos seguintes casos:</p>
+        <ul class="legal-list">
+          <li><span>Violação de qualquer cláusula destes Termos de Uso.</span></li>
+          <li><span>Uso fraudulento, abusivo ou que comprometa a segurança da plataforma ou de outros usuários.</span></li>
+          <li><span>Inatividade prolongada da conta (superior a 12 meses).</span></li>
+          <li><span>Solicitação do próprio usuário.</span></li>
+        </ul>
+        <p>
+          Você pode solicitar o encerramento e exclusão da sua conta a qualquer momento através do seu painel de Perfil ou entrando em contato com o suporte.
+        </p>
+      </section>
+
+      <!-- 9. Modificações -->
+      <section class="legal-section" id="modificacoes">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-arrow-repeat"></i></div>
+          <div>
+            <p class="legal-section-num">Cláusula 9</p>
+            <h2 class="legal-section-title">Modificações no Serviço e nos Termos</h2>
+          </div>
+        </div>
+        <p>
+          O FIND reserva-se o direito de modificar, suspender, atualizar ou descontinuar qualquer parte do serviço a qualquer momento. Também podemos atualizar estes Termos de Uso periodicamente.
+        </p>
+        <p>
+          Alterações relevantes serão comunicadas com pelo menos <strong>15 dias de antecedência</strong> via e-mail ou notificação na plataforma. O uso contínuo do serviço após a data de vigência das mudanças implica aceitação dos novos Termos.
+        </p>
+      </section>
+
+      <!-- 10. Legislação -->
+      <section class="legal-section" id="legislacao">
+        <div class="legal-section-header">
+          <div class="legal-section-icon"><i class="bi bi-bank2"></i></div>
+          <div>
+            <p class="legal-section-num">Cláusula 10</p>
+            <h2 class="legal-section-title">Legislação e Foro</h2>
+          </div>
+        </div>
+        <p>
+          Estes Termos de Uso são regidos e interpretados de acordo com as leis da <strong>República Federativa do Brasil</strong>, especialmente:
+        </p>
+        <ul class="legal-list">
+          <li><span><strong>Marco Civil da Internet</strong> — Lei nº 12.965/2014</span></li>
+          <li><span><strong>Lei Geral de Proteção de Dados</strong> — Lei nº 13.709/2018 (LGPD)</span></li>
+          <li><span><strong>Código de Defesa do Consumidor</strong> — Lei nº 8.078/1990</span></li>
+          <li><span><strong>Lei de Direitos Autorais</strong> — Lei nº 9.610/1998</span></li>
+        </ul>
+        <p>
+          Fica eleito o foro da comarca de <strong>Natal — RN</strong> para dirimir eventuais litígios decorrentes destes Termos, com renúncia expressa de qualquer outro, por mais privilegiado que seja.
+        </p>
+      </section>
+
+      <!-- Rodapé de ação -->
+      <div class="legal-footer-card">
+        <div class="legal-footer-card-text">
+          <h3>Dúvidas sobre os Termos?</h3>
+          <p>Leia também nossa Política de Privacidade ou fale com o suporte.</p>
+        </div>
+        <div class="legal-footer-card-actions">
+          <a href="{% url 'privacy' %}" class="legal-btn legal-btn-white">
+            <i class="bi bi-shield-lock-fill"></i> Privacidade
+          </a>
+          <a href="#" onclick="window.showCookieBanner(event)" class="legal-btn legal-btn-outline">
+            <i class="bi bi-sliders"></i> Cookies
+          </a>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /legal-layout -->
+</div><!-- /legal-page -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  /* Índice: destaca o link ativo conforme scroll */
+  (function () {
+    const sections = document.querySelectorAll('.legal-section[id]');
+    const links    = document.querySelectorAll('.legal-toc-list a');
+
+    if (!sections.length || !links.length) return;
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const active = document.querySelector(`.legal-toc-list a[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  }());
+</script>
+{% endblock %}

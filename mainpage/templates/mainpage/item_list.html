@@ -1,149 +1,152 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Todos os itens - FIND{% endblock %}
+{% block title %}{{ page_title|default:"Todos os Itens" }} | FIND{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'mainpage/css/item_list.css' %}?v=3">
+{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'mainpage/css/user.css' %}">
-<link rel="stylesheet" href="{% static 'mainpage/css/item_list.css' %}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+<div class="my-items-page">
+  <div class="container" style="max-width: 860px;">
 
-<div class="container py-5">
+    <!-- ── Hero header ───────────────────────────────────── -->
+    <div class="my-items-hero">
+      <div>
+        <h1 class="my-items-title">{{ page_title|default:"Todos os Itens" }}</h1>
+        <p class="my-items-subtitle">
+          {% if itens %}
+            <i class="bi bi-layers-fill"></i>
+            {{ itens|length }} item{% if itens|length != 1 %}ns{% endif %} encontrado{% if itens|length != 1 %}s{% endif %}
+          {% else %}
+            <i class="bi bi-inbox"></i>
+            Nenhum item encontrado
+          {% endif %}
+        </p>
+      </div>
 
-    <!-- TOPO -->
-    <div class="item-list-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-        <div>
-            <h3 class="fw-bold mb-1">{{ page_title|default:"Todos os itens" }}</h3>
-            <p class="text-muted mb-0">
-                {% if itens %}
-                    Mostrando {{ itens|length }} item(ns)
-                {% else %}
-                    Nenhum item encontrado
-                {% endif %}
-            </p>
-        </div>
-
-        <div class="d-flex gap-2">
-            <button class="btn-voltar-custom" onclick="history.back()">
-                ← Voltar
-            </button>
-        </div>
+      <div class="my-items-actions">
+        <button class="btn-voltar-item" onclick="history.back()">
+          <i class="bi bi-arrow-left"></i> Voltar
+        </button>
+      </div>
     </div>
 
-    <!-- FILTRO / BUSCA -->
-    <form method="GET" class="item-filter-card shadow-sm border-0 p-3 mb-4">
-        <div class="row g-2 align-items-center">
-            <div class="col-md-7">
-                <div class="input-group">
-                    <span class="input-group-text bg-white">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input
-                        type="text"
-                        class="form-control"
-                        name="q"
-                        placeholder="Buscar por título, local, categoria..."
-                        value="{{ request.GET.q }}"
-                    >
-                    <a href="{% url 'busca_visual' %}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center px-3" style="border: 1px solid rgba(0,0,0,0.1); background: #f8f9fa;" title="Busca por Imagem (IA)">
-                        <i class="bi bi-camera" style="font-size: 1.15rem; color: #0B3A4A;"></i>
-                    </a>
-                </div>
-            </div>
+    <!-- ── Filtro ────────────────────────────────────────── -->
+    <form method="GET" class="my-items-filter">
+      <div class="filter-search-wrap">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          class="filter-input"
+          name="q"
+          placeholder="Buscar por título, local, categoria..."
+          value="{{ request.GET.q }}"
+          autocomplete="off"
+        >
+      </div>
 
-            <div class="col-md-3">
-                <select class="form-select" name="status">
-                    <option value="">Todos os status</option>
-                    <option value="perdido" {% if request.GET.status == "perdido" %}selected{% endif %}>Perdidos</option>
-                    <option value="achado" {% if request.GET.status == "achado" %}selected{% endif %}>Encontrados</option>
-                </select>
-            </div>
+      <!-- Botão busca visual IA -->
+      <a href="{% url 'busca_visual' %}" class="btn-voltar-item" title="Busca por Imagem (IA)" style="padding: 11px 14px; flex-shrink:0;">
+        <i class="bi bi-camera-fill"></i>
+      </a>
 
-            <div class="col-md-2 d-grid">
-                <button class="btn" type="submit">Filtrar</button>
-            </div>
-        </div>
+      <select class="filter-select" name="status">
+        <option value="">Todos os status</option>
+        <option value="perdido"  {% if request.GET.status == "perdido"  %}selected{% endif %}>Perdidos</option>
+        <option value="achado"   {% if request.GET.status == "achado"   %}selected{% endif %}>Encontrados</option>
+        <option value="devolvido"{% if request.GET.status == "devolvido"%}selected{% endif %}>Devolvidos</option>
+      </select>
+
+      <button class="btn-filtrar" type="submit">
+        <i class="bi bi-funnel-fill"></i> Filtrar
+      </button>
     </form>
 
-    <!-- LISTA -->
-    <div class="item-list-container shadow-sm">
+    <!-- ── Lista de itens ────────────────────────────────── -->
+    {% if itens %}
+      <div class="my-items-list">
 
-        {% if itens %}
-            <div class="item-list-wrapper d-flex flex-column gap-3">
+        {% for item in itens %}
+          <div class="mi-card {% if item.status == 'perdido' %}mi-perdido{% elif item.status == 'achado' %}mi-achado{% else %}mi-devolvido{% endif %}">
 
-                {% for item in itens %}
-                    <div class="item-lista-horizontal shadow-sm item-card-{{ item.status }}">
+            <!-- Foto -->
+            <img
+              class="mi-img"
+              src="{% if item.imagem %}{{ item.imagem.url }}{% else %}{% static 'mainpage/img/item-default.png' %}{% endif %}"
+              alt="{{ item.titulo }}"
+              onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';"
+            >
 
-                        <!-- FOTO -->
-                        <div class="item-col-img">
-                            <div class="item-img-container">
-                                <img
-                                    src="{% if item.imagem %}{{ item.imagem.url }}{% else %}{% static 'mainpage/img/item-default.png' %}{% endif %}"
-                                    alt="{{ item.titulo }}"
-                                    onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';"
-                                >
-                            </div>
-                        </div>
+            <!-- Info -->
+            <div class="mi-info">
+              <h2 class="mi-title">{{ item.titulo }}</h2>
+              <p class="mi-category">
+                {{ item.categoria.nome|default:item.categoria|default:"Sem categoria" }}
+              </p>
+              <div class="mi-meta">
+                {% if item.local %}
+                  <span class="mi-meta-item">
+                    <i class="bi bi-geo-alt-fill"></i> {{ item.local }}
+                  </span>
+                {% endif %}
+                {% if item.data %}
+                  <span class="mi-meta-item">
+                    <i class="bi bi-calendar3"></i> {{ item.data|date:"d/m/Y" }}
+                  </span>
+                {% endif %}
 
-                        <!-- INFO -->
-                        <div class="item-col-info">
-                            <h6 class="fw-bold mb-0 text-truncate">{{ item.titulo }}</h6>
-                            <p class="text-muted small mb-1">
-                                {{ item.categoria.nome|default:item.categoria|default:"Sem categoria" }}
-                            </p>
-
-                            <small class="text-muted d-block">
-                                <i class="bi bi-geo-alt"></i> {{ item.local|default:"---" }}
-                            </small>
-
-                            <small class="text-muted d-block">
-                                <i class="bi bi-calendar"></i> {{ item.data|date:"d/m/Y" }}
-                            </small>
-                        </div>
-
-                        <!-- AÇÕES (SÓ VER ITEM) -->
-                        <div class="item-col-actions">
-                            <a href="{% url 'item_detail' item.slug %}" class="btn-ver-lista">
-                                VER ITEM
-                            </a>
-
-                            {% if item.status == 'perdido' %}
-                                <span class="status-badge-horizontal status-perdido" title="Perdido">
-                                    <i class="bi bi-exclamation-triangle-fill"></i>
-                                </span>
-
-                            {% elif item.status == 'achado' %}
-                                <span class="status-badge-horizontal status-achado" title="Achado">
-                                    <i class="bi bi-check-circle-fill"></i>
-                                </span>
-
-                            {% elif item.status == 'devolvido' %}
-                                <span class="status-badge-horizontal status-devolvido" title="Devolvido">
-                                    <i class="bi bi-arrow-repeat"></i>
-                                </span>
-
-                            {% else %}
-                                <span class="status-badge-horizontal">
-                                    <i class="bi bi-question-circle"></i>
-                                </span>
-                            {% endif %}
-                        </div>
-
-                    </div>
-                {% endfor %}
-
+                {% if item.status == 'perdido' %}
+                  <span class="mi-status mi-status-perdido">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Perdido
+                  </span>
+                {% elif item.status == 'achado' %}
+                  <span class="mi-status mi-status-achado">
+                    <i class="bi bi-check-circle-fill"></i> Encontrado
+                  </span>
+                {% else %}
+                  <span class="mi-status mi-status-devolvido">
+                    <i class="bi bi-arrow-repeat"></i> Devolvido
+                  </span>
+                {% endif %}
+              </div>
             </div>
-        {% else %}
-            <div class="item-empty text-center py-5">
-                <div class="empty-icon mb-3">
-                    <i class="bi bi-inbox text-muted" style="font-size: 3.5rem;"></i>
-                </div>
-                <h5 class="text-muted fw-normal">Nenhum item encontrado.</h5>
-                <p class="text-muted small">Tente ajustar seus filtros de busca ou volte mais tarde.</p>
+
+            <!-- Ação -->
+            <div class="mi-actions">
+              <a href="{% url 'item_detail' item.slug %}" class="btn-ver-item">
+                <i class="bi bi-eye-fill"></i> Ver
+              </a>
             </div>
+
+          </div>
+        {% endfor %}
+
+      </div>
+
+    {% else %}
+      <!-- ── Empty state ──────────────────────────────────── -->
+      <div class="mi-empty">
+        <div class="mi-empty-icon">
+          <i class="bi bi-inbox-fill"></i>
+        </div>
+        <h5>Nenhum item encontrado</h5>
+        <p>
+          {% if request.GET.q or request.GET.status %}
+            Tente ajustar os filtros ou limpar a pesquisa.
+          {% else %}
+            Ainda não há itens cadastrados nesta categoria.
+          {% endif %}
+        </p>
+        {% if request.GET.q or request.GET.status %}
+          <a href="{{ request.path }}" class="btn-ver-item">
+            <i class="bi bi-x-circle-fill"></i> Limpar filtros
+          </a>
         {% endif %}
+      </div>
+    {% endif %}
 
-    </div>
+  </div>
 </div>
-
 {% endblock %}

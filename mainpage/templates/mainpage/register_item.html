@@ -36,25 +36,25 @@
               <!-- TÍTULO + STATUS -->
               <div class="row mb-3 g-3">
                 <div class="col-md-7">
-                  <label class="form-label">Título do item *</label>
+                  <label class="form-label">O que é o objeto? *</label>
                   <div class="input-group-custom">
                     <span class="input-icon"><i class="bi bi-fonts"></i></span>
-                    <input type="text" name="titulo" class="form-control" placeholder="Ex: Chaveiro azul com chaves" required>
+                    <input type="text" name="titulo" class="form-control" placeholder="Ex: Chaveiro com controle de portão" required>
                   </div>
                 </div>
 
                 <div class="col-md-5">
-                  <label class="form-label">Status *</label>
+                  <label class="form-label">Situação *</label>
                   <div class="options-row">
                     <label class="option-chip selected">
                       <input type="radio" name="status" value="perdido" checked class="d-none" onchange="updateChipSelection(this)">
-                      <i class="bi bi-exclamation-circle chip-icon"></i>
-                      <span>Perdido</span>
+                      <i class="bi bi-megaphone chip-icon"></i>
+                      <span style="white-space: nowrap;">Perdido</span>
                     </label>
                     <label class="option-chip">
                       <input type="radio" name="status" value="achado" class="d-none" onchange="updateChipSelection(this)">
-                      <i class="bi bi-check-circle chip-icon"></i>
-                      <span>Achado</span>
+                      <i class="bi bi-check2-circle chip-icon"></i>
+                      <span style="white-space: nowrap;">Achado</span>
                     </label>
                   </div>
                 </div>
@@ -62,11 +62,11 @@
 
               <!-- DESCRIÇÃO -->
               <div class="mb-3">
-                <label class="form-label">Descrição *</label>
+                <label class="form-label">Detalhes da Ocorrência *</label>
                 <textarea name="descricao"
                           class="form-control"
                           rows="4"
-                          placeholder="Descreva o item com o máximo de detalhes possível"
+                          placeholder="Descreva as características do objeto e qualquer detalhe relevante sobre como ou onde ocorreu."
                           required></textarea>
               </div>
 
@@ -86,7 +86,7 @@
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">Data *</label>
+                  <label class="form-label">Data da Ocorrência *</label>
                   <div class="input-group-custom">
                     <span class="input-icon"><i class="bi bi-calendar3"></i></span>
                     <input type="date" name="data" class="form-control" required>
@@ -96,15 +96,14 @@
 
               <!-- LOCAL -->
               <div class="mb-3">
-                <label class="form-label">Local *</label>
+                <label class="form-label">Local Aproximado *</label>
                 <div class="input-group-custom">
                   <span class="input-icon"><i class="bi bi-geo-alt"></i></span>
                   <input type="text"
                          name="local"
                          class="form-control"
-                         placeholder="Onde o item foi perdido ou encontrado"
+                         placeholder="Onde o objeto foi perdido ou localizado"
                          required>
-                </div>
                 </div>
               </div>
 
@@ -243,8 +242,8 @@
 
         <!-- FOOTER -->
         <div class="modal-footer d-flex justify-content-center gap-3 border-0 pb-4 pt-0">
-          <button type="submit" class="btn btn-salvar-premium" style="background: linear-gradient(135deg, #6ccffb 0%, #1eaed4 100%) !important; color: #FFFFFF !important; font-weight: 800 !important; font-size: 0.9rem !important; letter-spacing: 0.3px !important; padding: 15px 32px !important; border: none !important; border-radius: 18px !important; box-shadow: 0 8px 24px rgba(30, 174, 212, 0.3), inset 0 1px 0 rgba(255,255,255,0.25) !important; flex: 1; max-width: 210px; cursor: pointer !important;">
-            SALVAR ITEM
+          <button type="submit" class="btn btn-salvar-premium" style="background: #90dbf4 !important; color: #0B3A4A !important; font-weight: 900 !important; font-size: 0.9rem !important; letter-spacing: 0.3px !important; padding: 15px 32px !important; border: none !important; border-radius: 18px !important; box-shadow: 0 8px 24px rgba(144, 219, 244, 0.4), inset 0 1px 0 rgba(255,255,255,0.4) !important; flex: 1; max-width: 240px; cursor: pointer !important;">
+            CADASTRAR ITEM
           </button>
 
           <button type="button" class="btn btn-cancelar-premium" data-bs-dismiss="modal" style="background: rgba(255, 255, 255, 0.85) !important; color: rgba(11, 58, 74, 0.7) !important; border: 1.5px solid rgba(11, 58, 74, 0.1) !important; font-weight: 700 !important; font-size: 0.9rem !important; padding: 15px 32px !important; border-radius: 18px !important; flex: 1; max-width: 210px; box-shadow: 0 2px 8px rgba(11, 58, 74, 0.04) !important; cursor: pointer !important;">

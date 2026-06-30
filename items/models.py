@@ -68,9 +68,21 @@ class Item(models.Model):
             base_slug = slugify(self.titulo)
             random_suffix = str(uuid.uuid4())[:6]
             self.slug = f"{base_slug}-{random_suffix}"
+
+        # Verifica se é criação ou se a imagem foi alterada
+        is_new = self.pk is None
+        update_fields = kwargs.get('update_fields') or []
+        imagem_alterada = is_new or 'imagem' in update_fields
+
         super().save(*args, **kwargs)
-        self._gerar_image_hash()
-        self._gerar_qrcode()
+
+        # Só regenera hash/QR se for item novo ou se a imagem mudou
+        # Isso evita I/O custoso em simples mudanças de status
+        if imagem_alterada:
+            self._gerar_image_hash()
+        if is_new:
+            self._gerar_qrcode()
+
 
     def _gerar_image_hash(self):
         """Gera pHash da imagem para busca visual (compatível com DatabaseStorage)."""

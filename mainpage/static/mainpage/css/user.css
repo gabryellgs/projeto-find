@@ -16,17 +16,16 @@
   --shadow-md:      0 6px 28px rgba(11,58,74,0.09), 0 2px 6px rgba(11,58,74,0.04);
 }
 
-body {
-  background-color: var(--c-bg) !important;
-  color: var(--c-text-body) !important;
-}
+/* body background removed to inherit base.css */
 
 /* ================= CARD USUÁRIO ================= */
 .profile-section-card {
-  background: var(--c-surface);
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
   border-radius: 20px;
-  border: 1px solid var(--c-border);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(11, 58, 74, 0.05);
   padding: 1.5rem;
   margin-bottom: 1rem;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -63,12 +62,15 @@ body {
 
 /* ================= MEUS ITENS ================= */
 .items-card {
-    background: var(--c-surface);
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
     border-radius: 20px;
-    border: 1px solid var(--c-border);
-    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(11, 58, 74, 0.05);
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
+    max-width: 100%;         /* garante que o card não estoure */
 }
 
 .items-card:hover {
@@ -90,7 +92,7 @@ body {
 
 /* ===== ITEM LISTA (CORRIGIDO) ===== */
 .item-lista-horizontal {
-    background: #ffffff; /* Fundo interno branco para contraste */
+    background: #ffffff;
     border-radius: 14px;
     padding: 14px;
     display: flex;
@@ -211,10 +213,12 @@ body {
 
 /* ================= ESTATÍSTICAS (CORRIGIDO) ================= */
 .stats-card {
-    background: var(--c-surface);
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
     border-radius: 20px;
-    border: 1px solid var(--c-border);
-    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(11, 58, 74, 0.05);
     margin-top: 0;
     transition: all 0.25s ease;
 }
@@ -226,10 +230,11 @@ body {
 
 /* Cada box */
 .stat-card {
-    border: 1px solid var(--c-border);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 14px;
     padding: 14px 10px;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -13,7 +13,7 @@
 <div class="container py-5">
 
   <!-- LINHA 1: PERFIL + ITENS -->
-  <div class="row g-4 align-items-stretch">
+  <div class="row g-4 align-items-start">
 
     <!-- PERFIL -->
     <div class="col-lg-4 col-md-5">
@@ -134,18 +134,19 @@
 
     <!-- ITENS -->
     <div class="col-lg-8 col-md-7">
-      <div class="card shadow-sm items-card border-0 h-100">
+      <div class="card shadow-sm items-card border-0">
 
         <div class="card-header d-flex justify-content-between align-items-center border-0 py-3">
           <h5 class="fw-bold mb-0" style="color: #0B3A4A;">Meus itens</h5>
 
           <button
-            class="btn btn-light btn-sm rounded-pill shadow-sm"
+            class="btn btn-sm rounded-pill shadow-sm"
+            style="background: #90dbf4; color: #0B3A4A; border: none; padding: 8px 16px; font-weight: 800;"
             data-bs-toggle="modal"
             data-bs-target="#modalNovoItem"
             type="button"
           >
-            <i class="bi bi-plus-lg"></i> Novo item
+            <i class="bi bi-plus-lg"></i> Cadastrar item
           </button>
         </div>
 

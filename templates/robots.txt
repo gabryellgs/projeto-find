@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /painel/
+Disallow: /accounts/
+Disallow: /chats/
+
+Allow: /
+Allow: /itens/
+Allow: /item/
+Allow: /privacidade/
+Allow: /termos/
+
+Sitemap: https://find-sitema.onrender.com/sitemap.xml

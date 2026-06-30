@@ -4,6 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FIND - Plataforma inteligente de Achados e Perdidos. Conecte-se para encontrar ou devolver itens perdidos com segurança e rapidez.">
+  <meta name="keywords" content="achados e perdidos, lost and found, find, recuperar itens, objetos perdidos">
+  <meta name="author" content="Equipe FIND">
+  <!-- Google Search Console Verification Meta Tag (Exemplo: altere pelo código real gerado no GSC) -->
+  <meta name="google-site-verification" content="COLOQUE_SEU_CODIGO_AQUI">
   <title>{% block title %}FIND{% endblock %}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,6 +26,8 @@
   <link rel="stylesheet" href="{% static 'mainpage/css/navbar.css' %}?v=10">
   {# CSS Mobile App Adaptation #}
   <link rel="stylesheet" href="{% static 'mainpage/css/mobile.css' %}?v=1.0">
+  {# CSS Cookie Consent LGPD #}
+  <link rel="stylesheet" href="{% static 'mainpage/css/cookie.css' %}?v=1.0">
 
   <link rel="icon" type="image/webp" href="{% static 'mainpage/img/find.webp' %}">
 
@@ -450,8 +457,8 @@
         <p class="footer-col-title">Suporte</p>
         <ul class="footer-col-links">
           <li><a href="#">Central de ajuda</a></li>
-          <li><a href="#">Privacidade</a></li>
-          <li><a href="#">Termos de uso</a></li>
+          <li><a href="{% url 'privacy' %}">Privacidade</a></li>
+          <li><a href="{% url 'terms' %}">Termos de uso</a></li>
           <li><a href="#">Contato</a></li>
         </ul>
       </div>
@@ -462,9 +469,9 @@
     <div class="find-footer-bottom">
       <span class="footer-copy">© 2025 FIND — Todos os direitos reservados.</span>
       <div class="footer-bottom-links">
-        <a href="#">Privacidade</a>
-        <a href="#">Termos</a>
-        <a href="#">Cookies</a>
+        <a href="{% url 'privacy' %}">Privacidade</a>
+        <a href="{% url 'terms' %}">Termos</a>
+        <a href="#" onclick="showCookieBanner()">Cookies</a>
       </div>
     </div>
 
@@ -553,6 +560,326 @@
 
   // Fecha com ESC
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+
+<!-- ══════════════════════════════════════════════════════════
+     COOKIE CONSENT BANNER (LGPD)
+══════════════════════════════════════════════════════════ -->
+
+<!-- Banner principal -->
+<div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Consentimento de cookies" aria-live="polite">
+  <div class="cookie-header">
+    <div class="cookie-icon-wrap">
+      <i class="bi bi-shield-lock-fill"></i>
+    </div>
+    <div class="cookie-text-wrap">
+      <p class="cookie-title">Sua privacidade importa</p>
+      <p class="cookie-desc">
+        O FIND usa cookies para funcionar e melhorar sua experiência, conforme a
+        <a href="{% url 'privacy' %}">LGPD e nossa Política de Privacidade</a>.
+      </p>
+    </div>
+  </div>
+  <div class="cookie-actions">
+    <button id="cookieBtnAccept" class="cookie-btn cookie-btn-accept">Aceitar todos</button>
+    <button id="cookieBtnEssential" class="cookie-btn cookie-btn-essential">Apenas essenciais</button>
+    <button id="cookieBtnSettings" class="cookie-btn cookie-btn-settings">
+      <i class="bi bi-sliders"></i> Personalizar
+    </button>
+  </div>
+</div>
+
+<!-- Modal de preferências -->
+<div id="cookieModalOverlay" class="cookie-modal-overlay" role="dialog" aria-modal="true" aria-label="Preferências de cookies">
+  <div class="cookie-modal">
+
+    <div class="cookie-modal-header">
+      <h2 class="cookie-modal-title">
+        <i class="bi bi-sliders"></i>
+        Preferências de Cookies
+      </h2>
+      <button id="cookieModalClose" class="cookie-modal-close" aria-label="Fechar">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="cookie-modal-body">
+      <p class="cookie-modal-intro">
+        A FIND respeita sua privacidade conforme a
+        <strong>Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018)</strong>.
+        Você pode escolher quais categorias de cookies aceitar.
+        Cookies essenciais são sempre ativos pois são necessários para o funcionamento da plataforma.
+        Saiba mais em nossa <a href="{% url 'privacy' %}">Política de Privacidade</a>.
+      </p>
+
+      <!-- Essenciais -->
+      <div class="cookie-category" id="cat-essential">
+        <div class="cookie-category-header">
+          <div class="cookie-category-icon icon-essential">
+            <i class="bi bi-shield-check-fill"></i>
+          </div>
+          <div class="cookie-category-info">
+            <p class="cookie-category-name">Cookies Essenciais</p>
+            <p class="cookie-category-desc">Necessários para autenticação, segurança e funcionamento básico da plataforma.</p>
+            <button class="cookie-expand-btn" data-target="cat-essential">
+              Ver detalhes <i class="bi bi-chevron-down"></i>
+            </button>
+          </div>
+          <span class="cookie-required-badge">Obrigatório</span>
+          <label class="cookie-toggle" aria-label="Cookies essenciais (sempre ativos)">
+            <input type="checkbox" id="toggle-essential" checked disabled>
+            <span class="cookie-toggle-track"></span>
+          </label>
+        </div>
+        <div class="cookie-category-details">
+          <table class="cookie-detail-table">
+            <thead><tr><th>Cookie</th><th>Finalidade</th><th>Duração</th></tr></thead>
+            <tbody>
+              <tr><td>sessionid</td><td>Mantém sua sessão autenticada</td><td>Sessão</td></tr>
+              <tr><td>csrftoken</td><td>Proteção contra ataques CSRF</td><td>1 ano</td></tr>
+              <tr><td>cookie_consent</td><td>Salva suas preferências de cookies</td><td>1 ano</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Analíticos -->
+      <div class="cookie-category" id="cat-analytics">
+        <div class="cookie-category-header">
+          <div class="cookie-category-icon icon-analytics">
+            <i class="bi bi-bar-chart-fill"></i>
+          </div>
+          <div class="cookie-category-info">
+            <p class="cookie-category-name">Cookies Analíticos</p>
+            <p class="cookie-category-desc">Nos ajudam a entender como você usa o FIND para melhorar nossos serviços.</p>
+            <button class="cookie-expand-btn" data-target="cat-analytics">
+              Ver detalhes <i class="bi bi-chevron-down"></i>
+            </button>
+          </div>
+          <label class="cookie-toggle" aria-label="Permitir cookies analíticos">
+            <input type="checkbox" id="toggle-analytics">
+            <span class="cookie-toggle-track"></span>
+          </label>
+        </div>
+        <div class="cookie-category-details">
+          <table class="cookie-detail-table">
+            <thead><tr><th>Cookie</th><th>Finalidade</th><th>Duração</th></tr></thead>
+            <tbody>
+              <tr><td>_ga</td><td>Análise de uso agregado (Google Analytics)</td><td>2 anos</td></tr>
+              <tr><td>_gid</td><td>Identificação de sessão analítica</td><td>24 horas</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Funcionais -->
+      <div class="cookie-category" id="cat-functional">
+        <div class="cookie-category-header">
+          <div class="cookie-category-icon icon-functional">
+            <i class="bi bi-gear-fill"></i>
+          </div>
+          <div class="cookie-category-info">
+            <p class="cookie-category-name">Cookies Funcionais</p>
+            <p class="cookie-category-desc">Lembram suas preferências como idioma, tema e filtros de busca.</p>
+            <button class="cookie-expand-btn" data-target="cat-functional">
+              Ver detalhes <i class="bi bi-chevron-down"></i>
+            </button>
+          </div>
+          <label class="cookie-toggle" aria-label="Permitir cookies funcionais">
+            <input type="checkbox" id="toggle-functional">
+            <span class="cookie-toggle-track"></span>
+          </label>
+        </div>
+        <div class="cookie-category-details">
+          <table class="cookie-detail-table">
+            <thead><tr><th>Cookie</th><th>Finalidade</th><th>Duração</th></tr></thead>
+            <tbody>
+              <tr><td>find_prefs</td><td>Preferências de filtros e exibição</td><td>6 meses</td></tr>
+              <tr><td>find_theme</td><td>Preferência de tema visual</td><td>1 ano</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>{# /modal-body #}
+
+    <div class="cookie-modal-footer">
+      <button id="cookieModalSave" class="cookie-modal-btn cookie-modal-btn-save">Salvar preferências</button>
+      <button id="cookieModalAcceptAll" class="cookie-modal-btn cookie-modal-btn-all">Aceitar todos</button>
+    </div>
+
+  </div>{# /cookie-modal #}
+</div>{# /overlay #}
+
+<!-- Toast de confirmação -->
+<div id="cookieToast" class="cookie-saved-toast" role="status" aria-live="polite">
+  <i class="bi bi-check-circle-fill"></i>
+  Preferências salvas com sucesso!
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── Elementos ──────────────────────────────────────────── */
+  const banner       = document.getElementById('cookieBanner');
+  const overlay      = document.getElementById('cookieModalOverlay');
+  const toast        = document.getElementById('cookieToast');
+
+  const btnAccept    = document.getElementById('cookieBtnAccept');
+  const btnEssential = document.getElementById('cookieBtnEssential');
+  const btnSettings  = document.getElementById('cookieBtnSettings');
+  const btnClose     = document.getElementById('cookieModalClose');
+  const btnSave      = document.getElementById('cookieModalSave');
+  const btnAcceptAll = document.getElementById('cookieModalAcceptAll');
+
+  const toggleAnalytics  = document.getElementById('toggle-analytics');
+  const toggleFunctional = document.getElementById('toggle-functional');
+
+  const STORAGE_KEY = 'find_cookie_consent';
+
+  /* ── Helpers ────────────────────────────────────────────── */
+  function showBanner() {
+    banner.classList.add('cookie-visible');
+  }
+
+  function hideBanner() {
+    banner.classList.remove('cookie-visible');
+  }
+
+  function openModal() {
+    overlay.classList.add('cookie-modal-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay.classList.remove('cookie-modal-open');
+    document.body.style.overflow = '';
+  }
+
+  function showToast() {
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  function saveConsent(analytics, functional) {
+    const prefs = {
+      essential: true,
+      analytics: analytics,
+      functional: functional,
+      timestamp: new Date().toISOString()
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+    return prefs;
+  }
+
+  function loadConsent() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY));
+    } catch { return null; }
+  }
+
+  function applyConsent(prefs) {
+    /* Aqui você pode ativar/desativar scripts de analytics conforme prefs */
+    if (prefs.analytics && window.gtag) {
+      gtag('consent', 'update', { analytics_storage: 'granted' });
+    }
+  }
+
+  /* ── Inicialização ──────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', function () {
+    const saved = loadConsent();
+
+    if (!saved) {
+      /* Primeira visita: mostra banner após 1,2s */
+      setTimeout(showBanner, 1200);
+    } else {
+      /* Restaura toggles conforme prefs salvas */
+      toggleAnalytics.checked  = saved.analytics;
+      toggleFunctional.checked = saved.functional;
+      applyConsent(saved);
+    }
+
+    /* ── Ações do banner ──────────────────────────────────── */
+    btnAccept.addEventListener('click', function () {
+      const prefs = saveConsent(true, true);
+      hideBanner();
+      applyConsent(prefs);
+      showToast();
+    });
+
+    btnEssential.addEventListener('click', function () {
+      const prefs = saveConsent(false, false);
+      hideBanner();
+      applyConsent(prefs);
+      showToast();
+    });
+
+    btnSettings.addEventListener('click', function () {
+      hideBanner();
+      openModal();
+    });
+
+    /* ── Ações do modal ───────────────────────────────────── */
+    btnClose.addEventListener('click', function () {
+      closeModal();
+      /* Reabre banner se ainda não consentiu */
+      if (!loadConsent()) showBanner();
+    });
+
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) {
+        closeModal();
+        if (!loadConsent()) showBanner();
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay.classList.contains('cookie-modal-open')) {
+        closeModal();
+        if (!loadConsent()) showBanner();
+      }
+    });
+
+    btnSave.addEventListener('click', function () {
+      const prefs = saveConsent(
+        toggleAnalytics.checked,
+        toggleFunctional.checked
+      );
+      closeModal();
+      hideBanner();
+      applyConsent(prefs);
+      showToast();
+    });
+
+    btnAcceptAll.addEventListener('click', function () {
+      toggleAnalytics.checked  = true;
+      toggleFunctional.checked = true;
+      const prefs = saveConsent(true, true);
+      closeModal();
+      hideBanner();
+      applyConsent(prefs);
+      showToast();
+    });
+
+    /* ── Expandir/recolher detalhes ───────────────────────── */
+    document.querySelectorAll('.cookie-expand-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const catId  = btn.dataset.target;
+        const catEl  = document.getElementById(catId);
+        catEl.classList.toggle('expanded');
+      });
+    });
+  });
+
+  /* ── Função global para reabrir via footer ──────────────── */
+  window.showCookieBanner = function (e) {
+    if (e) e.preventDefault();
+    openModal();
+  };
+
+}());
 </script>
 
 {% block extra_js %}{% endblock %}

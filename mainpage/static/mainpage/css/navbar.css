@@ -19,9 +19,9 @@
   --nav-shadow-s:  0 10px 40px rgba(11, 58, 74, 0.08), inset 0 -1px 0 rgba(255, 255, 255, 0.2);
 
   --link-idle:     #0B3A4A;
-  --link-hover-bg: rgba(30, 174, 212, 0.1); /* Azul bem clarinho/glass em vez de cinza */
-  --link-active-bg:#0B3A4A;
-  --link-active-c: #ffffff;
+  --link-hover-bg: rgba(30, 174, 212, 0.10);
+  --link-active-bg: rgba(255, 255, 255, 0.75);  /* pill branco glass */
+  --link-active-c: #0B3A4A;                      /* texto escuro p/ contraste */
 
   --radius-btn:    12px;
   --transition:    all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
@@ -175,18 +175,16 @@
 }
 
 .find-nav-link.active {
-  color: var(--brand-dark) !important;
+  background: var(--link-active-bg);
+  color: var(--link-active-c) !important;
   font-weight: 800;
+  border-radius: 99px;
+  box-shadow: 0 2px 8px rgba(11, 58, 74, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 8px 16px;
 }
 .find-nav-link.active::after {
-  content: '';
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 0px;
-  height: 3px;
-  border-radius: 4px;
-  background: var(--brand-accent);
+  display: none;  /* remove o sublinhado quando usa o pill */
 }
 .find-nav-link.active .nav-ico {
   opacity: 1;
@@ -492,6 +490,9 @@
 .drawer-link.active {
   background: var(--link-active-bg);
   color: var(--link-active-c);
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 8px rgba(11, 58, 74, 0.08);
 }
 
 /* Rodapé do drawer */
