@@ -1,124 +1,110 @@
-<div align="center">
-  <img src="https://raw.githubusercontent.com/seu-usuario/Find-sitema/main/projeto_find/mainpage/static/mainpage/img/logo-find.png" alt="Find Logo" width="120" style="border-radius: 12px;"/>
-  <h1>FIND - Achados e Perdidos</h1>
-  <p><strong>Plataforma SaaS Completa para Gestão de Itens Perdidos, App Mobile e Integração IoT (RFID)</strong></p>
-</div>
+# FIND Platform
+
+**Find** is a comprehensive, centralized ecosystem for lost and found asset management, designed for institutional environments. It bridges web, mobile, and IoT interfaces to deliver real-time item tracking and seamless communication between users.
 
 ---
 
-## 📌 Sobre o Projeto
+## 🏗️ Architecture & Ecosystem
 
-O **FIND** não é apenas um site de achados e perdidos; é um ecossistema completo de gestão inteligente de itens voltado para o ambiente acadêmico/institucional (como a COPAC do IFRN). Ele conecta de forma rápida quem perdeu algo com quem encontrou, automatizando fluxos e garantindo segurança na devolução.
+The platform is structured into three integrated components:
 
-### 🌟 Destaques do Ecossistema
-- **Plataforma Web (SaaS):** Design premium moderno (*Glassmorphism*, *Baby Blue Palette*), painéis dinâmicos para administradores e fluxo gamificado para bolsistas.
-- **Mobile App:** Aplicativo responsivo que espelha perfeitamente a lógica da web, trazendo a experiência nativa (*Bottom Navigation*, *Swipe Cards*) para o smartphone do usuário.
-- **Integração IoT (Hardware):** Leitura de cartões e itens via RFID (ESP32) integrados de forma nativa ao banco de dados e dashboard web para inventário em tempo real.
-- **Chat e Notificações:** Comunicação segura e direta entre o dono do item e quem o encontrou/registrou.
+1. **Web Dashboard (SaaS)**: A responsive, high-fidelity administrative panel built with Django. It features a modern Glassmorphism UI, ensuring a premium user experience. Includes permission-based routing for administrators and scholarship holders.
+2. **Mobile Application**: A React Native cross-platform application ensuring native mobile experiences with fluid gestures and intuitive UI design.
+3. **IoT Integration**: Hardware-level integration utilizing ESP32 microcontrollers and RFID technology for real-time asset validation and scanning.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Technology Stack
 
-**Backend & Web:**
-- Python 3.12 + **Django 5.0** (Framework Web e ORM)
-- Autenticação avançada (Google OAuth2 integrada)
-- Banco de Dados: SQLite (Dev) / PostgreSQL (Produção)
-- Gunicorn (Servidor WSGI)
+**Backend Infrastructure**
+- **Framework**: Django 5.0 (Python 3.12)
+- **Database**: PostgreSQL (Production) / SQLite (Development)
+- **Authentication**: Native session management and Google OAuth2 integration.
+- **Server**: Gunicorn (WSGI HTTP Server)
 
-**Frontend:**
-- HTML5, CSS3, JavaScript Vanilla
-- Bootstrap 5 (Customizado)
-- Swiper.js (Carrosséis de cards de itens)
-- Leaflet.js (Mapas interativos de localização de perdas)
-- Estilização SaaS Premium (Translucidez, Glassmorphism, Micro-interações)
+**Frontend (Web)**
+- HTML5, CSS3, JavaScript (ES6+)
+- Custom UI framework using Bootstrap 5 architecture.
+- Interactive map components via Leaflet.js.
+- Image hashing and processing tools via Pillow and python-magic.
 
-**DevOps & Infra:**
-- Docker & Docker Compose
-- Render (PaaS Deployment Automático)
-- Integração CI/CD nativa
+**DevOps & Deployment**
+- Containerization: Docker & Docker Compose
+- Continuous Deployment Pipeline via Render Platform.
 
 ---
 
-## 🚀 Como Executar o Projeto
+## ⚙️ Prerequisites
 
-A maneira mais rápida e garantida de executar o projeto na sua máquina (ou em qualquer servidor) é utilizando o **Docker**. O sistema já vem com tudo mastigado para subir automaticamente.
+Before you begin, ensure you have met the following requirements:
+- Python 3.12+
+- Docker and Docker Compose (For containerized deployment)
+- Git (Version control)
+- System dependencies (Linux/Ubuntu): `libmagic1`, `default-libmysqlclient-dev`
 
-### 🐳 1. Rodando com Docker (Recomendado)
+---
 
-Certifique-se de ter o [Docker](https://docs.docker.com/get-docker/) e o [Docker Compose](https://docs.docker.com/compose/install/) instalados na sua máquina.
+## 🚀 Installation & Setup
 
-1. **Clone o repositório:**
+### Option A: Containerized Environment (Recommended)
+This approach automatically provisions the database, applies migrations, and gathers static assets.
+
+1. Clone the repository:
    ```bash
-   git clone https://github.com/SEU_USUARIO/Find-sitema.git
-   cd Find-sitema/projeto_find
+   git clone https://github.com/gabryellgs/projeto-find.git
+   cd projeto-find
    ```
-
-2. **Suba os containers da aplicação:**
+2. Build and initialize the Docker containers:
    ```bash
    docker-compose build web
    docker-compose up -d web
    ```
+3. Access the application at `http://localhost:8000`.
 
-3. **Acesse a aplicação no navegador:**
-   - http://localhost:8000
+### Option B: Local Development Environment
 
-*O Docker irá instalar o Python, instalar os `requirements.txt`, preparar o banco de dados e aplicar os arquivos estáticos automaticamente usando o arquivo `start.sh`.*
-
----
-
-### 💻 2. Rodando Localmente (Sem Docker)
-
-Caso prefira rodar diretamente no seu ambiente Python local para desenvolvimento:
-
-1. **Crie e ative um ambiente virtual:**
+1. Create and activate a virtual environment:
    ```bash
-   python3.12 -m venv .venv
-   source .venv/bin/activate  # No Windows: .venv\Scripts\activate
+   python3 -m venv .venv
+   source .venv/bin/activate
    ```
-
-2. **Instale as dependências e o suporte para o Magic (reconhecimento de imagens):**
+2. Install Python dependencies:
    ```bash
-   # Dependências do sistema (Linux/Ubuntu)
-   sudo apt-get install libmagic1 default-libmysqlclient-dev
-   
-   # Instale os pacotes Python
    pip install -r requirements.txt
    ```
-
-3. **Gere os arquivos estáticos e rode as migrações do Banco:**
+3. Execute database migrations and seed default data:
    ```bash
-   python manage.py collectstatic --noinput
    python manage.py migrate
    python manage.py criar_categorias
+   python manage.py gerar_hashes
    ```
-
-4. **Inicie o servidor de desenvolvimento:**
+4. Collect static files:
+   ```bash
+   python manage.py collectstatic --noinput
+   ```
+5. Initialize the development server:
    ```bash
    python manage.py runserver
    ```
-   Acesse: http://127.0.0.1:8000
 
 ---
 
-## ☁️ Deploy no Render
+## ☁️ Deployment Guide
 
-Este repositório está pronto para deploy contínuo (CI/CD) em plataformas como o **Render**.
+The application is configured for seamless deployment to PaaS providers (e.g., Render, Heroku). 
 
-1. Crie um Web Service no Render conectado a este repositório do GitHub.
-2. Defina o **Environment** como `Docker` ou use o comando nativo se escolher `Python 3` (Build Command: `./start.sh`, Start Command: `gunicorn find.wsgi:application`).
-3. O script `start.sh` interno garante que as migrações de banco e a coleta dos seus arquivos estáticos (CSS atualizados) sejam feitas de forma 100% autônoma a cada Push.
-
----
-
-## 🔒 Segurança e LGPD
-
-- Banner flutuante nativo e gerenciador de cookies implementados.
-- Políticas de Privacidade e Termos de Uso documentados de acordo com os padrões legais (gov.br).
-- Rotas sensíveis (como gestão IoT e painéis administrativos) fortemente blindadas por `decorators` de permissão.
+1. Connect the GitHub repository to your Render Web Service.
+2. Select the **Docker** runtime environment.
+3. The embedded `Dockerfile` and `start.sh` scripts will automatically manage static file compilation (`collectstatic`), WSGI configuration, and database migrations.
 
 ---
 
-<div align="center">
-  <p>Desenvolvido com 🩵 e muito <strong>Azul Bebê</strong></p>
-</div>
+## 🔐 Security & Compliance
+
+- **LGPD/GDPR Compliance**: Includes built-in consent management logic for cookie tracking and privacy policies.
+- **Access Control**: Role-Based Access Control (RBAC) separating administrative actions from standard user permissions.
+- **Data Protection**: Enforced CSRF tokens, secure cookie flags, and parameterized query execution to prevent injection attacks.
+
+---
+
+*Find Platform - Proprietary License. All rights reserved.*
