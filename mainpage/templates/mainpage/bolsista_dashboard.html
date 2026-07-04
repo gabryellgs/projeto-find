@@ -1372,6 +1372,50 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     btnStop.addEventListener("click", stopScannerSilently);
+
+    // ══════════════════════════════════════════════════════
+    // GLOBAL IOT POLLING: Abrir modal do item automaticamente
+    // ══════════════════════════════════════════════════════
+    let lastScannedTimestamp = null;
+    
+    setInterval(async () => {
+        // Não faz polling global se o modal de Novo Item estiver aberto (para não conflitar com o cadastro)
+        const modalNovo = document.getElementById('modalNovoItem');
+        if (modalNovo && modalNovo.classList.contains('show')) return;
+        
+        try {
+            const resp = await fetch('/api/iot/latest-scan/', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await resp.json();
+            
+            if (data.ok && data.timestamp !== lastScannedTimestamp) {
+                lastScannedTimestamp = data.timestamp;
+                
+                if (data.sucesso_identificacao && data.item_id) {
+                    // Tenta abrir o modal de entrega (devolverModal) primeiro
+                    let targetModalEl = document.getElementById(`devolverModal${data.item_id}`);
+                    
+                    // Se não for um item pendente (ex: já foi devolvido), tenta abrir o modal de edição
+                    if (!targetModalEl) {
+                        targetModalEl = document.getElementById(`editarTodosModal${data.item_id}`);
+                    }
+                    
+                    if (targetModalEl) {
+                        // Se existir, abre ele
+                        const bsModal = new bootstrap.Modal(targetModalEl);
+                        bsModal.show();
+                    } else {
+                        // Se não estiver na página, redireciona a busca
+                        window.location.href = `/bolsista/?busca=${data.rfid_uid}`;
+                    }
+                }
+            }
+        } catch (e) {
+            // Ignora erros de rede no background
+        }
+    }, 2500); // Checa a cada 2.5 segundos
+
 });
 </script>
 {% endblock %}

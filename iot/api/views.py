@@ -102,67 +102,10 @@ def api_iot_latest_scan(request):
         "rfid_uid": leitura.rfid_uid.upper(),
         "dispositivo": leitura.dispositivo.nome if leitura.dispositivo else "Desconhecido",
         "timestamp": leitura.timestamp.isoformat(),
+        "sucesso_identificacao": leitura.sucesso_identificacao,
+        "item_slug": leitura.item_associado.slug if leitura.item_associado else None,
+        "item_id": leitura.item_associado.id if leitura.item_associado else None,
+        "item_titulo": leitura.item_associado.titulo if leitura.item_associado else None,
+        "item_status": leitura.item_associado.status if leitura.item_associado else None
     })
 
-
-@api_view(["POST"])
-@permission_classes([AllowAny])
-def api_iot_scan(request):
-    """
-    Endpoint dedicado para receber leituras de módulos IoT (ESP32).
-    Requer header: Authorization: Hardware-Token <token>
-    Payload esperado: {"rfid_uid": "04 EA B1 22", "acao": "scan"}
-    """
-    auth_header = request.headers.get("Authorization", "")
-    
-    if not auth_header.startswith("Hardware-Token "):
-        logger.warning(f"Tentativa de acesso IoT sem header correto. IP: {_get_client_ip(request)}")
-        return Response({"ok": False, "detail": "Acesso negado. Formato de token inválido."}, status=403)
-        
-    token_str = auth_header.replace("Hardware-Token ", "").strip()
-    
-    # 1. Autenticação Baseada no Banco de Dados
-    try:
-        dispositivo = Dispositivo.objects.get(token_auth=token_str, is_ativo=True)
-    except Dispositivo.DoesNotExist:
-        logger.warning(f"Tentativa de acesso IoT com token não reconhecido: {token_str}. IP: {_get_client_ip(request)}")
-        return Response({"ok": False, "detail": "Acesso negado. Dispositivo inativo ou token inválido."}, status=403)
-
-    # Atualiza last_seen do dispositivo
-    dispositivo.ultima_comunicacao = timezone.now()
-    dispositivo.save(update_fields=["ultima_comunicacao"])
-
-    # 2. Processamento do RFID
-    rfid_uid = request.data.get("rfid_uid", "").strip()
-    if not rfid_uid:
-        return Response({"ok": False, "detail": "O campo 'rfid_uid' é obrigatório."}, status=400)
-
-    try:
-        item = Item.objects.select_related("usuario", "categoria").get(rfid_uid__iexact=rfid_uid)
-        
-        # Registra no log do IoT
-        LeituraLog.objects.create(
-            dispositivo=dispositivo,
-            rfid_uid=rfid_uid,
-            sucesso_identificacao=True,
-            item_associado=item
-        )
-        
-        return Response({
-            "ok": True,
-            "detail": f"Item identificado pelo leitor {dispositivo.nome}.",
-            "item": _item_to_dict(item, request)
-        })
-    except Item.DoesNotExist:
-        # Registra no log como tag virgem/não associada
-        LeituraLog.objects.create(
-            dispositivo=dispositivo,
-            rfid_uid=rfid_uid,
-            sucesso_identificacao=False
-        )
-        
-        return Response({
-            "ok": False,
-            "detail": "Etiqueta lida mas não associada a nenhum item no sistema.",
-            "rfid_uid": rfid_uid
-        }, status=404)

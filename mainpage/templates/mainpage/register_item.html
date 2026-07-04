@@ -327,9 +327,10 @@ function iniciarLeituraSensor(inputId, btnId, statusId) {
     } catch(e) {}
   }, 500);
 }
-</script>
+
 // Função de seleção de chips de status
 function updateChipSelection(radioInput) {
+
   const row = radioInput.closest('.options-row');
   if (!row) return;
   row.querySelectorAll('.option-chip').forEach(chip => {
