@@ -131,11 +131,17 @@
                   </label>
                   <button type="button"
                           style="background:none; border:none; padding:0; font-size:.72rem; color:#1eaed4; cursor:pointer;"
-                          data-bs-toggle="collapse" data-bs-target="#rfidFieldWrap" aria-expanded="false">
+                          data-bs-toggle="collapse" data-bs-target="#rfidFieldWrap" aria-expanded="{% if rfid_prefill %}true{% else %}false{% endif %}">
                     + Vincular etiqueta
                   </button>
                 </div>
-                <div class="collapse" id="rfidFieldWrap">
+                  <div class="collapse {% if rfid_prefill %}show{% endif %}" id="rfidFieldWrap">
+                  {% if rfid_prefill %}
+                  <div class="alert mb-2" style="background:#fff3cd; border:1px solid #fcd34d; border-radius:10px; font-size:.78rem; color:#92400e; padding:8px 12px;">
+                    <i class="bi bi-broadcast me-1" style="color:#f59e0b;"></i>
+                    Tag detectada pelo leitor RFID: <strong style="font-family:monospace;">{{ rfid_prefill }}</strong>
+                  </div>
+                  {% endif %}
                   <div class="input-group-custom" style="border:1.5px dashed rgba(30,174,212,0.35); border-radius:12px; background:rgba(30,174,212,0.03);">
                     <span class="input-icon"><i class="bi bi-cpu" style="color:#1eaed4;"></i></span>
                     <input type="text"
@@ -143,12 +149,20 @@
                            name="rfid_uid"
                            class="form-control"
                            placeholder="Ex: 04 EA B1 22"
+                           value="{{ rfid_prefill }}"
                            style="text-transform:uppercase; font-family:monospace; letter-spacing:.5px;"
                            autocomplete="off">
+                    <button type="button" id="btnScanRfidModal"
+                            onclick="iniciarLeituraSensor('rfidUidInput', 'btnScanRfidModal', 'statusScanModal')"
+                            title="Aproxime a tag do leitor para preencher automaticamente"
+                            style="background:#1eaed4; color:#fff; border:none; border-radius:0 10px 10px 0; padding:0 12px; cursor:pointer; white-space:nowrap;">
+                      <i class="bi bi-broadcast"></i>
+                    </button>
                   </div>
-                  <div style="font-size:.71rem; color:#94a3b8; margin-top:5px; padding-left:4px;">
+                  <div id="statusScanModal" class="mt-1" style="font-size:.71rem; min-height:16px;"></div>
+                  <div style="font-size:.71rem; color:#94a3b8; margin-top:3px; padding-left:4px;">
                     <i class="bi bi-info-circle me-1"></i>
-                    Digite o UID impresso na etiqueta ou lido pelo leitor RFID. Deixe em branco se não houver etiqueta física.
+                    Digite o UID ou clique em <i class="bi bi-broadcast"></i> e aproxime a tag do leitor.
                   </div>
                 </div>
               </div>
@@ -261,6 +275,59 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 
 <script>
+// ── Leitura ao vivo via sensor RFID (reutilizável) ────────────────────────
+let _rfidPollIntervalModal = null;
+
+function iniciarLeituraSensor(inputId, btnId, statusId) {
+  if (_rfidPollIntervalModal) {
+    clearInterval(_rfidPollIntervalModal);
+    _rfidPollIntervalModal = null;
+    const btn = document.getElementById(btnId);
+    const status = document.getElementById(statusId);
+    if (btn) { btn.innerHTML = '<i class="bi bi-broadcast"></i>'; btn.style.background = '#1eaed4'; }
+    if (status) status.innerHTML = '';
+    return;
+  }
+
+  const input  = document.getElementById(inputId);
+  const btn    = document.getElementById(btnId);
+  const status = document.getElementById(statusId);
+  if (!input) return;
+
+  if (btn)    { btn.innerHTML = '<i class="bi bi-broadcast-pin"></i>'; btn.style.background = '#f59e0b'; }
+  if (status) { status.innerHTML = '<span style="color:#f59e0b;"><i class="bi bi-broadcast-pin me-1"></i>Aproxime a tag do leitor...</span>'; }
+
+  let tentativas = 0;
+  const maxTentativas = 60;
+
+  _rfidPollIntervalModal = setInterval(async function() {
+    tentativas++;
+    if (tentativas > maxTentativas) {
+      clearInterval(_rfidPollIntervalModal);
+      _rfidPollIntervalModal = null;
+      if (btn)    { btn.innerHTML = '<i class="bi bi-broadcast"></i>'; btn.style.background = '#1eaed4'; }
+      if (status) { status.innerHTML = '<span style="color:#dc3545;">Tempo esgotado. Tente novamente.</span>'; }
+      return;
+    }
+    try {
+      const resp = await fetch('/api/iot/latest-scan/', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+      const data = await resp.json();
+      if (data.ok && data.rfid_uid) {
+        clearInterval(_rfidPollIntervalModal);
+        _rfidPollIntervalModal = null;
+        input.value = data.rfid_uid.toUpperCase();
+        input.style.borderColor = '#22c55e';
+        if (btn)    { btn.innerHTML = '<i class="bi bi-check-lg"></i>'; btn.style.background = '#22c55e'; }
+        if (status) { status.innerHTML = '<span style="color:#22c55e;"><i class="bi bi-check-circle-fill me-1"></i>Tag lida: <strong style="font-family:monospace;">' + data.rfid_uid + '</strong></span>'; }
+        setTimeout(function() {
+          input.style.borderColor = '';
+          if (btn) { btn.innerHTML = '<i class="bi bi-broadcast"></i>'; btn.style.background = '#1eaed4'; }
+        }, 4000);
+      }
+    } catch(e) {}
+  }, 500);
+}
+</script>
 // Função de seleção de chips de status
 function updateChipSelection(radioInput) {
   const row = radioInput.closest('.options-row');

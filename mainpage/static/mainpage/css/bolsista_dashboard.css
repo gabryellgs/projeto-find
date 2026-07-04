@@ -229,6 +229,93 @@ h1,h2,h3,h4,h5,h6 {
 .conquista-badge.unlocked i { color:#f59e0b; }
 .conquista-badge:hover { transform:translateY(-2px); box-shadow:var(--shadow-sm); opacity:1; filter:none; }
 
+/* ══ SIDEBAR RANK BADGE (GAMER STYLE) ══════════════════════ */
+
+/* Container do avatar precisa ser relativo para o badge absoluto */
+.profile-avatar-container { position: relative !important; display: inline-block !important; }
+
+/* Círculo externo: fundo azul do sistema, redondo */
+.sidebar-level-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #90dbf4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+  z-index: 10;
+  opacity: 0;
+  box-shadow: 0 2px 10px rgba(30,174,212,0.35);
+}
+
+/* Glow pulsante por rank — aplicado no círculo externo */
+.sidebar-level-badge.rank-glow-blue   { animation: badge-glow-blue   2.2s ease-in-out infinite; }
+.sidebar-level-badge.rank-glow-purple { animation: badge-glow-purple  2.2s ease-in-out infinite; }
+.sidebar-level-badge.rank-glow-amber  { animation: badge-glow-amber   2.0s ease-in-out infinite; }
+.sidebar-level-badge.rank-glow-red    { animation: badge-glow-red     1.6s ease-in-out infinite; }
+
+@keyframes badge-glow-blue   { 0%,100%{box-shadow:0 2px 8px #1eaed455} 50%{box-shadow:0 0 18px #1eaed4aa} }
+@keyframes badge-glow-purple { 0%,100%{box-shadow:0 2px 8px #8b5cf655} 50%{box-shadow:0 0 18px #8b5cf6aa} }
+@keyframes badge-glow-amber  { 0%,100%{box-shadow:0 2px 8px #f59e0b55} 50%{box-shadow:0 0 22px #f59e0baa} }
+@keyframes badge-glow-red    { 0%,100%{box-shadow:0 2px 8px #f43f5e55} 50%{box-shadow:0 0 26px #f43f5ecc} }
+
+/* Ícone dentro do círculo */
+.sidebar-level-badge span {
+  font-size: 14px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Rank name tag abaixo da foto */
+.sidebar-level-name {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #64748b;
+  padding: 3px 12px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 4px;
+  display: inline-block;
+  transition: color 0.4s ease, text-shadow 0.4s ease;
+  font-family: var(--font-display);
+}
+
+/* XP bar gamer: neon + scanlines */
+.progresso-barra-glow {
+  height: 100%;
+  background: linear-gradient(90deg, #1eaed4 0%, #90dbf4 60%, #fff 100%);
+  border-radius: var(--r-full);
+  width: 0%;
+  transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  box-shadow: 0 0 10px #1eaed4aa, 0 0 20px #1eaed455;
+}
+
+/* Partícula de brilho correndo na barra */
+.progresso-barra-glow::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 28px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
+  border-radius: var(--r-full);
+  animation: xp-shine 2.5s ease-in-out infinite;
+}
+
+@keyframes xp-shine {
+  0%   { opacity: 0; right: 0; }
+  30%  { opacity: 1; }
+  100% { opacity: 0; right: 100%; }
+}
+
 /* ══ VALIDATION CARDS ══════════════════════════════════════ */
 .validation-card {
   background:#ffffff; border:1px solid var(--bd);
@@ -249,6 +336,145 @@ h1,h2,h3,h4,h5,h6 {
   box-shadow:0 4px 14px rgba(16,185,129,0.28) !important; transition:var(--t) !important;
 }
 .btn-success:hover { transform:translateY(-1.5px) !important; box-shadow:0 6px 20px rgba(16,185,129,0.38) !important; }
+
+/* ===== ITEM LISTA (COPIADO DE USER.CSS) ===== */
+.item-lista-horizontal {
+    background: linear-gradient(160deg, #f0fbff 0%, #EBF9FE 60%, #e2f6fd 100%);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid rgba(144, 219, 244, 0.30);
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 10px rgba(11,58,74,0.05), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+.item-lista-horizontal:hover {
+    box-shadow: 0 8px 28px rgba(11,58,74,0.10), 0 2px 6px rgba(11,58,74,0.05);
+    border-color: rgba(30, 174, 212, 0.35);
+    transform: translateY(-2px);
+}
+
+.item-col-img {
+    flex: 0 0 auto;
+}
+
+.item-col-info {
+    flex: 1 1 auto;
+    min-width: 0; 
+}
+
+.item-col-actions {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.item-img-container {
+    width: 78px;
+    height: 78px;
+    min-width: 78px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: rgba(144, 219, 244, 0.20);
+    border: 1px solid rgba(144, 219, 244, 0.35);
+}
+
+.item-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Botão ver item */
+.btn-ver-lista {
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-dark));
+    color: white !important;
+    border-radius: 50px;
+    font-size: 0.70rem;
+    font-weight: 800;
+    padding: 8px 18px;
+    border: none;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-ver-lista:hover {
+    box-shadow: 0 4px 15px rgba(30, 174, 212, 0.4);
+    transform: translateY(-1px);
+}
+
+.item-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-badge-horizontal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    color: white;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.status-badge-horizontal.status-perdido {
+    background-color: var(--c-danger);
+}
+
+.status-badge-horizontal.status-achado {
+    background-color: var(--c-success);
+}
+.status-badge-horizontal.status-devolvido {
+    background-color: var(--brand-light);
+}
+.status-badge-horizontal.status-pendente {
+    background-color: var(--c-warning); 
+}
+
+@media (max-width: 576px) {
+    .item-lista-horizontal {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .item-col-img {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 8px;
+    }
+    .item-img-container {
+        width: 100%;
+        max-width: 180px;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        border-radius: 8px;
+    }
+    .item-col-info {
+        text-align: center;
+    }
+    .item-col-actions {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 12px;
+        margin-left: 0;
+        width: 100%;
+    }
+    .item-actions-row {
+        flex: 1;
+        justify-content: flex-end;
+    }
+}
 
 .btn-outline-primary {
   border:1.5px solid rgba(30,174,212,0.3) !important; color:var(--brand-accent) !important;
@@ -346,9 +572,346 @@ h1,h2,h3,h4,h5,h6 {
 .alert-info    { background:rgba(144,219,244,0.10) !important; color:var(--brand-dark) !important; border-color:rgba(30,174,212,0.2) !important; }
 .alert-warning { background:var(--c-warning-bg) !important; color:var(--c-warning) !important; border-color:var(--c-warning-bd) !important; }
 
+/* ══ MODAIS PREMIUM (ESTILO FIND) ═══════════════════════════ */
+
+/* Backdrop */
+.modal-backdrop {
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  background-color: rgba(5, 20, 30, 0.55) !important;
+}
+
+/* Dialog entrance animation */
+.modal.fade .modal-dialog {
+  transform: translateY(24px) scale(0.97);
+  opacity: 0;
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease !important;
+}
+.modal.show .modal-dialog {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* ── MODAL CONTENT: fundo azul-bebê igual ao cadastrar item ── */
+.modal-content {
+  border-radius: 32px !important;
+  background: linear-gradient(160deg, #f0fbff 0%, #EBF9FE 60%, #e2f6fd 100%) !important;
+  border: none !important;
+  box-shadow:
+    0 32px 80px rgba(11, 58, 74, 0.16),
+    0 8px 24px rgba(11, 58, 74, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  padding: 12px 12px 16px 12px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Decoração de fundo: círculo superior direito */
+.modal-content::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(144, 219, 244, 0.22) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Decoração de fundo: círculo inferior esquerdo */
+.modal-content::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  left: -60px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(30, 174, 212, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── INDICADOR ESTILO BOTTOM-SHEET (opção futura mobile) ── */
+.modal-indicator {
+  width: 44px;
+  height: 4px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, rgba(11,58,74,0.08), rgba(11,58,74,0.15), rgba(11,58,74,0.08));
+  margin: 0 auto 10px auto;
+  display: block;
+}
+
+/* ── HEADER: light, centralizado, sem cor de fundo ── */
+.modal-header {
+  border: none !important;
+  padding: 6px 28px 12px 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  background: transparent !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* Override para classes bg-* que o HTML coloca no header */
+.modal-header.bg-danger,
+.modal-header.bg-primary,
+.modal-header.bg-dark,
+.modal-header[style*="background"] {
+  background: transparent !important;
+}
+
+/* Título do modal: grande, escuro, centralizado */
+.modal-header .modal-title {
+  color: #0B3A4A !important;
+  font-family: var(--font-display) !important;
+  font-weight: 800 !important;
+  font-size: 1.45rem !important;
+  letter-spacing: -0.6px;
+  line-height: 1.15;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 1;
+  position: relative;
+}
+
+/* Ícone dentro do título herda cor da marca */
+.modal-header .modal-title i {
+  font-size: 1.25rem;
+  color: var(--brand-accent);
+  opacity: 1;
+}
+
+/* btn-close: pill escuro, igual ao cadastrar item */
+.modal-header .btn-close {
+  background-color: rgba(11, 58, 74, 0.07) !important;
+  background-size: 9px !important;
+  border-radius: 12px !important;
+  padding: 11px !important;
+  position: absolute !important;
+  top: 0px;
+  right: 20px;
+  transition: all 0.2s ease;
+  filter: none !important;
+  opacity: 0.6;
+  z-index: 10;
+  border: 1px solid rgba(11, 58, 74, 0.06) !important;
+  margin: 0;
+}
+.modal-header .btn-close:hover {
+  border-color: rgba(11, 58, 74, 0.16) !important;
+  opacity: 1;
+  transform: scale(1.05) !important;
+  background-color: rgba(11, 58, 74, 0.1) !important;
+}
+
+/* ── BODY ── */
+.modal-body {
+  padding: 20px 28px 24px !important;
+  background: transparent !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* Labels dentro do modal */
+.modal-body .form-label {
+  font-size: 0.7rem !important;
+  font-weight: 800 !important;
+  color: #0B3A4A !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  margin-bottom: 8px !important;
+  opacity: 0.75;
+}
+
+/* Inputs no modal */
+.modal-body .form-control,
+.modal-body .form-select {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1.5px solid rgba(11, 58, 74, 0.08) !important;
+  border-radius: 16px !important;
+  padding: 12px 18px !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  color: #0B3A4A !important;
+  box-shadow: 0 2px 8px rgba(11,58,74,0.03), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+  transition: all 0.22s ease !important;
+}
+
+.modal-body .form-control::placeholder {
+  color: rgba(11, 58, 74, 0.38) !important;
+  font-weight: 500 !important;
+}
+
+.modal-body .form-control:focus,
+.modal-body .form-select:focus {
+  border-color: rgba(30, 174, 212, 0.55) !important;
+  box-shadow: 0 0 0 4px rgba(144, 219, 244, 0.2), 0 2px 8px rgba(11,58,74,0.04) !important;
+  outline: none !important;
+  background: #ffffff !important;
+}
+
+/* Textarea */
+.modal-body textarea.form-control {
+  min-height: 90px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* Alert dentro do modal */
+.modal-body .alert {
+  border-radius: 14px !important;
+  font-size: 0.83rem !important;
+  padding: 11px 16px !important;
+  border: 1px solid rgba(11,58,74,0.06) !important;
+  background: rgba(255,255,255,0.7) !important;
+  color: #0B3A4A !important;
+}
+.modal-body .alert i { color: var(--brand-accent); }
+
+/* ── FOOTER ── */
+.modal-footer {
+  border: none !important;
+  background: transparent !important;
+  padding: 4px 28px 8px !important;
+  display: flex !important;
+  justify-content: center !important;
+  gap: 14px !important;
+  align-items: center !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* Linha separadora sutil acima do footer */
+.modal-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 28px;
+  right: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(11,58,74,0.07) 30%, rgba(11,58,74,0.07) 70%, transparent);
+}
+
+/* Botão Salvar / Confirmar (primário) */
+.modal-footer .btn-primary,
+.modal-footer [type="submit"] {
+  background: linear-gradient(135deg, #6ccffb 0%, #1eaed4 100%) !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.3px !important;
+  padding: 14px 32px !important;
+  border: none !important;
+  border-radius: 18px !important;
+  box-shadow: 0 8px 24px rgba(30, 174, 212, 0.30), inset 0 1px 0 rgba(255,255,255,0.25) !important;
+  transition: all 0.22s cubic-bezier(0.4,0,0.2,1) !important;
+  flex: 1;
+  max-width: 240px;
+  text-align: center;
+}
+.modal-footer .btn-primary:hover,
+.modal-footer [type="submit"]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 14px 32px rgba(30, 174, 212, 0.38), inset 0 1px 0 rgba(255,255,255,0.3) !important;
+  filter: brightness(1.04) !important;
+}
+
+/* Botão Danger (Rejeitar / Excluir) */
+.modal-footer .btn-danger {
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%) !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-size: 0.9rem !important;
+  padding: 14px 32px !important;
+  border: none !important;
+  border-radius: 18px !important;
+  box-shadow: 0 8px 24px rgba(244,63,94,0.25), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+  transition: all 0.22s cubic-bezier(0.4,0,0.2,1) !important;
+  flex: 1;
+  max-width: 240px;
+}
+.modal-footer .btn-danger:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 14px 32px rgba(244,63,94,0.36) !important;
+}
+
+/* Botão Cancelar */
+.modal-footer .btn-link {
+  background: rgba(255, 255, 255, 0.85) !important;
+  color: rgba(11, 58, 74, 0.7) !important;
+  border: 1.5px solid rgba(11, 58, 74, 0.10) !important;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  padding: 14px 28px !important;
+  border-radius: 18px !important;
+  text-decoration: none !important;
+  transition: all 0.22s cubic-bezier(0.4,0,0.2,1) !important;
+  box-shadow: 0 2px 8px rgba(11,58,74,0.04) !important;
+  flex: 1;
+  max-width: 200px;
+  text-align: center;
+}
+.modal-footer .btn-link:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: rgba(11, 58, 74, 0.18) !important;
+  color: #0B3A4A !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(11,58,74,0.08) !important;
+}
+
+/* ── MOBILE: bottom-sheet ── */
+@media (max-width: 576px) {
+  .modal-dialog:not(.modal-dialog-centered) {
+    margin: 0 !important;
+    max-width: 100% !important;
+    position: fixed !important;
+    bottom: 0; left: 0; right: 0;
+  }
+  .modal-content {
+    border-radius: 32px 32px 0 0 !important;
+    padding-bottom: 32px !important;
+  }
+  .modal-footer .btn-primary,
+  .modal-footer .btn-danger,
+  .modal-footer .btn-link {
+    max-width: none !important;
+  }
+}
+
+/* ── Preview label card (modal de etiqueta) ── */
+.preview-label-card {
+  border: 2px dashed rgba(30, 174, 212, 0.35);
+  border-radius: 20px;
+  padding: 28px 24px;
+  background: rgba(255,255,255,0.85);
+  max-width: 320px;
+  margin: 0 auto;
+  box-shadow: 0 8px 32px rgba(11,58,74,0.08);
+  position: relative;
+  overflow: hidden;
+}
+.preview-label-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand-accent), var(--brand-light));
+}
+
+
+
+
+
+
 /* ══ TABS ══════════════════════════════════════════════════ */
-.tab-content > .tab-pane { opacity:0; transform:translateY(6px); transition:opacity 0.18s ease,transform 0.18s ease; }
-.tab-content > .tab-pane.show.active { opacity:1; transform:translateY(0); }
+.tab-content > .tab-pane { opacity:0; transition:opacity 0.18s ease; }
+.tab-content > .tab-pane.show.active { opacity:1; }
 
 /* ══ RESPONSIVE ════════════════════════════════════════════ */
 @media (max-width:991px) {

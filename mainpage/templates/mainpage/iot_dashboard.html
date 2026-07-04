@@ -73,6 +73,20 @@
             </button>
 
             <button class="nav-link text-start border-0"
+                    id="v-pills-pendentes-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#v-pills-pendentes"
+                    type="button" role="tab"
+                    aria-controls="v-pills-pendentes"
+                    aria-selected="false">
+              <i class="bi bi-exclamation-triangle-fill" style="color:#f59e0b;"></i>
+              <span>Tags Pendentes</span>
+              {% if total_tags_pendentes %}
+              <span class="badge" style="background:var(--c-danger); color:#fff;">{{ total_tags_pendentes }}</span>
+              {% endif %}
+            </button>
+
+            <button class="nav-link text-start border-0"
                     id="v-pills-novo-tab"
                     data-bs-toggle="pill"
                     data-bs-target="#v-pills-novo"
@@ -313,7 +327,79 @@
 
         </div>
 
-        <!-- ── TAB 3: NOVO DISPOSITIVO ─────────────────────── -->
+        <!-- ── TAB 3: TAGS PENDENTES ──────────────────────── -->
+        <div class="tab-pane fade" id="v-pills-pendentes" role="tabpanel">
+
+          <div class="admin-page-header">
+            <div>
+              <h2 class="admin-page-title">Tags Não Cadastradas</h2>
+              <p class="admin-page-subtitle">Tags lidas pelo ESP32 que ainda não possuem um item associado no sistema</p>
+            </div>
+          </div>
+
+          {% if tags_pendentes %}
+          <div class="dashboard-card">
+            <div class="card-header-band" style="border-left: 3px solid #f59e0b;">
+              <div>
+                <h5><i class="bi bi-exclamation-triangle-fill" style="color:#f59e0b;"></i> {{ total_tags_pendentes }} tag{% if total_tags_pendentes != 1 %}s{% endif %} aguardando cadastro</h5>
+                <p>Clique em "Cadastrar Item" para vincular a tag a um item do sistema</p>
+              </div>
+            </div>
+            <div class="p-0">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>UID da Tag</th>
+                      <th>Último Leitor</th>
+                      <th>Última Leitura</th>
+                      <th>Qtd. Leituras</th>
+                      <th class="text-center">Ação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for log in tags_pendentes %}
+                    <tr>
+                      <td>
+                        <span class="badge" style="background:#fff3cd; color:#92400e; font-family:monospace; font-size:.82rem; letter-spacing:1px; padding:6px 10px; border:1px solid #fcd34d;">
+                          <i class="bi bi-tag-fill me-1" style="color:#f59e0b;"></i>
+                          {{ log.rfid_uid|upper }}
+                        </span>
+                      </td>
+                      <td style="font-size:.86rem; font-weight:600;">{{ log.dispositivo.nome|default:"—" }}</td>
+                      <td style="font-size:.8rem; color:var(--text-muted);">
+                        <i class="bi bi-clock me-1"></i>{{ log.timestamp|timesince }} atrás
+                      </td>
+                      <td class="text-center">
+                        <span class="badge bg-secondary-subtle fw-bold">{{ log.rfid_uid|upper }}</span>
+                      </td>
+                      <td class="text-center">
+                        <a href="{% url 'bolsista_dashboard' %}?tab=cadastrar&rfid_uid={{ log.rfid_uid|upper }}"
+                           class="btn btn-sm"
+                           style="background:#f59e0b; color:#fff; font-weight:600; border:none; border-radius:8px;">
+                          <i class="bi bi-plus-circle-fill me-1"></i>Cadastrar Item
+                        </a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="dashboard-card">
+            <div class="text-center py-5 px-4">
+              <i class="bi bi-check-circle fs-1 d-block mb-3" style="color:var(--c-success);"></i>
+              <h5 style="color:var(--text-muted);">Tudo em dia!</h5>
+              <p class="mb-0" style="color:var(--text-faint);">Não há tags pendentes. Todas as leituras foram identificadas com sucesso.</p>
+            </div>
+          </div>
+          {% endif %}
+
+        </div>
+
+        <!-- ── TAB 4: NOVO DISPOSITIVO ─────────────────────── -->
         <div class="tab-pane fade" id="v-pills-novo" role="tabpanel">
 
           <div class="admin-page-header">

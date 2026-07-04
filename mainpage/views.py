@@ -319,9 +319,16 @@ def update_profile(request):
 @login_required(login_url="login")
 def register_item(request):
     next_url = request.GET.get("next") or reverse("screen_user")
+    categorias = Categoria.objects.all()
 
     if request.method != "POST":
-        return redirect(next_url)
+        # Permite pré-preencher o RFID vindo do painel IoT (Tags Pendentes)
+        rfid_prefill = request.GET.get("rfid_uid", "").strip().upper()
+        return render(request, "mainpage/register_item.html", {
+            "categorias": categorias,
+            "next": next_url,
+            "rfid_prefill": rfid_prefill,
+        })
 
     titulo = (request.POST.get("titulo") or "").strip()
     descricao = request.POST.get("descricao") or ""
@@ -381,6 +388,7 @@ def register_item(request):
     else:
         messages.success(request, "Item cadastrado com sucesso!")
     return redirect(next_url)
+
 
 
 @login_required(login_url="login")
@@ -603,9 +611,10 @@ def marcar_devolvido(request, id):
     next_url = request.POST.get("next") or reverse("item_detail", kwargs={"slug": item.slug})
 
     item.status = "devolvido"
-    item.save(update_fields=["status", "atualizado_em"])
+    item.rfid_uid = None  # Libera a tag para ser reutilizada em outro item
+    item.save(update_fields=["status", "rfid_uid", "atualizado_em"])
 
-    messages.success(request, "Item marcado como devolvido!")
+    messages.success(request, "Item marcado como devolvido! A etiqueta RFID foi liberada.")
     return redirect(next_url)
 
 # -----------------------------
@@ -1014,7 +1023,8 @@ def bolsista_dashboard(request):
             else:
                 item = get_object_or_404(Item, id=item_id)
                 item.status = "devolvido"
-                item.save(update_fields=["status", "atualizado_em"])
+                item.rfid_uid = None  # Libera a tag RFID para ser reutilizada em outro item
+                item.save(update_fields=["status", "rfid_uid", "atualizado_em"])
 
                 # Notifica o dono que o item foi retirado
                 from items.models import Notificacao
@@ -1040,7 +1050,7 @@ def bolsista_dashboard(request):
                     observacao=obs_log,
                     ip_origem=_get_client_ip(request)
                 )
-                messages.success(request, f"Item '{item.titulo}' devolvido para {nome_recebedor}!")
+                messages.success(request, f"Item '{item.titulo}' devolvido para {nome_recebedor}! Etiqueta RFID liberada.")
                 return redirect("bolsista_dashboard")
 
         elif action == "editar" and item_id:
@@ -1087,14 +1097,19 @@ def bolsista_dashboard(request):
     categorias = Categoria.objects.all().order_by("nome")
     pendentes = Item.objects.filter(status__in=["achado", "confirmado", "pendente_confirmacao"]).order_by("-criado_em")
     recent_actions = AcaoLog.objects.filter(bolsista=request.user).select_related("item").order_by("-timestamp")[:50]
+    total_acoes = AcaoLog.objects.filter(bolsista=request.user).count()
+    devolucoes_count = AcaoLog.objects.filter(bolsista=request.user, acao="devolveu").count()
     todos_itens = Item.objects.all().order_by("-criado_em")
 
     return render(request, "mainpage/bolsista_dashboard.html", {
         "pendentes": pendentes,
         "recent_actions": recent_actions,
+        "total_acoes": total_acoes,
+        "devolucoes_count": devolucoes_count,
         "todos_itens": todos_itens,
         "categorias": categorias,
     })
+
 
 
 
@@ -1303,6 +1318,23 @@ def iot_dashboard(request):
 
     leituras = LeituraLog.objects.select_related("dispositivo", "item_associado").order_by("-timestamp")[:30]
 
+    # Tags lidas mas sem item cadastrado (deduplicadas por UID, mais recente de cada)
+    tags_pendentes_raw = (
+        LeituraLog.objects
+        .filter(sucesso_identificacao=False)
+        .select_related("dispositivo")
+        .order_by("rfid_uid", "-timestamp")
+    )
+    # Pega apenas a leitura mais recente de cada UID único
+    seen_uids = set()
+    tags_pendentes = []
+    for log in tags_pendentes_raw:
+        uid = log.rfid_uid.upper()
+        if uid not in seen_uids:
+            seen_uids.add(uid)
+            tags_pendentes.append(log)
+    tags_pendentes.sort(key=lambda x: x.timestamp, reverse=True)
+
     return render(request, "mainpage/iot_dashboard.html", {
         "dispositivos": dispositivos,
         "total_dispositivos": total_dispositivos,
@@ -1311,6 +1343,8 @@ def iot_dashboard(request):
         "leituras_sucesso": leituras_sucesso,
         "leituras_falha": leituras_falha,
         "leituras": leituras,
+        "tags_pendentes": tags_pendentes,
+        "total_tags_pendentes": len(tags_pendentes),
     })
 
 

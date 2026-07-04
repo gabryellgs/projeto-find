@@ -4,7 +4,7 @@
 {% block title %}Painel do Bolsista - FIND{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'mainpage/css/bolsista_dashboard.css' %}?v=7">
+<link rel="stylesheet" href="{% static 'mainpage/css/bolsista_dashboard.css' %}?v=10">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 {% endblock %}
 
@@ -18,15 +18,21 @@
             <div class="sidebar-wrapper">
                 <!-- Profile Header -->
                 <div class="sidebar-profile text-center">
-                    <div class="profile-avatar-container mx-auto">
+                    <div class="profile-avatar-container mx-auto" style="position:relative; display:inline-block;">
                         <div class="profile-avatar-glow"></div>
                         <div class="profile-avatar-circle d-flex align-items-center justify-content-center">
                             <i class="bi bi-person-fill-check"></i>
+                        </div>
+                        <!-- EMBLEMA DE NÍVEL -->
+                        <div id="sidebar-level-badge" class="sidebar-level-badge" title="Seu nível atual">
+                            <span id="sidebar-level-icon">🛡️</span>
                         </div>
                     </div>
                     <h5 class="profile-name">{{ request.user.first_name }} {{ request.user.last_name }}</h5>
                     <p class="profile-username">@{{ request.user.username }}</p>
                     <span class="profile-badge badge-bolsista">Bolsista</span>
+                    <!-- Nome do nível abaixo do badge -->
+                    <div id="sidebar-level-name" class="sidebar-level-name mt-2">Cadete do Balcão</div>
                 </div>
 
                 <!-- Navigation Menu -->
@@ -481,43 +487,68 @@
                     <div class="row g-3">
                         {% for item in todos_itens %}
                         <div class="col-12 mb-3">
-                            <div class="validation-card overflow-hidden" style="border-left:4px solid {% if item.status == 'achado' or item.status == 'confirmado' %}#10b981{% elif item.status == 'devolvido' %}#60caff{% elif item.status == 'pendente_confirmacao' %}#f59e0b{% else %}#ef4444{% endif %};">
-                                <div class="px-4 pt-3 pb-0 d-flex justify-content-between align-items-center">
-                                    <span class="badge bg-light text-dark border" style="font-size:.72rem;">
-                                        Status: {{ item.get_status_display }}
-                                    </span>
-                                    <small class="text-muted">por @{{ item.usuario.username }} — {{ item.criado_em|date:"d/m/Y H:i" }}</small>
-                                </div>
-                                <div class="row g-0">
-                                    <div class="col-md-3 bg-light d-flex align-items-center justify-content-center p-3 border-end" style="min-height:120px;">
+                            <div class="item-lista-horizontal shadow-sm">
+                                <!-- FOTO -->
+                                <div class="item-col-img">
+                                    <div class="item-img-container">
                                         {% if item.imagem %}
-                                        <div class="validation-img-container rounded-3 w-100 h-100">
-                                            <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
-                                        </div>
+                                        <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
                                         {% else %}
-                                        <div class="d-flex flex-column align-items-center">
+                                        <div class="d-flex flex-column align-items-center justify-content-center h-100 bg-light">
                                             <i class="bi bi-box-seam validation-placeholder-ico"></i>
                                         </div>
                                         {% endif %}
                                     </div>
-                                    <div class="col-md-9">
-                                        <div class="card-body p-4 d-flex flex-column h-100 justify-content-between">
-                                            <div>
-                                                <h5 class="fw-bold mb-1 text-dark">{{ item.titulo }}</h5>
-                                                <p class="text-muted small mb-2">{{ item.descricao|truncatechars:120 }}</p>
-                                                <div class="d-flex flex-wrap gap-3 mb-3 text-muted small">
-                                                    <span><i class="bi bi-geo-alt-fill me-1 text-danger"></i>{{ item.local|default:"Não informado" }}</span>
-                                                    <span><i class="bi bi-tag me-1 text-primary"></i>{{ item.categoria.nome|default:"Sem categoria" }}</span>
-                                                    {% if item.rfid_uid %}<span><i class="bi bi-broadcast me-1" style="color:#1eaed4;"></i>{{ item.rfid_uid }}</span>{% endif %}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex gap-2 border-top pt-3">
-                                                <button type="button" class="btn btn-outline-secondary btn-sm px-3"
-                                                        data-bs-toggle="modal" data-bs-target="#editarTodosModal{{ item.id }}">
-                                                    <i class="bi bi-pencil-fill me-1"></i>Editar Item
-                                                </button>
-                                            </div>
-                                        </div>
+                                </div>
+                                <!-- INFO -->
+                                <div class="item-col-info">
+                                    <h6 class="fw-bold mb-0 text-truncate text-dark">{{ item.titulo }}</h6>
+                                    <p class="text-muted small mb-1">
+                                        {% if item.categoria %}
+                                            {{ item.categoria.nome }}
+                                        {% else %}
+                                            Sem categoria
+                                        {% endif %}
+                                    </p>
+                                    <small class="text-muted d-block">
+                                        <i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ item.local|default:"Não informado" }}
+                                    </small>
+                                    {% if item.rfid_uid %}
+                                    <small class="text-muted d-block mt-1">
+                                        <i class="bi bi-broadcast me-1" style="color:#1eaed4;"></i>{{ item.rfid_uid }}
+                                    </small>
+                                    {% endif %}
+                                    <small class="text-muted d-block mt-1">
+                                        por @{{ item.usuario.username }} — {{ item.criado_em|date:"d/m/Y H:i" }}
+                                    </small>
+                                </div>
+                                <!-- AÇÕES -->
+                                <div class="item-col-actions">
+                                    <a href="{% url 'item_detail' item.slug %}" class="btn btn-dark btn-ver-lista">
+                                        VER ITEM
+                                    </a>
+                                    <div class="item-actions-row">
+                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#editarTodosModal{{ item.id }}" title="Editar Item">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </button>
+
+                                        {% if item.status == 'perdido' %}
+                                        <span class="status-badge-horizontal status-perdido" title="Perdido">
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+                                        </span>
+                                        {% elif item.status == 'achado' or item.status == 'confirmado' %}
+                                        <span class="status-badge-horizontal status-achado" title="Achado/Confirmado">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                        </span>
+                                        {% elif item.status == 'devolvido' %}
+                                        <span class="status-badge-horizontal status-devolvido" title="Devolvido">
+                                            <i class="bi bi-arrow-repeat"></i>
+                                        </span>
+                                        {% elif item.status == 'pendente_confirmacao' %}
+                                        <span class="status-badge-horizontal status-pendente" title="Pendente de Confirmação">
+                                            <i class="bi bi-hourglass-split"></i>
+                                        </span>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -817,11 +848,20 @@
                                         Etiqueta RFID
                                         <span class="text-muted" style="font-size:.78rem; font-weight:400;">(opcional)</span>
                                     </label>
-                                    <input type="text" name="rfid_uid" class="form-control rounded-3"
-                                           placeholder="Ex: 04 EA B1 22"
-                                           style="font-family:monospace; text-transform:uppercase; letter-spacing:.5px;"
-                                           autocomplete="off">
-                                    <div class="form-text">UID da etiqueta RFID colada no objeto físico.</div>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <input type="text" name="rfid_uid" id="rfidInputBolsista"
+                                               class="form-control rounded-3"
+                                               placeholder="Ex: 04 EA B1 22"
+                                               style="font-family:monospace; text-transform:uppercase; letter-spacing:.5px;"
+                                               autocomplete="off">
+                                        <button type="button" id="btnScanRfidBolsista"
+                                                onclick="iniciarLeituraSensor('rfidInputBolsista', 'btnScanRfidBolsista', 'statusScanBolsista')"
+                                                class="btn btn-sm flex-shrink-0"
+                                                style="background:#1eaed4; color:#fff; border:none; border-radius:8px; white-space:nowrap; padding:8px 10px;">
+                                            <i class="bi bi-broadcast"></i>
+                                        </button>
+                                    </div>
+                                    <div id="statusScanBolsista" class="form-text mt-1" style="min-height:18px;"></div>
                                 </div>
 
                                 <!-- Foto -->
@@ -858,6 +898,106 @@
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
+// ── Auto-ativação via query params vindos do painel IoT ────────────────────
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const tab    = params.get('tab');
+  const rfid   = params.get('rfid_uid');
+
+  if (tab === 'cadastrar') {
+    document.addEventListener('DOMContentLoaded', function() {
+      // Ativa a aba de cadastro
+      const cadastrarTabBtn = document.getElementById('v-pills-cadastrar-tab');
+      if (cadastrarTabBtn) {
+        const bsTab = new bootstrap.Tab(cadastrarTabBtn);
+        bsTab.show();
+      }
+
+      // Preenche o campo RFID
+      if (rfid) {
+        const rfidInput = document.querySelector('#formCadastrarItemBolsista input[name="rfid_uid"]');
+        if (rfidInput) {
+          rfidInput.value = rfid.toUpperCase();
+          // Mostra um aviso amigável acima do campo
+          const notice = document.createElement('div');
+          notice.className = 'alert mb-2';
+          notice.style.cssText = 'background:#fff3cd; border:1px solid #fcd34d; border-radius:10px; font-size:.82rem; color:#92400e; padding:10px 14px;';
+          notice.innerHTML = '<i class="bi bi-broadcast me-1" style="color:#f59e0b;"></i> Tag detectada pelo leitor RFID: <strong style="font-family:monospace;">' + rfid.toUpperCase() + '</strong>';
+          rfidInput.parentElement.insertAdjacentElement('beforebegin', notice);
+        }
+      }
+    });
+  }
+})();
+
+// ── Leitura ao vivo via sensor RFID ───────────────────────────────────────
+let _rfidPollInterval = null;
+
+function iniciarLeituraSensor(inputId, btnId, statusId) {
+  // Se já está aguardando, cancela
+  if (_rfidPollInterval) {
+    clearInterval(_rfidPollInterval);
+    _rfidPollInterval = null;
+    const btn = document.getElementById(btnId);
+    const status = document.getElementById(statusId);
+    if (btn) { btn.innerHTML = '<i class="bi bi-broadcast"></i>'; btn.style.background = '#1eaed4'; }
+    if (status) status.innerHTML = '';
+    return;
+  }
+
+  const input  = document.getElementById(inputId);
+  const btn    = document.getElementById(btnId);
+  const status = document.getElementById(statusId);
+
+  if (!input) return;
+
+  // Aparência de "aguardando"
+  if (btn)    { btn.innerHTML = '<i class="bi bi-broadcast-pin"></i>'; btn.style.background = '#f59e0b'; }
+  if (status) { status.innerHTML = '<span style="color:#f59e0b;"><i class="bi bi-broadcast-pin me-1"></i>Aproxime a tag do leitor...</span>'; }
+
+  let tentativas = 0;
+  const maxTentativas = 60; // 30 segundos (500ms cada)
+
+  _rfidPollInterval = setInterval(async function() {
+    tentativas++;
+    if (tentativas > maxTentativas) {
+      clearInterval(_rfidPollInterval);
+      _rfidPollInterval = null;
+      if (btn)    { btn.innerHTML = '<i class="bi bi-broadcast"></i>'; btn.style.background = '#1eaed4'; }
+      if (status) { status.innerHTML = '<span style="color:#dc3545;">Tempo esgotado. Tente novamente.</span>'; }
+      return;
+    }
+
+    try {
+      const resp = await fetch('/api/iot/latest-scan/', {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      });
+      const data = await resp.json();
+
+      if (data.ok && data.rfid_uid) {
+        clearInterval(_rfidPollInterval);
+        _rfidPollInterval = null;
+
+        input.value = data.rfid_uid.toUpperCase();
+        input.style.borderColor = '#22c55e';
+
+        if (btn)    { btn.innerHTML = '<i class="bi bi-check-lg"></i>'; btn.style.background = '#22c55e'; }
+        if (status) {
+          status.innerHTML = '<span style="color:#22c55e;"><i class="bi bi-check-circle-fill me-1"></i>Tag lida: <strong style="font-family:monospace;">' + data.rfid_uid + '</strong> (via ' + data.dispositivo + ')</span>';
+        }
+
+        // Reseta aparência após 4s
+        setTimeout(function() {
+          input.style.borderColor = '';
+          if (btn)    { btn.innerHTML = '<i class="bi bi-broadcast"></i>'; btn.style.background = '#1eaed4'; }
+        }, 4000);
+      }
+    } catch(e) {
+      // Silencia erros de rede durante o poll
+    }
+  }, 500);
+}
+
 // Variáveis para guardar dados do modal ativo de impressão
 let currentQrData = null;
 
@@ -1009,91 +1149,89 @@ function printLabelWindow(titulo, slug, categoria, data, qrUrl) {
 document.addEventListener("DOMContentLoaded", function() {
     // ══════════════════════════════════════════════════════
     // Sistema Dinâmico de Gamificação (Bolsistas)
+    // Dados vindos do backend (total real, sem limite de 50)
     // ══════════════════════════════════════════════════════
-    // O histórico recent_actions contém o número de validações concluídas.
-    // Usamos esse total para calcular XP e Conquistas de forma interativa.
-    const totalAcoes = {{ recent_actions|length }};
+    const totalAcoes = {{ total_acoes }};
+    const devolucoesCount = {{ devolucoes_count }};
     const xpPorAcao = 15;
     const totalXP = totalAcoes * xpPorAcao;
-    
-    let level = 1;
-    let levelName = "Cadete do Balcão";
-    let nextLevelActions = 5;
-    let currentLevelXPStart = 0;
-    let nextLevelXPEnd = 5 * xpPorAcao; // 75 XP
-    
-    if (totalAcoes >= 5 && totalAcoes < 15) {
-        level = 2;
-        levelName = "Guardião de Achados";
-        nextLevelActions = 15;
-        currentLevelXPStart = 5 * xpPorAcao;
-        nextLevelXPEnd = 15 * xpPorAcao;
-    } else if (totalAcoes >= 15 && totalAcoes < 30) {
-        level = 3;
-        levelName = "Especialista em Entregas";
-        nextLevelActions = 30;
-        currentLevelXPStart = 15 * xpPorAcao;
-        nextLevelXPEnd = 30 * xpPorAcao;
-    } else if (totalAcoes >= 30) {
-        level = 4;
-        levelName = "Mestre do Reencontro 🌟";
-        nextLevelActions = "Max";
-        currentLevelXPStart = 30 * xpPorAcao;
-        nextLevelXPEnd = 30 * xpPorAcao;
+
+    // Tabela de ranks (estilo gamer)
+    const LEVELS = [
+        { min: 0,   nome: "RECRUTA",    icone: "bi-shield",           cor: "#64748b", glow: null,               next: 5  },
+        { min: 5,   nome: "GUARDIÃO",   icone: "bi-shield-check",     cor: "#1eaed4", glow: "rank-glow-blue",   next: 15 },
+        { min: 15,  nome: "ÉLITE",      icone: "bi-shield-fill",      cor: "#8b5cf6", glow: "rank-glow-purple", next: 30 },
+        { min: 30,  nome: "VETERANO",   icone: "bi-star-fill",        cor: "#f59e0b", glow: "rank-glow-amber",  next: 50 },
+        { min: 50,  nome: "LENDÁRIO",   icone: "bi-trophy-fill",      cor: "#f43f5e", glow: "rank-glow-red",    next: null },
+    ];
+
+    // Determina nível atual
+    let levelData = LEVELS[0];
+    for (let i = LEVELS.length - 1; i >= 0; i--) {
+        if (totalAcoes >= LEVELS[i].min) { levelData = LEVELS[i]; break; }
     }
-    
-    // Atualização visual do painel de conquistas
+    const levelIndex = LEVELS.indexOf(levelData);
+    const level = levelIndex + 1;
+
+    // Calcula progresso dentro do nível
+    const xpStart = levelData.min * xpPorAcao;
+    const xpEnd   = levelData.next ? levelData.next * xpPorAcao : xpStart;
+    const xpRange = xpEnd - xpStart;
+    const xpProgress = totalXP - xpStart;
+    const pct = levelData.next ? Math.min(100, Math.max(0, (xpProgress / xpRange) * 100)) : 100;
+
+    // ── Atualiza painel de progresso
     document.getElementById("lbl-level-num").innerText = level;
-    document.getElementById("lbl-level-name").innerText = levelName;
+    document.getElementById("lbl-level-name").innerText = levelData.nome;
     document.getElementById("lbl-xp-total").innerText = `Total: ${totalXP} XP acumulados`;
-    
-    if (nextLevelActions === "Max") {
-        document.getElementById("lbl-xp-status").innerText = `${totalXP} XP`;
+
+    if (!levelData.next) {
+        document.getElementById("lbl-xp-status").innerText = `${totalXP} XP ✨`;
         document.getElementById("bar-xp").style.width = "100%";
         document.getElementById("lbl-next-level").innerText = "Nível Máximo Alcançado! 🎉";
     } else {
-        const progressInLevelXP = totalXP - currentLevelXPStart;
-        const totalLevelXPNeeded = nextLevelXPEnd - currentLevelXPStart;
-        const pct = Math.min(100, Math.max(0, (progressInLevelXP / totalLevelXPNeeded) * 100));
-        
-        document.getElementById("lbl-xp-status").innerText = `${totalXP} / ${nextLevelXPEnd} XP`;
+        document.getElementById("lbl-xp-status").innerText = `${xpProgress} / ${xpRange} XP`;
         document.getElementById("bar-xp").style.width = `${pct}%`;
+        const faltam = levelData.next - totalAcoes;
+        document.getElementById("lbl-next-level").innerText = `Próximo nível em ${faltam} ação${faltam !== 1 ? 'ões' : ''}`;
+    }
+
+    // ── Atualiza emblema na sidebar
+    const badgeEl    = document.getElementById("sidebar-level-badge");
+    const iconEl     = document.getElementById("sidebar-level-icon");
+    const nameEl     = document.getElementById("sidebar-level-name");
+
+    if (badgeEl && iconEl && nameEl) {
+        // Remove classes antigas do ícone e adiciona a nova
+        iconEl.className = `bi ${levelData.icone}`;
+        iconEl.style.color = levelData.cor;
         
-        const acoesRestantes = nextLevelActions - totalAcoes;
-        document.getElementById("lbl-next-level").innerText = `Próximo Nível em ${acoesRestantes} ações`;
+        nameEl.innerText = levelData.nome;
+        nameEl.style.color = levelData.cor;
+        nameEl.style.textShadow = `0 0 10px ${levelData.cor}66`;
+
+        // Glow pulsante no círculo externo azul por rank
+        if (levelData.glow) badgeEl.classList.add(levelData.glow);
+
+        // Anima entrada com bounce + rotação
+        badgeEl.style.transform = "scale(0.3) rotate(-15deg)";
+        badgeEl.style.opacity = "0";
+        setTimeout(() => {
+            badgeEl.style.transition = "all 0.55s cubic-bezier(0.16,1,0.3,1)";
+            badgeEl.style.transform = "scale(1) rotate(0deg)";
+            badgeEl.style.opacity = "1";
+        }, 400);
     }
-    
-    // Desbloquear medalhas com base em conquistas
-    if (totalAcoes >= 1) {
-        const badge = document.getElementById("badge-1");
-        badge.classList.remove("locked");
-        badge.classList.add("unlocked");
-    }
-    if (totalAcoes >= 5) {
-        const badge = document.getElementById("badge-2");
-        badge.classList.remove("locked");
-        badge.classList.add("unlocked");
-    }
-    // Para contar especificamente devoluções
-    // Como simplificação, verificamos se o bolsista fez pelo menos 5 ações no histórico total
-    // Se ele tem ações do tipo devolveu
-    let devolucoesCount = 0;
-    {% for log in recent_actions %}
-        {% if log.acao == 'devolveu' %}
-            devolucoesCount++;
-        {% endif %}
-    {% endfor %}
-    
-    if (devolucoesCount >= 5) {
-        const badge = document.getElementById("badge-3");
-        badge.classList.remove("locked");
-        badge.classList.add("unlocked");
-    }
-    if (totalAcoes >= 15) {
-        const badge = document.getElementById("badge-4");
-        badge.classList.remove("locked");
-        badge.classList.add("unlocked");
-    }
+
+    // ── Desbloquear medalhas
+    const unlockBadge = (id) => {
+        const b = document.getElementById(id);
+        if (b) { b.classList.remove("locked"); b.classList.add("unlocked"); }
+    };
+    if (totalAcoes >= 1)       unlockBadge("badge-1");
+    if (totalAcoes >= 5)       unlockBadge("badge-2");
+    if (devolucoesCount >= 5)  unlockBadge("badge-3");
+    if (totalAcoes >= 15)      unlockBadge("badge-4");
 
     // Configurar o botão de disparo de impressão no modal
     document.getElementById("btn-trigger-print").addEventListener("click", function() {
