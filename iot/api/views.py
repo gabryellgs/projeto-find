@@ -76,8 +76,11 @@ def api_iot_scan(request):
 
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def api_iot_latest_scan(request):
+    # Só retorna dados se o usuário estiver logado (sessão Django)
+    if not request.user.is_authenticated:
+        return Response({"ok": False, "rfid_uid": None})
     """
     Retorna a leitura RFID mais recente dos últimos 15 segundos.
     Usado pelo frontend para auto-preencher o campo RFID no formulário
