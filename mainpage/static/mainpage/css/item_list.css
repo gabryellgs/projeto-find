@@ -436,6 +436,21 @@
   .btn-ver-item { order: 1; }
 }
 
+/* ── Paginação ──────────────────────────────────────────────── */
+.mi-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.mi-page-current {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: rgba(11, 58, 74, 0.55);
+}
+
 /* ── Empty state ────────────────────────────────────────────── */
 .mi-empty {
   display: flex;

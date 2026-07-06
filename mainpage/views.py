@@ -370,8 +370,8 @@ def register_item(request):
     categoria = Categoria.objects.filter(id=categoria_id).first() if categoria_id else None
 
     # Usuários comuns:
-    # Se o item foi "achado" por eles, vai para pendente_confirmacao na COPAC.
-    # Se for "perdido", pula a COPAC e vai direto pro mural de perdidos.
+    # Se o item foi "achado" por eles, vai para pendente_confirmacao na COAPAC.
+    # Se for "perdido", pula a COAPAC e vai direto pro mural de perdidos.
     from accounts.permissoes import check_bolsista_ou_admin
     if not check_bolsista_ou_admin(request.user):
         if status == "achado":
@@ -400,7 +400,7 @@ def register_item(request):
     )
 
     if status == "pendente_confirmacao":
-        messages.success(request, "Item cadastrado! Ele ficará pendente até a validação pela equipe da COPAC.")
+        messages.success(request, "Item cadastrado! Ele ficará pendente até a validação pela equipe da COAPAC.")
     else:
         messages.success(request, "Item cadastrado com sucesso!")
     return redirect(next_url)
@@ -491,6 +491,7 @@ def list_item(request):
         "status": status,
         "categoria": categoria,
         "page_title": "Todos os itens",
+        "page": page,
         "has_more": has_more,
         "next_page": page + 1,
     })
@@ -521,6 +522,7 @@ def my_itens(request):
         "itens": itens_page,
         "q": q,
         "status": status,
+        "page": page,
         "has_more": has_more,
         "next_page": page + 1,
         "page_title": "Meus itens",
@@ -554,6 +556,7 @@ def items_perdidos(request):
         "status": "perdido",
         "categoria": categoria,
         "page_title": "Itens Perdidos",
+        "page": page,
         "has_more": has_more,
         "next_page": page + 1,
     })
@@ -586,6 +589,7 @@ def items_encontrados(request):
         "status": "achado",
         "categoria": categoria,
         "page_title": "Itens Encontrados",
+        "page": page,
         "has_more": has_more,
         "next_page": page + 1,
     })
@@ -618,6 +622,7 @@ def items_devolvidos(request):
         "status": "devolvido",
         "categoria": categoria,
         "page_title": "Itens Devolvidos",
+        "page": page,
         "has_more": has_more,
         "next_page": page + 1,
     })
@@ -700,6 +705,7 @@ def recent_items(request):
         "itens": itens_page,
         "q": q,
         "page_title": "Itens Recentes",
+        "page": page,
         "has_more": has_more,
         "next_page": page + 1,
     })
@@ -1026,14 +1032,14 @@ def bolsista_dashboard(request):
                 ip_origem=_get_client_ip(request)
             )
 
-            # Notifica o usuário de que o item foi validado na COPAC
+            # Notifica o usuário de que o item foi validado na COAPAC
             from items.models import Notificacao
             from django.urls import reverse
             try:
                 Notificacao.objects.create(
                     usuario=item.usuario,
-                    titulo="Item Validado na COPAC! 🎉",
-                    mensagem=f"Seu item '{item.titulo}' foi verificado por nossa equipe e está sob custódia física da COPAC. Ele agora aparece no painel de achados.",
+                    titulo="Item Validado na COAPAC! 🎉",
+                    mensagem=f"Seu item '{item.titulo}' foi verificado por nossa equipe e está sob custódia física da COAPAC. Ele agora aparece no painel de achados.",
                     icone="bi-check-circle-fill",
                     link=reverse('item_detail', args=[item.slug]) if item.slug else "#"
                 )
@@ -1061,7 +1067,7 @@ def bolsista_dashboard(request):
                     Notificacao.objects.create(
                         usuario=item.usuario,
                         titulo="Item Entregue/Retirado ✅",
-                        mensagem=f"Seu item '{item.titulo}' foi retirado no balcão da COPAC por: {nome_recebedor}.",
+                        mensagem=f"Seu item '{item.titulo}' foi retirado no balcão da COAPAC por: {nome_recebedor}.",
                         icone="bi-box-seam",
                     )
                 except Exception:

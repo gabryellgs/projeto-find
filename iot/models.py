@@ -4,11 +4,11 @@ from django.db import models
 
 class Dispositivo(models.Model):
     """
-    Representa um leitor de hardware físico (Ex: ESP32 na COPAC).
+    Representa um leitor de hardware físico (Ex: ESP32 na COAPAC).
     Isso permite ter múltiplos leitores, cada um com sua senha e localidade.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    nome = models.CharField(max_length=100, help_text="Ex: Leitor RFID COPAC Balcão")
+    nome = models.CharField(max_length=100, help_text="Ex: Leitor RFID COAPAC Balcão")
     token_auth = models.CharField(max_length=64, unique=True, blank=True, help_text="Token secreto que este dispositivo usa para se autenticar")
     is_ativo = models.BooleanField(default=True)
     ultima_comunicacao = models.DateTimeField(null=True, blank=True)

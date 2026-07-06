@@ -152,7 +152,7 @@
                             <!-- Badge de tipo no topo -->
                             <div class="px-4 pt-3 pb-0 d-flex justify-content-between align-items-center">
                                 <span class="badge bg-warning-subtle" style="font-size:.72rem;">
-                                    <i class="bi bi-hourglass-split me-1"></i>Aguardando Aprovação da COPAC
+                                    <i class="bi bi-hourglass-split me-1"></i>Aguardando Aprovação da COAPAC
                                 </span>
                                 <small class="text-muted">por @{{ item.usuario.username }} — {{ item.criado_em|timesince }} atrás</small>
                             </div>
@@ -183,13 +183,13 @@
                                             </div>
                                         </div>
                                         <div class="d-flex flex-wrap gap-2 border-top pt-3">
-                                            <!-- Aprovar (confirmar na COPAC) -->
+                                            <!-- Aprovar (confirmar na COAPAC) -->
                                             <form method="POST" class="d-inline">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="action" value="confirmar">
                                                 <input type="hidden" name="item_id" value="{{ item.id }}">
                                                 <button type="submit" class="btn btn-success btn-sm px-3">
-                                                    <i class="bi bi-check-circle-fill me-1"></i>Aprovar e Guardar na COPAC
+                                                    <i class="bi bi-check-circle-fill me-1"></i>Aprovar e Guardar na COAPAC
                                                 </button>
                                             </form>
                                             <!-- Editar -->
@@ -244,7 +244,7 @@
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold small">Local</label>
                                                 <input type="text" name="novo_local" class="form-control rounded-3"
-                                                       value="{{ item.local }}" placeholder="Ex: COPAC / Bloco A">
+                                                       value="{{ item.local }}" placeholder="Ex: COAPAC / Bloco A">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold small">
@@ -313,21 +313,21 @@
                     {% endif %}
                 </div>
 
-                <!-- TAB 2: ESTOQUE E DESPACHE (NA COPAC) -->
+                <!-- TAB 2: ESTOQUE E DESPACHE (NA COAPAC) -->
                 <div class="tab-pane fade" id="v-pills-estoque" role="tabpanel" aria-labelledby="v-pills-estoque-tab">
                     <div class="page-header">
                         <h2 class="page-title">Estoque & Despache</h2>
-                        <p class="page-subtitle">Gerencie os itens físicos na COPAC e registre entregas aos donos.</p>
+                        <p class="page-subtitle">Gerencie os itens físicos na COAPAC e registre entregas aos donos.</p>
                     </div>
 
                     {% if pendentes %}
-                    <!-- Seção: Já na COPAC (achado aguardando devolução) -->
+                    <!-- Seção: Já na COAPAC (achado aguardando devolução) -->
                     {% for item in pendentes %}{% if item.status == 'achado' or item.status == 'confirmado' %}
                     <div class="col-12 mb-3">
                         <div class="validation-card overflow-hidden" style="border-left:4px solid #10b981;">
                             <div class="px-4 pt-3 pb-0 d-flex justify-content-between align-items-center">
                                 <span class="badge bg-success-subtle" style="font-size:.72rem;">
-                                    <i class="bi bi-archive-fill me-1"></i>Na COPAC — Aguardando Devolução
+                                    <i class="bi bi-archive-fill me-1"></i>Na COAPAC — Aguardando Devolução
                                 </span>
                                 <small class="text-muted">por @{{ item.usuario.username }}</small>
                             </div>
@@ -438,7 +438,7 @@
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold small">Local</label>
                                                 <input type="text" name="novo_local" class="form-control rounded-3"
-                                                       value="{{ item.local }}" placeholder="Ex: COPAC / Bloco A">
+                                                       value="{{ item.local }}" placeholder="Ex: COAPAC / Bloco A">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold small">
@@ -587,7 +587,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label fw-semibold small">Local</label>
-                                                    <input type="text" name="novo_local" class="form-control rounded-3" value="{{ item.local }}" placeholder="Ex: COPAC / Bloco A">
+                                                    <input type="text" name="novo_local" class="form-control rounded-3" value="{{ item.local }}" placeholder="Ex: COAPAC / Bloco A">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label fw-semibold small">
@@ -829,7 +829,7 @@
                                 <div class="col-md-4">
                                     <label class="form-label">Local <span class="text-danger">*</span></label>
                                     <input type="text" name="local" class="form-control rounded-3"
-                                           placeholder="Ex: COPAC / Bloco A" required>
+                                           placeholder="Ex: COAPAC / Bloco A" required>
                                 </div>
 
                                 <!-- Mapa de Localização Exata -->

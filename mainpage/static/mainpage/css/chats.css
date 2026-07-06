@@ -7,11 +7,11 @@
    1. TOKENS
    ---------------------------------------------------------- */
 :root {
-  --brand-dark: #002a35;
-  --brand-mid: #004254;
-  --brand-accent: #01627a;
-  --brand-light: #abe8ff;
-  --brand-pale: rgba(171, 232, 255, 0.45);
+  --chat-dark: #002a35;
+  --chat-mid: #004254;
+  --chat-accent: #01627a;
+  --chat-light: #abe8ff;
+  --chat-pale: rgba(171, 232, 255, 0.45);
 
   --surface: #ffffff;
   --surface-2: #f4fafd;
@@ -63,7 +63,7 @@
 .chats-header-left h4 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--brand-dark);
+  color: var(--chat-dark);
   margin: 0 0 2px;
   letter-spacing: -0.4px;
 }
@@ -75,8 +75,8 @@
 }
 
 .chats-count-pill {
-  background: var(--brand-pale);
-  color: var(--brand-accent);
+  background: var(--chat-pale);
+  color: var(--chat-accent);
   font-size: 0.75rem;
   font-weight: 700;
   padding: 4px 12px;
@@ -120,7 +120,7 @@
 }
 
 .chats-search input:focus {
-  border-color: var(--brand-accent);
+  border-color: var(--chat-accent);
   box-shadow: 0 0 0 3px rgba(1, 98, 122, 0.12);
 }
 
@@ -194,7 +194,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--brand-accent), var(--brand-dark));
+  background: linear-gradient(135deg, var(--chat-accent), var(--chat-dark));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -255,7 +255,7 @@
 
 .chat-item-name {
   font-size: 0.78rem;
-  color: var(--brand-accent);
+  color: var(--chat-accent);
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -307,7 +307,7 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: var(--brand-accent);
+  background: var(--chat-accent);
   flex-shrink: 0;
 }
 
@@ -340,7 +340,7 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: var(--brand-pale);
+  background: var(--chat-pale);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -350,13 +350,13 @@
 
 .empty-icon-wrap i {
   font-size: 2rem;
-  color: var(--brand-accent);
+  color: var(--chat-accent);
 }
 
 .chats-empty h5 {
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--brand-dark);
+  color: var(--chat-dark);
   margin: 0 0 8px;
 }
 
@@ -374,7 +374,7 @@
   gap: 8px;
   padding: 11px 26px;
   border-radius: var(--radius-pill);
-  background: linear-gradient(135deg, var(--brand-accent), var(--brand-dark));
+  background: linear-gradient(135deg, #0B3A4A 0%, #1eaed4 100%);
   color: #fff;
   font-family: var(--font);
   font-size: 0.875rem;
@@ -382,7 +382,7 @@
   text-decoration: none;
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 42, 53, 0.22);
+  box-shadow: 0 4px 14px rgba(11, 58, 74, 0.25);
   transition:
     box-shadow var(--tr),
     transform var(--tr);
@@ -390,7 +390,7 @@
 
 .btn-explore:hover {
   color: #fff;
-  box-shadow: 0 6px 20px rgba(0, 42, 53, 0.3);
+  box-shadow: 0 6px 20px rgba(30, 174, 212, 0.4);
   transform: translateY(-1px);
 }
 .btn-explore:active {
@@ -457,8 +457,8 @@
   padding: 14px 20px;
   background: linear-gradient(
     135deg,
-    var(--brand-accent) 0%,
-    var(--brand-dark) 100%
+    var(--chat-accent) 0%,
+    var(--chat-dark) 100%
   );
   flex-shrink: 0;
 }
@@ -660,12 +660,12 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: var(--brand-pale);
+  background: var(--chat-pale);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
-  color: var(--brand-accent);
+  color: var(--chat-accent);
   margin-bottom: 4px;
   border: 1.5px solid rgba(1, 98, 122, 0.12);
 }
@@ -743,7 +743,7 @@
 .bubble-name {
   font-size: 0.72rem;
   font-weight: 700;
-  color: var(--brand-accent);
+  color: var(--chat-accent);
   margin-bottom: 2px;
   display: none;
 }
@@ -771,7 +771,7 @@
   white-space: nowrap;
 }
 .msg.me .bubble-time {
-  color: var(--brand-accent);
+  color: var(--chat-accent);
   opacity: 0.75;
 }
 
@@ -805,7 +805,7 @@
 }
 
 .modal-input-wrap:focus-within {
-  border-color: var(--brand-accent);
+  border-color: var(--chat-accent);
   box-shadow: 0 0 0 3px rgba(1, 98, 122, 0.1);
 }
 
@@ -831,7 +831,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--brand-accent), var(--brand-dark));
+  background: linear-gradient(135deg, var(--chat-accent), var(--chat-dark));
   color: #fff;
   border: none;
   display: flex;

@@ -17,7 +17,7 @@ from items.models import Item
 def dispositivo(db):
     """Cria um dispositivo (leitor RFID) de teste."""
     return Dispositivo.objects.create(
-        nome="Leitor RFID COPAC Balcão",
+        nome="Leitor RFID COAPAC Balcão",
         token_auth="token-secreto-teste-1234",
         is_ativo=True,
     )
@@ -71,7 +71,7 @@ class TestDispositivoModel:
 
     def test_dispositivo_str_ativo(self, dispositivo):
         """__str__ deve indicar nome e status Ativo."""
-        assert str(dispositivo) == "Leitor RFID COPAC Balcão (Ativo)"
+        assert str(dispositivo) == "Leitor RFID COAPAC Balcão (Ativo)"
 
     def test_dispositivo_str_inativo(self, dispositivo_inativo):
         """__str__ deve indicar nome e status Inativo."""
@@ -156,7 +156,7 @@ class TestLeituraLogModel:
         )
         resultado = str(log)
         assert "AA BB CC DD" in resultado
-        assert "Leitor RFID COPAC Balcão" in resultado
+        assert "Leitor RFID COAPAC Balcão" in resultado
 
     def test_leitura_log_timestamp_auto(self, dispositivo):
         """O campo timestamp deve ser preenchido automaticamente."""

@@ -21,7 +21,7 @@ def api_client():
 def dispositivo(db):
     """Dispositivo ativo com token válido."""
     return Dispositivo.objects.create(
-        nome="Leitor RFID COPAC",
+        nome="Leitor RFID COAPAC",
         token_auth="token-valido-iot-9876",
         is_ativo=True,
     )
@@ -205,7 +205,7 @@ class TestIotScanItemIdentificado:
             **_auth_header(dispositivo.token_auth),
         )
         assert resp.status_code == 200
-        assert "Leitor RFID COPAC" in resp.data["detail"]
+        assert "Leitor RFID COAPAC" in resp.data["detail"]
 
 
 # ──────────────────────────────────────────────────────────────

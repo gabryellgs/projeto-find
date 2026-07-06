@@ -1,5 +1,7 @@
 /* ==========================================================
    chats.js  —  Lista de Chats + Modal Chat Detail
+   Tempo real via WebSocket (mesmo transporte usado em
+   item_detail.html e chat_detail.html — sem polling HTTP).
    Salvar em: static/mainpage/js/chats.js
    ========================================================== */
 
@@ -26,13 +28,13 @@
   const sendBtn       = document.getElementById('modalSendBtn');
   const toast         = document.getElementById('chatErrorToast');
   const searchInput   = document.getElementById('chatSearch');
-  const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-  /* URLs do chat aberto no momento */
-  let urlMessages = null;
-  let urlSend     = null;
-  let pollTimer   = null;
-  let lastSender  = null;
+  /* Estado do chat aberto no momento */
+  let urlMessages   = null;
+  let currentChatId = null;
+  let chatSocket    = null;
+  let chatIsAtivo   = false;
+  let lastSender    = null;
 
   /* ----------------------------------------------------------
      UTILS
@@ -43,14 +45,16 @@
     return d.innerHTML;
   }
 
-  function isNearBottom() {
-    return (msgBox.scrollHeight - msgBox.scrollTop - msgBox.clientHeight) < 160;
-  }
-
   function showError(msg) {
     toast.textContent = msg;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2800);
+  }
+
+  function setComposerEnabled(enabled) {
+    textarea.disabled = !enabled;
+    textarea.placeholder = enabled ? 'Digite uma mensagem…' : 'Esta conversa está encerrada.';
+    sendBtn.disabled = !enabled || textarea.value.trim() === '';
   }
 
   /* ----------------------------------------------------------
@@ -63,14 +67,15 @@
     modalItem.textContent     = data.item;
 
     const isAtivo = data.status === 'ativo';
+    chatIsAtivo = isAtivo;
 
     modalDot.className = 'modal-status-dot ' + (isAtivo ? 'dot-ativo' : 'dot-fechado');
     modalBadge.textContent = data.statusLabel;
     modalBadge.className   = 'modal-status-badge ' + (isAtivo ? 'msb-ativo' : 'msb-fechado');
 
-    /* URLs */
-    urlMessages = data.urlMessages;
-    urlSend     = data.urlSend;
+    /* Estado do chat */
+    currentChatId = data.chatId;
+    urlMessages   = data.urlMessages;
 
     /* Reset área de mensagens */
     modalMessages.innerHTML = '';
@@ -78,16 +83,15 @@
     modalLoading.style.display = 'flex';
     textarea.value = '';
     textarea.style.height = 'auto';
-    sendBtn.disabled = true;
     lastSender = null;
+    setComposerEnabled(false);
 
     /* Abre o backdrop */
     backdrop.classList.add('open');
     document.body.style.overflow = 'hidden';
 
-    /* Carrega e inicia polling */
-    loadMessages();
-    pollTimer = setInterval(loadMessages, 2000);
+    /* Carrega histórico e conecta o WebSocket */
+    loadHistory();
 
     /* Foca no input */
     setTimeout(() => textarea.focus(), 280);
@@ -96,16 +100,18 @@
   function closeModal() {
     backdrop.classList.remove('open');
     document.body.style.overflow = '';
-    clearInterval(pollTimer);
-    pollTimer = null;
+    if (chatSocket) {
+      chatSocket.close();
+      chatSocket = null;
+    }
+    currentChatId = null;
     urlMessages = null;
-    urlSend = null;
   }
 
   /* ----------------------------------------------------------
-     MENSAGENS — carregar
+     HISTÓRICO — carregado uma única vez ao abrir o modal
      ---------------------------------------------------------- */
-  async function loadMessages() {
+  async function loadHistory() {
     if (!urlMessages) return;
 
     try {
@@ -114,24 +120,23 @@
 
       if (!r.ok) { showError(data.error || 'Erro ao carregar'); return; }
 
-      /* Atualiza status se a API retornar */
       if (data.status) {
         const isAtivo = data.status === 'ativo';
+        chatIsAtivo = isAtivo;
         modalBadge.textContent = isAtivo ? 'Ativo' : 'Fechado';
         modalBadge.className   = 'modal-status-badge ' + (isAtivo ? 'msb-ativo' : 'msb-fechado');
         modalDot.className     = 'modal-status-dot '   + (isAtivo ? 'dot-ativo' : 'dot-fechado');
       }
 
-      renderMessages(data.mensagens || []);
+      renderHistory(data.mensagens || []);
+      connectSocket();
     } catch {
+      modalLoading.style.display = 'none';
       showError('Sem conexão');
     }
   }
 
-  /* ----------------------------------------------------------
-     MENSAGENS — renderizar
-     ---------------------------------------------------------- */
-  function renderMessages(mensagens) {
+  function renderHistory(mensagens) {
     modalLoading.style.display = 'none';
 
     if (!mensagens.length) {
@@ -142,69 +147,91 @@
 
     modalEmpty.style.display    = 'none';
     modalMessages.style.display = 'flex';
-
-    const stick = isNearBottom();
     modalMessages.innerHTML = '';
     lastSender = null;
 
-    for (const m of mensagens) {
-      const senderKey    = m.is_me ? '__me__' : m.remetente;
-      const isGroupStart = senderKey !== lastSender;
-
-      const wrap = document.createElement('div');
-      wrap.className =
-        'msg ' + (m.is_me ? 'me' : 'other') + (isGroupStart ? ' group-start' : '');
-
-      wrap.innerHTML = `
-        <div class="bubble">
-          <div class="bubble-name">${isGroupStart && !m.is_me ? escapeHtml(m.remetente) : ''}</div>
-          <div class="bubble-text">${escapeHtml(m.conteudo)}</div>
-          <div class="bubble-footer">
-            <span class="bubble-time">${escapeHtml(m.data_envio)}</span>
-            ${m.is_me ? '<i class="bi bi-check2-all" style="font-size:.65rem;color:var(--brand-accent);opacity:.7;"></i>' : ''}
-          </div>
-        </div>`;
-
-      modalMessages.appendChild(wrap);
-      lastSender = senderKey;
-    }
-
-    if (stick) msgBox.scrollTop = msgBox.scrollHeight;
+    mensagens.forEach(appendMessage);
+    msgBox.scrollTop = msgBox.scrollHeight;
   }
 
   /* ----------------------------------------------------------
-     MENSAGENS — enviar
+     MENSAGENS — anexar uma mensagem (histórico ou tempo real)
      ---------------------------------------------------------- */
-  msgForm.addEventListener('submit', async (e) => {
+  function appendMessage(m) {
+    if (modalEmpty.style.display !== 'none') {
+      modalEmpty.style.display    = 'none';
+      modalMessages.style.display = 'flex';
+    }
+
+    const senderKey    = m.is_me ? '__me__' : m.remetente;
+    const isGroupStart = senderKey !== lastSender;
+
+    const wrap = document.createElement('div');
+    wrap.className =
+      'msg ' + (m.is_me ? 'me' : 'other') + (isGroupStart ? ' group-start' : '');
+
+    wrap.innerHTML = `
+      <div class="bubble">
+        <div class="bubble-name">${isGroupStart && !m.is_me ? escapeHtml(m.remetente) : ''}</div>
+        <div class="bubble-text">${escapeHtml(m.conteudo)}</div>
+        <div class="bubble-footer">
+          <span class="bubble-time">${escapeHtml(m.data_envio)}</span>
+          ${m.is_me ? '<i class="bi bi-check2-all" style="font-size:.65rem;color:var(--chat-accent);opacity:.7;"></i>' : ''}
+        </div>
+      </div>`;
+
+    modalMessages.appendChild(wrap);
+    lastSender = senderKey;
+    msgBox.scrollTop = msgBox.scrollHeight;
+  }
+
+  /* ----------------------------------------------------------
+     WEBSOCKET — tempo real (substitui o polling antigo)
+     ---------------------------------------------------------- */
+  function connectSocket() {
+    if (!chatIsAtivo || !currentChatId) {
+      setComposerEnabled(false);
+      return;
+    }
+
+    const wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    chatSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/chat/${currentChatId}/`);
+
+    chatSocket.onopen = () => setComposerEnabled(true);
+
+    chatSocket.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+
+      if (data.type === 'error') {
+        showError(data.detail || 'Não foi possível enviar a mensagem.');
+        return;
+      }
+
+      appendMessage({
+        is_me: data.is_me,
+        remetente: data.remetente,
+        conteudo: data.message,
+        data_envio: data.data_envio,
+      });
+    };
+
+    chatSocket.onclose = () => setComposerEnabled(false);
+    chatSocket.onerror = () => showError('Conexão em tempo real perdida.');
+  }
+
+  /* ----------------------------------------------------------
+     MENSAGENS — enviar via WebSocket
+     ---------------------------------------------------------- */
+  msgForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const conteudo = textarea.value.trim();
-    if (!conteudo || !urlSend) return;
+    if (!conteudo || !chatSocket || chatSocket.readyState !== WebSocket.OPEN) return;
 
+    chatSocket.send(JSON.stringify({ message: conteudo }));
+    textarea.value = '';
+    textarea.style.height = 'auto';
     sendBtn.disabled = true;
-    const body = new URLSearchParams();
-    body.append('conteudo', conteudo);
-
-    try {
-      const r    = await fetch(urlSend, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': csrfToken,
-        },
-        body: body.toString(),
-      });
-      const data = await r.json();
-      if (!r.ok) { showError(data.error || 'Erro ao enviar'); return; }
-
-      textarea.value = '';
-      textarea.style.height = 'auto';
-      await loadMessages();
-      msgBox.scrollTop = msgBox.scrollHeight;
-    } catch {
-      showError('Erro de conexão');
-    } finally {
-      sendBtn.disabled = textarea.value.trim() === '';
-    }
+    textarea.focus();
   });
 
   /* ----------------------------------------------------------
@@ -213,7 +240,7 @@
   textarea.addEventListener('input', () => {
     textarea.style.height = 'auto';
     textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
-    sendBtn.disabled = textarea.value.trim() === '';
+    sendBtn.disabled = textarea.disabled || textarea.value.trim() === '';
   });
 
   textarea.addEventListener('keydown', (e) => {
@@ -244,13 +271,13 @@
   document.querySelectorAll('.chat-row').forEach((row) => {
     row.addEventListener('click', () => {
       openModal({
+        chatId:      row.dataset.chatId,
         avatar:      row.dataset.avatar,
         username:    row.dataset.username,
         item:        row.dataset.item,
         status:      row.dataset.status,
         statusLabel: row.dataset.statusLabel,
         urlMessages: row.dataset.urlMessages,
-        urlSend:     row.dataset.urlSend,
       });
     });
   });
