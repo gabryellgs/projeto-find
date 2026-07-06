@@ -1,8 +1,13 @@
 import json
+import logging
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from .models import Chat, Mensagem
+
+logger = logging.getLogger(__name__)
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -46,8 +51,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         # Salva a mensagem no banco de dados
         msg_obj = await self.save_message(self.chat_id, self.user.id, message)
-        
+
         if not msg_obj:
+            # Avisa só o remetente (não o grupo) que a mensagem não foi
+            # persistida, em vez de falhar silenciosamente.
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'detail': 'Não foi possível enviar a mensagem. Tente novamente.',
+            }))
             return
 
         data_envio = msg_obj.data_envio.strftime("%d/%m/%Y %H:%M")
@@ -81,7 +92,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         try:
             chat = Chat.objects.get(id=chat_id)
             return user_id in (chat.criado_por_id, chat.dono_item_id)
-        except Chat.DoesNotExist:
+        except (Chat.DoesNotExist, ValueError, ValidationError):
+            # ValueError/ValidationError cobrem chat_id não numérico vindo da URL do WS
             return False
 
     @database_sync_to_async
@@ -115,9 +127,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     link=link_chat
                 )
             except Exception:
-                pass
-                
+                logger.exception(f"Falha ao criar notificação de nova mensagem (chat_id={chat_id})")
+
             return m
+        except (Chat.DoesNotExist, ValueError, ValidationError):
+            return None
         except Exception:
+            logger.exception(f"Falha ao salvar mensagem de chat (chat_id={chat_id}, user_id={user_id})")
             return None
 

@@ -465,8 +465,10 @@ class TestChatWebViews:
 class TestUpdateProfileView:
 
     def test_atualizar_perfil(self, auth_client, user):
+        # A view (mainpage/views.py::update_profile) e o formulário real
+        # (edit_profile.html) usam o campo "first_name", não "nome".
         resp = auth_client.post("/perfil/atualizar/", {
-            "nome": "NomeNovo",
+            "first_name": "NomeNovo",
             "telefone": "(85) 99999-1111",
             "cidade": "Fortaleza",
             "estado": "CE",

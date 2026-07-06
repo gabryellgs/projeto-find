@@ -1,12 +1,15 @@
 """API views para autenticação e perfil de usuário."""
 import json
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from accounts.models import Profile
 from accounts.permissoes import IsAdministrador
+from find.validators import validate_image_file
 
 
 @api_view(["POST"])
@@ -140,6 +143,10 @@ def api_update_profile(request):
 
     nova_foto = request.FILES.get("image")
     if nova_foto:
+        try:
+            validate_image_file(nova_foto)
+        except ValidationError as e:
+            return Response({"ok": False, "detail": e.messages[0]}, status=400)
         profile.image = nova_foto
 
     # Salva sem acionar o processamento automático (usamos update_fields para evitar

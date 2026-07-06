@@ -26,3 +26,7 @@ TODO.md
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Outros
+.claude/
+.qodo

@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -11,6 +12,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
+from find.validators import validate_image_file
 from .forms import ProfileupdateForm
 from .models import Categoria, Item, Profile, Chat, Mensagem
 
@@ -226,8 +228,10 @@ def menu_view(request):
 
     base_qs = Item.objects.select_related('usuario', 'categoria').all().order_by("-id")
 
-    # lista principal (com filtros)
-    itens = _apply_item_filters(base_qs, q=q, status=status, categoria=categoria)
+    # lista principal (com filtros) — limitada porque esta é a prévia do
+    # dashboard, renderizada inteira (2x, desktop+mobile) sem paginação;
+    # a navegação completa e paginada já existe em item_list/_paginate_has_more.
+    itens = _apply_item_filters(base_qs, q=q, status=status, categoria=categoria)[:24]
 
     # listas específicas para seções
     itens_devolvidos = Item.objects.filter(status="devolvido").select_related('usuario', 'categoria').order_by("-id")[:10]
@@ -305,7 +309,13 @@ def update_profile(request):
         profile.cep = request.POST.get("cep")
 
         if request.FILES.get("image"):
-            profile.image = request.FILES.get("image")
+            nova_foto = request.FILES.get("image")
+            try:
+                validate_image_file(nova_foto)
+            except ValidationError as e:
+                messages.error(request, e.messages[0])
+                return redirect("screen_user")
+            profile.image = nova_foto
 
         profile.save()
         messages.success(request, "Perfil atualizado com sucesso!")
@@ -337,6 +347,12 @@ def register_item(request):
     data_item = request.POST.get("data")
     local = request.POST.get("local") or ""
     imagem = request.FILES.get("imagem")
+    if imagem:
+        try:
+            validate_image_file(imagem)
+        except ValidationError as e:
+            messages.error(request, e.messages[0])
+            return redirect(next_url)
     rfid_uid = (request.POST.get("rfid_uid") or "").strip().upper() or None
 
     latitude = request.POST.get("latitude")
@@ -409,7 +425,13 @@ def edit_item(request, id):
             item.categoria_id = categoria_id
 
         if request.FILES.get("imagem"):
-            item.imagem = request.FILES.get("imagem")
+            nova_imagem = request.FILES.get("imagem")
+            try:
+                validate_image_file(nova_imagem)
+            except ValidationError as e:
+                messages.error(request, e.messages[0])
+                return redirect(next_url)
+            item.imagem = nova_imagem
 
         item.save()
         messages.success(request, "Item atualizado com sucesso!")
@@ -921,13 +943,20 @@ def busca_visual(request):
     if request.method == "POST" and request.FILES.get("imagem_busca"):
         imagem_file = request.FILES["imagem_busca"]
         try:
-            resultados = Item.buscar_por_imagem(imagem_file)
-            import base64
-            imagem_file.seek(0)
-            encoded = base64.b64encode(imagem_file.read()).decode("utf-8")
-            imagem_base64 = f"data:{imagem_file.content_type};base64,{encoded}"
-        except Exception as e:
-            messages.error(request, f"Erro ao processar imagem: {str(e)}")
+            validate_image_file(imagem_file)
+        except ValidationError as e:
+            messages.error(request, e.messages[0])
+            imagem_file = None
+
+        if imagem_file:
+            try:
+                resultados = Item.buscar_por_imagem(imagem_file)
+                import base64
+                imagem_file.seek(0)
+                encoded = base64.b64encode(imagem_file.read()).decode("utf-8")
+                imagem_base64 = f"data:{imagem_file.content_type};base64,{encoded}"
+            except Exception as e:
+                messages.error(request, f"Erro ao processar imagem: {str(e)}")
 
     # 2. Match Automático (Smart Match) para os itens perdidos do usuário
     matches_automaticos = []

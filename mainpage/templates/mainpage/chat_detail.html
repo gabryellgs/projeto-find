@@ -124,21 +124,27 @@
         wsScheme + "://" + window.location.host + "/ws/chat/" + chatId + "/"
     );
 
+    function escapeHtml(text) {
+        const d = document.createElement('div');
+        d.innerText = text;
+        return d.innerHTML;
+    }
+
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
-        
+
         // Remove empty state if it exists
         const emptyState = document.querySelector('.chat-empty');
         if (emptyState) emptyState.remove();
 
         const bubbleClass = data.is_me ? 'me' : 'other';
         const checkIcon = data.is_me ? '<span><i class="bi bi-check"></i></span>' : '';
-        
+
         const msgHtml = `
           <div class="chat-bubble ${bubbleClass}">
-            ${data.message.replace(/\n/g, '<br>')}
+            ${escapeHtml(data.message).replace(/\n/g, '<br>')}
             <div class="chat-bubble-meta">
-              <span>${data.data_envio}</span>
+              <span>${escapeHtml(data.data_envio || '')}</span>
               ${checkIcon}
             </div>
           </div>

@@ -383,14 +383,20 @@
   if (btnCloseChat) btnCloseChat.addEventListener("click", closeChat);
   if (chatOverlay) chatOverlay.addEventListener("click", closeChat);
 
+  function escapeHtml(text) {
+    const d = document.createElement('div');
+    d.innerText = text;
+    return d.innerHTML;
+  }
+
   function appendMessage(msg) {
     // msg.is_me , msg.conteudo, msg.data_envio
     const isMe = msg.is_me;
     const bubbleClass = isMe ? 'me' : 'other';
     const html = `
       <div class="chat-drawer-bubble ${bubbleClass}">
-        <div class="chat-txt">${msg.conteudo || msg.message}</div>
-        <div class="chat-meta">${msg.data_envio || ''}</div>
+        <div class="chat-txt">${escapeHtml(msg.conteudo || msg.message || '')}</div>
+        <div class="chat-meta">${escapeHtml(msg.data_envio || '')}</div>
       </div>
     `;
     chatMessagesBox.insertAdjacentHTML("beforeend", html);

@@ -2,9 +2,10 @@
 import logging
 from datetime import timedelta
 from django.utils import timezone
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes, throttle_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
 
 from items.models import Item
 from items.api.views import _item_to_dict, _get_client_ip
@@ -12,8 +13,17 @@ from iot.models import Dispositivo, LeituraLog
 
 logger = logging.getLogger(__name__)
 
+
+class IotScanRateThrottle(AnonRateThrottle):
+    scope = 'iot-scan'
+
+
 @api_view(["POST"])
+@authentication_classes([])  # autenticação é feita manualmente via Hardware-Token abaixo;
+# sem isso, o JWTAuthentication global (settings.REST_FRAMEWORK) intercepta headers
+# "Bearer ..." e retorna 401 antes mesmo desta view rodar.
 @permission_classes([AllowAny])
+@throttle_classes([IotScanRateThrottle])
 def api_iot_scan(request):
     """
     Endpoint dedicado para receber leituras de módulos IoT (ESP32).
@@ -21,18 +31,18 @@ def api_iot_scan(request):
     Payload esperado: {"rfid_uid": "04 EA B1 22", "acao": "scan"}
     """
     auth_header = request.headers.get("Authorization", "")
-    
+
     if not auth_header.startswith("Hardware-Token "):
         logger.warning(f"Tentativa de acesso IoT sem header correto. IP: {_get_client_ip(request)}")
         return Response({"ok": False, "detail": "Acesso negado. Formato de token inválido."}, status=403)
-        
+
     token_str = auth_header.replace("Hardware-Token ", "").strip()
-    
+
     # 1. Autenticação Baseada no Banco de Dados
     try:
         dispositivo = Dispositivo.objects.get(token_auth=token_str, is_ativo=True)
     except Dispositivo.DoesNotExist:
-        logger.warning(f"Tentativa de acesso IoT com token não reconhecido: {token_str}. IP: {_get_client_ip(request)}")
+        logger.warning(f"Tentativa de acesso IoT com token não reconhecido (tamanho={len(token_str)}). IP: {_get_client_ip(request)}")
         return Response({"ok": False, "detail": "Acesso negado. Dispositivo inativo ou token inválido."}, status=403)
 
     # Atualiza last_seen do dispositivo
@@ -40,7 +50,10 @@ def api_iot_scan(request):
     dispositivo.save(update_fields=["ultima_comunicacao"])
 
     # 2. Processamento do RFID
-    rfid_uid = request.data.get("rfid_uid", "").strip()
+    rfid_uid = request.data.get("rfid_uid", "")
+    if not isinstance(rfid_uid, str):
+        return Response({"ok": False, "detail": "O campo 'rfid_uid' deve ser um texto."}, status=400)
+    rfid_uid = rfid_uid.strip()[:50]
     if not rfid_uid:
         return Response({"ok": False, "detail": "O campo 'rfid_uid' é obrigatório."}, status=400)
 

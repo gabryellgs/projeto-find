@@ -1,12 +1,19 @@
 """API views para itens e categorias."""
 import datetime
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
 from items.models import Item, Categoria
 from accounts.permissoes import IsBolsistaOuAdmin
+from find.validators import validate_image_file
+
+
+class VisualSearchRateThrottle(AnonRateThrottle):
+    scope = 'visual-search'
 
 
 def _item_to_dict(item, request=None):
@@ -97,6 +104,12 @@ def api_create_item(request):
             pass
 
     imagem = request.FILES.get("imagem")
+    if imagem:
+        try:
+            validate_image_file(imagem)
+        except ValidationError as e:
+            return Response({"ok": False, "detail": e.messages[0]}, status=400)
+
     item = Item.objects.create(
         titulo=titulo, descricao=descricao, local=local,
         status=status, categoria=categoria, usuario=request.user,
@@ -126,7 +139,12 @@ def api_edit_item(request, item_id):
     if "data" in data:
         item.data = data["data"]
     if request.FILES.get("imagem"):
-        item.imagem = request.FILES["imagem"]
+        nova_imagem = request.FILES["imagem"]
+        try:
+            validate_image_file(nova_imagem)
+        except ValidationError as e:
+            return Response({"ok": False, "detail": e.messages[0]}, status=400)
+        item.imagem = nova_imagem
     item.save()
     return Response({"ok": True, "data": _item_to_dict(item, request)})
 
@@ -310,11 +328,17 @@ def api_categories(request):
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
+@throttle_classes([VisualSearchRateThrottle])
 def api_search_by_image(request):
     """Busca itens visualmente similares a uma foto enviada (AI visual search)."""
     imagem = request.FILES.get("imagem") or request.FILES.get("image")
     if not imagem:
         return Response({"ok": False, "detail": "Envie uma imagem no campo 'imagem'."}, status=400)
+
+    try:
+        validate_image_file(imagem)
+    except ValidationError as e:
+        return Response({"ok": False, "detail": e.messages[0]}, status=400)
 
     try:
         resultados = Item.buscar_por_imagem(imagem)

@@ -62,6 +62,13 @@ class Item(models.Model):
     class Meta:
         db_table = 'mainpage_item'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Snapshot do nome da imagem atual (funciona tanto para instâncias novas
+        # quanto para as carregadas do banco via Model.from_db) para detectar
+        # troca de imagem de forma confiável, sem depender de update_fields.
+        self._imagem_original = self.imagem.name if self.imagem else None
+
     def save(self, *args, **kwargs):
         if not self.slug:
             import uuid
@@ -71,8 +78,8 @@ class Item(models.Model):
 
         # Verifica se é criação ou se a imagem foi alterada
         is_new = self.pk is None
-        update_fields = kwargs.get('update_fields') or []
-        imagem_alterada = is_new or 'imagem' in update_fields
+        imagem_atual = self.imagem.name if self.imagem else None
+        imagem_alterada = is_new or imagem_atual != self._imagem_original
 
         super().save(*args, **kwargs)
 
@@ -80,6 +87,7 @@ class Item(models.Model):
         # Isso evita I/O custoso em simples mudanças de status
         if imagem_alterada:
             self._gerar_image_hash()
+            self._imagem_original = imagem_atual
         if is_new:
             self._gerar_qrcode()
 
@@ -199,9 +207,9 @@ class Item(models.Model):
                                 Q(descricao__icontains=palavra) |
                                 Q(local__icontains=palavra)
                             )
-                        
+
                         itens_encontrados = Item.objects.filter(query).select_related('usuario', 'categoria')[:limite]
-                        
+
                         # Calcula a similaridade textual baseada em quantas palavras-chave deram match
                         resultados = []
                         for item in itens_encontrados:
@@ -209,9 +217,13 @@ class Item(models.Model):
                             matches = sum(1 for palavra in palavras if palavra in texto_item)
                             sim_txt = (matches / len(palavras)) * 100 if palavras else 100.0
                             resultados.append((item, round(sim_txt, 1)))
-                        
+
                         resultados.sort(key=lambda x: x[1], reverse=True)
-                        return resultados
+                        # Só retorna aqui se a busca textual realmente encontrou algo;
+                        # caso contrário cai no fallback local de pHash abaixo, em vez
+                        # de responder "nenhum resultado" quando o fallback poderia achar algo.
+                        if resultados:
+                            return resultados
             except Exception as e:
                 logger.error(f"Erro ao consultar Gemini API para busca visual: {e}")
                 pass # Se falhar a API por qualquer motivo, cai no fallback local
@@ -222,6 +234,7 @@ class Item(models.Model):
         from PIL import Image as PILImage
 
         try:
+            imagem_file.seek(0)  # o caminho do Gemini acima pode ter consumido o stream
             img_query = PILImage.open(imagem_file)
             query_hash = imagehash.phash(img_query, hash_size=16)
             

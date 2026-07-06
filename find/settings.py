@@ -18,7 +18,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-only')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,*', cast=Csv())
+# Inclui o domínio de produção conhecido (find.ifrn.edu.br, usado em items/models.py
+# para gerar URLs de QR Code) no default — assim, mesmo que a env var ALLOWED_HOSTS
+# não esteja configurada no Render, o domínio real continua funcionando sem
+# precisar do curinga "*" (que aceitava qualquer Host header).
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='localhost,127.0.0.1,find.ifrn.edu.br,www.find.ifrn.edu.br',
+    cast=Csv(),
+)
 # Render injeta este env automaticamente no deploy
 RENDER_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_HOSTNAME:
@@ -136,13 +144,19 @@ else:
     }
 
 # ─── CORS ─────────────────────────────────────────────────────
-CORS_ALLOW_ALL_ORIGINS = True   # permite o app mobile se conectar
+# Apps nativos (mobile) não são afetados por CORS — é uma restrição imposta
+# pelo navegador, não pelo cliente HTTP. Só front-ends web (Vite dev/produção)
+# precisam estar aqui. CORS_ALLOW_ALL_ORIGINS + CORS_ALLOW_CREDENTIALS juntos
+# permitiam que qualquer site na internet enviasse requisições autenticadas
+# com os cookies de sessão do usuário — por isso a lista explícita abaixo.
+_WEB_TRUSTED_ORIGINS = config(
+    'WEB_TRUSTED_ORIGINS',
+    default='http://localhost:5173,http://127.0.0.1:5173,https://projeto-find.onrender.com',
+    cast=Csv(),
+)
+CORS_ALLOWED_ORIGINS = _WEB_TRUSTED_ORIGINS
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'https://projeto-find.onrender.com',
-]
+CSRF_TRUSTED_ORIGINS = _WEB_TRUSTED_ORIGINS
 
 # ─── DRF + JWT ────────────────────────────────────────────────
 REST_FRAMEWORK = {
@@ -152,6 +166,16 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
     ),
+    'DEFAULT_THROTTLE_RATES': {
+        # Escopos usados por views específicas via @throttle_classes;
+        # não afeta o restante da API (sem DEFAULT_THROTTLE_CLASSES global).
+        # iot-scan: deliberadamente generoso (não sabemos a frequência real de
+        # scan do hardware físico, nem se múltiplos leitores share o mesmo IP
+        # público atrás do NAT da instituição) — existe só para conter um
+        # flood extremo, não para limitar o uso normal do RFID.
+        'iot-scan': '1000/minute',
+        'visual-search': '10/minute',
+    },
 }
 
 SIMPLE_JWT = {
@@ -230,5 +254,16 @@ SOCIALACCOUNT_PROVIDERS = {
 # ─── Gemini API (Busca Visual Inteligente) ──────────────────────
 GEMINI_API_KEY = config('GEMINI_API_KEY', default='')
 
-# ─── Autenticação de Hardware (ESP32/RFID) ──────────────────────
-HARDWARE_API_TOKEN = config('HARDWARE_API_TOKEN', default='esp32-secret-token-find-ifrn')
+# Nota: a autenticação de dispositivos IoT (ESP32/RFID) usa o token por
+# dispositivo em Dispositivo.token_auth (banco de dados), não um token
+# global fixo — ver iot/api/views.py::api_iot_scan.
+
+# ─── Hardening de produção (Render) ────────────────────────────
+if os.getenv("RENDER"):
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 60 * 60 * 24 * 7  # 7 dias
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True

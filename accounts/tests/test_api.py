@@ -171,3 +171,36 @@ class TestApiProfile:
         assert resp.data["ok"] is True
         assert "pequeno" in resp.data["data"]
         assert "grande" in resp.data["data"]
+
+
+# ──────────────────────────────────────────────────────────────
+# Admin: gestão de bolsistas
+# ──────────────────────────────────────────────────────────────
+class TestApiAdminBolsistasRemover:
+
+    @pytest.fixture
+    def admin_client(self, api_client, db):
+        from django.contrib.auth.models import Group
+
+        admin = User.objects.create_user(username="admin1", password="Str0ngP@ss!", is_staff=True)
+        resp = api_client.post("/api/token/", {"username": "admin1", "password": "Str0ngP@ss!"})
+        assert resp.status_code == 200, resp.data
+        api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {resp.data['access']}")
+        return api_client
+
+    def test_remover_bolsista_existente(self, admin_client, user):
+        from django.contrib.auth.models import Group
+
+        grupo, _ = Group.objects.get_or_create(name="Bolsistas")
+        user.groups.add(grupo)
+
+        resp = admin_client.delete(f"/api/admin/bolsistas/{user.id}/remover/")
+
+        assert resp.status_code == 200
+        assert resp.data["ok"] is True
+        user.refresh_from_db()
+        assert not user.groups.filter(name="Bolsistas").exists()
+
+    def test_remover_usuario_inexistente_retorna_404(self, admin_client):
+        resp = admin_client.delete("/api/admin/bolsistas/999999/remover/")
+        assert resp.status_code == 404
