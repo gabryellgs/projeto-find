@@ -1202,13 +1202,17 @@ document.addEventListener("DOMContentLoaded", function() {
     const nameEl     = document.getElementById("sidebar-level-name");
 
     if (badgeEl && iconEl && nameEl) {
-        // Remove classes antigas do ícone e adiciona a nova, apagando o emoji padrão
-        iconEl.className = `bi ${levelData.icone}`;
-        iconEl.innerText = "";
-        iconEl.style.color = levelData.cor;
-        iconEl.style.fontSize = "16px";
-        iconEl.style.filter = "drop-shadow(0px 1px 2px rgba(0,0,0,0.15))"; // dá destaque na cor
-        
+        // Bootstrap Icons usam CSS ::before — definir className é suficiente
+        // Não usar innerText="" pois isso cria um nó de texto vazio e pode
+        // interferir com pseudo-elementos. Usamos um <i> criado dinamicamente.
+        iconEl.innerHTML = "";  // limpa o emoji padrão (🛡️)
+        const iEl = document.createElement("i");
+        iEl.className = `bi ${levelData.icone}`;
+        iEl.style.color = levelData.cor;
+        iEl.style.fontSize = "16px";
+        iEl.style.filter = "drop-shadow(0px 1px 2px rgba(0,0,0,0.18))";
+        iconEl.appendChild(iEl);
+
         nameEl.innerText = levelData.nome;
         nameEl.style.color = levelData.cor;
         nameEl.style.textShadow = `0 0 10px ${levelData.cor}66`;
@@ -1216,14 +1220,14 @@ document.addEventListener("DOMContentLoaded", function() {
         // Glow pulsante no círculo externo azul por rank
         if (levelData.glow) badgeEl.classList.add(levelData.glow);
 
-        // Anima entrada com bounce + rotação
+        // Anima entrada com bounce + rotação — mostra o badge que estava opacity:0
         badgeEl.style.transform = "scale(0.3) rotate(-15deg)";
         badgeEl.style.opacity = "0";
         setTimeout(() => {
             badgeEl.style.transition = "all 0.55s cubic-bezier(0.16,1,0.3,1)";
             badgeEl.style.transform = "scale(1) rotate(0deg)";
             badgeEl.style.opacity = "1";
-        }, 400);
+        }, 200);  // reduzido de 400ms para 200ms — menos delay visível
     }
 
     // ── Desbloquear medalhas

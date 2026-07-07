@@ -93,8 +93,7 @@ class TestItemModel:
         assert str(item) == "Celular Samsung"
 
     def test_slug_gerado_automaticamente(self, item):
-        # O model sempre acrescenta um sufixo aleatório ao slug (ver Item.save())
-        # para garantir unicidade, então o slug nunca é só o título "slugificado".
+        # O model sempre acrescenta um sufixo aleatório ao slug para garantir unicidade.
         assert item.slug.startswith("celular-samsung-")
         assert len(item.slug) == len("celular-samsung-") + 6
 
