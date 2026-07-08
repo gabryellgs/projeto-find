@@ -324,46 +324,61 @@
                     <!-- Seção: Já na COAPAC (achado aguardando devolução) -->
                     {% for item in pendentes %}{% if item.status == 'achado' or item.status == 'confirmado' %}
                     <div class="col-12 mb-3">
-                        <div class="validation-card overflow-hidden" style="border-left:4px solid #10b981;">
-                            <div class="px-4 pt-3 pb-0 d-flex justify-content-between align-items-center">
-                                <span class="badge bg-success-subtle" style="font-size:.72rem;">
-                                    <i class="bi bi-archive-fill me-1"></i>Na COAPAC — Aguardando Devolução
+                        <div class="item-lista-horizontal shadow-sm position-relative overflow-hidden" style="border-left: 4px solid #10b981;">
+                            <!-- Tag superior para COAPAC -->
+                            <div class="position-absolute" style="top: 10px; right: 15px; z-index: 2;">
+                                <span class="badge bg-success-subtle text-success border border-success border-opacity-25 shadow-sm" style="font-size: 0.65rem; padding: 4px 8px; border-radius: 6px;">
+                                    <i class="bi bi-archive-fill me-1"></i>Na COAPAC
                                 </span>
-                                <small class="text-muted">por @{{ item.usuario.username }}</small>
                             </div>
-                            <div class="row g-0">
-                                <div class="col-md-3 bg-light d-flex align-items-center justify-content-center p-3 border-end" style="min-height:120px;">
+                            
+                            <!-- FOTO -->
+                            <div class="item-col-img">
+                                <div class="item-img-container">
                                     {% if item.imagem %}
-                                    <div class="validation-img-container rounded-3 w-100 h-100">
-                                        <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
-                                    </div>
+                                    <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
                                     {% else %}
-                                    <div class="d-flex flex-column align-items-center">
+                                    <div class="d-flex flex-column align-items-center justify-content-center h-100 bg-light">
                                         <i class="bi bi-box-seam validation-placeholder-ico"></i>
                                     </div>
                                     {% endif %}
                                 </div>
-                                <div class="col-md-9">
-                                    <div class="card-body p-4 d-flex flex-column h-100 justify-content-between">
-                                        <div>
-                                            <h5 class="fw-bold mb-1 text-dark">{{ item.titulo }}</h5>
-                                            <div class="d-flex flex-wrap gap-3 mb-3 text-muted small">
-                                                <span><i class="bi bi-geo-alt-fill me-1 text-danger"></i>{{ item.local|default:"Não informado" }}</span>
-                                                <span><i class="bi bi-person-fill me-1 text-primary"></i>{{ item.usuario.username }}</span>
-                                                {% if item.rfid_uid %}<span><i class="bi bi-broadcast me-1" style="color:#1eaed4;"></i>{{ item.rfid_uid }}</span>{% endif %}
-                                            </div>
-                                        </div>
-                                        <div class="d-flex gap-2 border-top pt-3">
-                                            <button type="button" class="btn btn-outline-primary btn-sm px-3"
-                                                    data-bs-toggle="modal" data-bs-target="#devolverModal{{ item.id }}">
-                                                <i class="bi bi-arrow-return-left me-1"></i>Registrar Entrega ao Dono
-                                            </button>
-                                            <button type="button" class="btn btn-outline-secondary btn-sm px-3"
-                                                    data-bs-toggle="modal" data-bs-target="#editarModal{{ item.id }}">
-                                                <i class="bi bi-pencil-fill me-1"></i>Editar
-                                            </button>
-                                        </div>
-                                    </div>
+                            </div>
+                            
+                            <!-- INFO -->
+                            <div class="item-col-info pe-4">
+                                <h6 class="fw-bold mb-0 text-truncate text-dark">{{ item.titulo }}</h6>
+                                <p class="text-muted small mb-1">
+                                    {% if item.categoria %}
+                                        {{ item.categoria.nome }}
+                                    {% else %}
+                                        Sem categoria
+                                    {% endif %}
+                                </p>
+                                <small class="text-muted d-block mt-1">
+                                    <i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ item.local|default:"Não informado" }}
+                                </small>
+                                <small class="text-muted d-block mt-1">
+                                    <i class="bi bi-person-fill text-primary me-1"></i> @{{ item.usuario.username }}
+                                </small>
+                                {% if item.rfid_uid %}
+                                <small class="text-muted d-block mt-1">
+                                    <i class="bi bi-broadcast me-1" style="color:#1eaed4;"></i>{{ item.rfid_uid }}
+                                </small>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- AÇÕES -->
+                            <div class="item-col-actions justify-content-center bg-light border-start" style="min-width: 200px; border-left: 1px dashed rgba(0,0,0,0.1) !important;">
+                                <div class="d-flex flex-column gap-2 w-100 px-3 py-2">
+                                    <button type="button" class="btn btn-primary btn-sm w-100 shadow-sm fw-bold rounded-pill"
+                                            data-bs-toggle="modal" data-bs-target="#devolverModal{{ item.id }}" style="font-size: 0.75rem;">
+                                        <i class="bi bi-arrow-return-left me-1"></i>Entregar
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm w-100 fw-bold rounded-pill"
+                                            data-bs-toggle="modal" data-bs-target="#editarModal{{ item.id }}" style="font-size: 0.75rem;">
+                                        <i class="bi bi-pencil-fill me-1"></i>Editar
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -382,8 +397,27 @@
                                     <input type="hidden" name="action" value="devolver">
                                     <input type="hidden" name="item_id" value="{{ item.id }}">
                                     <div class="modal-body p-4">
-                                        <div class="alert alert-info py-2 mb-3">
-                                            <i class="bi bi-info-circle-fill me-2"></i>Valide o documento do estudante antes de entregar.
+                                        <div class="alert alert-info py-2 mb-4 d-flex align-items-center">
+                                            <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+                                            <span class="small">Valide o documento do estudante antes de entregar o item abaixo.</span>
+                                        </div>
+                                        
+                                        <!-- DETALHES DO ITEM -->
+                                        <div class="d-flex align-items-center mb-4 p-3 rounded-4" style="background-color: var(--bg-surface);">
+                                            {% if item.imagem %}
+                                            <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}" class="rounded-3 me-3" style="width: 65px; height: 65px; object-fit: cover; border: 1px solid var(--bd);">
+                                            {% else %}
+                                            <div class="rounded-3 me-3 d-flex align-items-center justify-content-center bg-white" style="width: 65px; height: 65px; border: 1px solid var(--bd);">
+                                                <i class="bi bi-box-seam fs-3" style="color: var(--brand-accent);"></i>
+                                            </div>
+                                            {% endif %}
+                                            <div>
+                                                <h6 class="mb-1 fw-bold text-dark">{{ item.titulo }}</h6>
+                                                <div class="text-muted" style="font-size: 0.8rem;">
+                                                    <div class="mb-1"><i class="bi bi-person-fill me-1"></i>Dono: @{{ item.usuario.username }}</div>
+                                                    {% if item.rfid_uid %}<div><i class="bi bi-broadcast me-1" style="color:#1eaed4;"></i>TAG: {{ item.rfid_uid }}</div>{% endif %}
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label fw-bold small">Nome do Recebedor <span class="text-danger">*</span></label>
