@@ -978,12 +978,28 @@ function iniciarLeituraSensor(inputId, btnId, statusId) {
         clearInterval(_rfidPollInterval);
         _rfidPollInterval = null;
 
+        if (data.sucesso_identificacao) {
+          // Tag já cadastrada em outro item -> Recusar
+          input.style.borderColor = '#dc3545';
+          if (btn)    { btn.innerHTML = '<i class="bi bi-x-lg"></i>'; btn.style.background = '#dc3545'; }
+          if (status) {
+            status.innerHTML = `<span style="color:#dc3545;"><i class="bi bi-x-circle-fill me-1"></i>Atenção: Tag já cadastrada (${data.item_titulo || 'Item'}). Recusada!</span>`;
+          }
+          
+          setTimeout(function() {
+            input.style.borderColor = '';
+            if (btn)    { btn.innerHTML = '<i class="bi bi-broadcast"></i>'; btn.style.background = '#1eaed4'; }
+          }, 4500);
+          return;
+        }
+
+        // Tag livre -> Aceitar
         input.value = data.rfid_uid.toUpperCase();
         input.style.borderColor = '#22c55e';
 
         if (btn)    { btn.innerHTML = '<i class="bi bi-check-lg"></i>'; btn.style.background = '#22c55e'; }
         if (status) {
-          status.innerHTML = '<span style="color:#22c55e;"><i class="bi bi-check-circle-fill me-1"></i>Tag lida: <strong style="font-family:monospace;">' + data.rfid_uid + '</strong> (via ' + data.dispositivo + ')</span>';
+          status.innerHTML = '<span style="color:#22c55e;"><i class="bi bi-check-circle-fill me-1"></i>Tag lida: <strong style="font-family:monospace;">' + data.rfid_uid + '</strong> (via ' + (data.dispositivo || 'Leitor') + ')</span>';
         }
 
         // Reseta aparência após 4s
@@ -1402,16 +1418,27 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (data.sucesso_identificacao && data.item_id) {
                     // Tenta abrir o modal de entrega (devolverModal) primeiro
                     let targetModalEl = document.getElementById(`devolverModal${data.item_id}`);
+                    let targetTabId = "v-pills-estoque-tab";
                     
                     // Se não for um item pendente (ex: já foi devolvido), tenta abrir o modal de edição
                     if (!targetModalEl) {
                         targetModalEl = document.getElementById(`editarTodosModal${data.item_id}`);
+                        targetTabId = "v-pills-todos-tab";
                     }
                     
                     if (targetModalEl) {
-                        // Se existir, abre ele
-                        const bsModal = new bootstrap.Modal(targetModalEl);
-                        bsModal.show();
+                        // 1. Muda para a aba correspondente para o modal não ficar oculto pelo tab-pane
+                        const tabTriggerEl = document.getElementById(targetTabId);
+                        if (tabTriggerEl) {
+                            const tab = new bootstrap.Tab(tabTriggerEl);
+                            tab.show();
+                        }
+                        
+                        // 2. Abre o modal com um pequeno delay para a aba renderizar
+                        setTimeout(() => {
+                            const bsModal = bootstrap.Modal.getOrCreateInstance(targetModalEl);
+                            bsModal.show();
+                        }, 150);
                     } else {
                         // Se não estiver na página, redireciona a busca
                         window.location.href = `/bolsista/?busca=${data.rfid_uid}`;

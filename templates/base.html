@@ -135,6 +135,12 @@
                   Painel do Bolsista
                 </a>
               </li>
+              <li>
+                <a class="dropdown-item py-2 px-3 fw-medium d-flex align-items-center text-dark" href="{% url 'iot_dashboard' %}">
+                  <i class="bi bi-cpu-fill text-primary me-2 fs-5"></i>
+                  Central IoT
+                </a>
+              </li>
               {% endif %}
               {% if is_admin_user %}
               {% if is_bolsista_user %}<li><hr class="dropdown-divider my-1"></li>{% endif %}
@@ -148,12 +154,6 @@
                 <a class="dropdown-item py-2 px-3 fw-medium d-flex align-items-center text-dark" href="{% url 'dashboard_admin' %}">
                   <i class="bi bi-pie-chart-fill text-danger me-2 fs-5"></i>
                   Estatísticas (Gráficos)
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item py-2 px-3 fw-medium d-flex align-items-center text-dark" href="{% url 'iot_dashboard' %}">
-                  <i class="bi bi-cpu-fill text-primary me-2 fs-5"></i>
-                  Central IoT
                 </a>
               </li>
               {% endif %}
@@ -345,6 +345,13 @@
         <div class="drawer-link-left">
           <i class="bi bi-person-workspace nav-ico" style="font-size: 16px; margin-right: 12px;"></i>
           Bolsista
+        </div>
+      </a>
+      <a href="{% url 'iot_dashboard' %}"
+         class="drawer-link {% if request.resolver_match.url_name == 'iot_dashboard' %}active{% endif %}">
+        <div class="drawer-link-left">
+          <i class="bi bi-cpu-fill nav-ico" style="font-size: 16px; margin-right: 12px;"></i>
+          Central IoT
         </div>
       </a>
       {% endif %}
