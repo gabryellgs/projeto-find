@@ -8,7 +8,7 @@
 
 A plataforma é composta por três componentes integrados:
 
-1. **Dashboard Web (SaaS):** Painel administrativo responsivo construído com Django, com UI em Glassmorphism e roteamento baseado em permissões para administradores e bolsistas.
+1. **Plataforma Web (SaaS):** Painel administrativo responsivo construído com Django, com UI em Glassmorphism e roteamento baseado em permissões para administradores e bolsistas.
 2. **Aplicativo Mobile:** Aplicação cross-platform em React Native com experiência nativa e gestos fluidos.
 3. **Integração IoT:** Integração com hardware ESP32 e tecnologia RFID para validação e leitura de ativos em tempo real.
 
