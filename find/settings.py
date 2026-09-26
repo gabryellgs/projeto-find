@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    # Apple OAuth removido — não configurado
+    'correspondencia',
 ]
 
 SITE_ID = 1
