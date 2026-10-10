@@ -19,6 +19,7 @@ db.sqlite3
 
 # Sistema
 *.log
+correspondencia/dados/fotos_originais/
 
 TODO.md
 
