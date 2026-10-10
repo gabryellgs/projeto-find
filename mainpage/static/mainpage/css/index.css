@@ -985,7 +985,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 18px;
+  margin: 0 auto 18px;
   transition: transform var(--transition), box-shadow var(--transition);
 }
 .benefit-icon-wrap i { font-size: 1.35rem; color: #ffffff; }

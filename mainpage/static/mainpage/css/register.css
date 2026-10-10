@@ -558,6 +558,7 @@ body {
   text-align: center;
   font-size: 0.87rem;
   color: var(--muted);
+  margin: 24px 0 0;
 }
 
 .register-link {
