@@ -16,7 +16,7 @@ A amostra é formada pelas páginas listadas em `paginas.csv`, escolhidas para c
 | P04 | Redefinir senha | `/redefinir-senha/` | sem login |
 | P05 | Início (menu) | `/menu/` | avaliadora |
 | P06 | Itens perdidos | `/itens/perdidos/` | avaliadora |
-| P07 | Detalhe do item | `/item/avaliacao-01/` | avaliadora (dona do item) |
+| P07 | Detalhe do item | `/item/avaliacao-01/` | avaliadora (dono do item) |
 | P08 | Cadastrar item | `/perfil/item/novo/` | avaliadora |
 | P09 | Meus chats | `/chats/` | avaliadora |
 | P10 | Conversa | `/chats/1/` | avaliadora |
@@ -24,7 +24,7 @@ A amostra é formada pelas páginas listadas em `paginas.csv`, escolhidas para c
 | P12 | Busca visual | `/itens/busca-visual/` | avaliadora |
 | P13 | Detalhe do item (visitante) | `/item/avaliacao-01/` | visitante |
 
-A P13 foi incluída por decisão do autor, porque a página de detalhe muda conforme quem a acessa: a dona do item vê os dados de contato e os controles de status, enquanto o visitante vê o botão para iniciar a conversa. A decisão será informada ao orientador na entrega da sprint e, se ele preferir, a P13 sai da análise sem afetar as outras doze páginas. A visão da página de detalhe sem login não será avaliada e entra como limitação do trabalho.
+A P13 foi incluída por decisão do autor, porque a página de detalhe muda conforme quem a acessa: o dono do item vê os dados de contato e os controles de status, enquanto o visitante vê o botão para iniciar a conversa. A decisão será informada ao orientador na entrega da sprint e, se ele preferir, a P13 sai da análise sem afetar as outras doze páginas. A visão da página de detalhe sem login não será avaliada e entra como limitação do trabalho.
 
 A WCAG-EM 2.0 também sugere uma amostra aleatória, de cerca de 10% do tamanho da amostra estruturada, o que daria uma ou duas páginas a mais. A inclusão dela está pendente de decisão do orientador.
 
