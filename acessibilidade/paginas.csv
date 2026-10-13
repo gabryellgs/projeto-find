@@ -1,0 +1,14 @@
+id,nome,url,requer_login
+P01,Página inicial,/,nao
+P02,Entrar,/login/,nao
+P03,Cadastro de usuário,/register/,nao
+P04,Redefinir senha,/redefinir-senha/,nao
+P05,Início (menu),/menu/,sim
+P06,Itens perdidos,/itens/perdidos/,sim
+P07,Detalhe do item,/item/avaliacao-01/,sim
+P08,Cadastrar item,/perfil/item/novo/,sim
+P09,Meus chats,/chats/,sim
+P10,Conversa,/chats/1/,sim
+P11,Perfil do usuário,/tela/,sim
+P12,Busca visual,/itens/busca-visual/,sim
+P13,Detalhe do item (visitante),/item/avaliacao-01/,sim
