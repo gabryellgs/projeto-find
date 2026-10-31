@@ -18,7 +18,7 @@ ImageHash==4.3.2
 iniconfig==2.3.0
 mysqlclient==2.2.8
 numpy==2.2.6
-oauthlib==3.3.1
+oauthlib==4.0.0
 packaging==26.2
 pillow==12.1.1
 pluggy==1.6.0
