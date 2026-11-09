@@ -90,6 +90,6 @@ class Command(BaseCommand):
             Mensagem.objects.create(chat=chat, remetente=usuarios[remetente], conteudo=texto, lida=True)
 
         self.stdout.write(self.style.SUCCESS("Dados fictícios criados."))
-        self.stdout.write(f"P07 e P13: /item/{itens[0].slug}/")
+        self.stdout.write(f"P07: /item/{itens[0].slug}/")
         self.stdout.write(f"P10: /chats/{chat.id}/")
         self.stdout.write(f"Login: avaliadora@example.com ou visitante@example.com, senha {SENHA}")

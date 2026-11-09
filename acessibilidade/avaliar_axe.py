@@ -17,7 +17,6 @@ from playwright.sync_api import sync_playwright
 BASE_URL = "http://127.0.0.1:8000"
 SENHA = "Avaliacao@2026"
 USUARIO = "avaliadora@example.com"
-USUARIO_POR_PAGINA = {"P13": "visitante@example.com"}
 TAGS_WCAG = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]
 VIEWPORT = {"width": 1366, "height": 768}
 CANAL = "msedge"  # ou "chrome"
@@ -29,9 +28,9 @@ def ler_paginas():
         return list(csv.DictReader(arquivo))
 
 
-def fazer_login(page, usuario):
+def fazer_login(page):
     page.goto(f"{BASE_URL}/login/")
-    page.fill('input[name="username"]', usuario)
+    page.fill('input[name="username"]', USUARIO)
     page.fill('input[name="password"]', SENHA)
     with page.expect_navigation():
         page.click("#btn-submit")
@@ -77,7 +76,7 @@ def main():
             contexto = navegador.new_context(bypass_csp=True, viewport=VIEWPORT)
             page = contexto.new_page()
             if pagina["requer_login"] == "sim":
-                fazer_login(page, USUARIO_POR_PAGINA.get(pagina["id"], USUARIO))
+                fazer_login(page)
             page.goto(BASE_URL + pagina["url"], wait_until="load")
             page.wait_for_timeout(1500)
 
