@@ -1,8 +1,3 @@
-"""Salva o código-fonte das páginas com login para avaliar no ASES Web.
-
-Uso (com o servidor rodando em outro terminal):
-    python acessibilidade/salvar_html_ases.py --rotulo antes
-"""
 import argparse
 import csv
 from pathlib import Path
@@ -37,7 +32,6 @@ def main():
 
         for pagina in paginas:
             resposta = page.goto(BASE_URL + pagina["url"], wait_until="load")
-            # texto da resposta do servidor, o mesmo que o "exibir código-fonte" mostra
             (destino / f"{pagina['id']}.html").write_text(resposta.text(), encoding="utf-8")
             print(f"{pagina['id']}: {resposta.status}")
         navegador.close()

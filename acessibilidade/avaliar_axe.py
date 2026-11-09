@@ -1,8 +1,3 @@
-"""Avalia as páginas da amostra com o axe-core.
-
-Uso (com o servidor rodando em outro terminal):
-    python acessibilidade/avaliar_axe.py --rotulo antes
-"""
 import argparse
 import csv
 import json
@@ -19,7 +14,7 @@ SENHA = "Avaliacao@2026"
 USUARIO = "avaliadora@example.com"
 TAGS_WCAG = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]
 VIEWPORT = {"width": 1366, "height": 768}
-CANAL = "msedge"  # ou "chrome"
+CANAL = "msedge"
 PASTA = Path(__file__).parent
 
 
@@ -37,7 +32,6 @@ def fazer_login(page):
 
 
 def criterios_wcag(tags):
-    # converte tags como 'wcag143' em '1.4.3'
     return [".".join(t[4:]) for t in tags if t.startswith("wcag") and t[4:].isdigit()]
 
 
@@ -72,7 +66,6 @@ def main():
     with sync_playwright() as p:
         navegador = p.chromium.launch(channel=CANAL)
         for pagina in ler_paginas():
-            # um contexto novo por página, para todas começarem do mesmo estado
             contexto = navegador.new_context(bypass_csp=True, viewport=VIEWPORT)
             page = contexto.new_page()
             if pagina["requer_login"] == "sim":

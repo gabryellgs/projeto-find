@@ -1,8 +1,3 @@
-"""Roda o Lighthouse (só Acessibilidade, preset desktop) nas páginas da amostra.
-
-Uso (com o servidor rodando em outro terminal):
-    python acessibilidade/avaliar_lighthouse.py --rotulo antes
-"""
 import argparse
 import csv
 import json
@@ -47,7 +42,6 @@ def cookie_de_sessao(p):
 
 
 def rodar_lighthouse(url, saida, cookies=None):
-    # o Lighthouse abre o próprio Edge, com perfil novo e sem extensões
     comando = [
         shutil.which("npx"), "--yes", f"lighthouse@{VERSAO_LIGHTHOUSE}", url,
         "--preset=desktop", "--only-categories=accessibility",

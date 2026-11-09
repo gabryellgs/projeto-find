@@ -60,7 +60,6 @@ class Command(BaseCommand):
 
         itens = []
         for indice, objeto in enumerate(OBJETOS, start=1):
-            # slug fixo, senão o save() gera um aleatório e a URL da P07 muda
             item, _ = Item.objects.update_or_create(
                 slug=f"avaliacao-{indice:02d}",
                 defaults={
