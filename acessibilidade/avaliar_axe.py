@@ -13,7 +13,7 @@ BASE_URL = "http://127.0.0.1:8000"
 SENHA = "Avaliacao@2026"
 USUARIO = "avaliadora@example.com"
 TAGS_WCAG = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]
-VIEWPORT = {"width": 1366, "height": 768}
+VIEWPORT = {"width": 1366, "height": 768}  # tamanho da janela
 CANAL = "msedge"
 PASTA = Path(__file__).parent
 
