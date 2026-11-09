@@ -40,7 +40,7 @@ A avaliação usa as ferramentas abaixo, com as versões e configurações indic
 | WAVE | 3.3.1.0 | registro de Errors, Contrast Errors, Alerts e AIM Score |
 | Lighthouse | 13.4.1 | rodado pelo script `avaliar_lighthouse.py`, com Edge de perfil novo e sem extensões, modo Navegação, preset Desktop e só a categoria Acessibilidade; nas páginas com login o script envia o cookie de sessão |
 | ASES Web | sem versão numerada, com a data de acesso anotada | páginas com login avaliadas pelo código-fonte, salvo pelo script `salvar_html_ases.py` |
-| NVDA | anotada no início de cada rodada | no Edge; sintetizador e voz também anotados no início da rodada; modo de navegação para ler a página e modo de foco nos campos de formulário |
+| NVDA | 2026.3.1 (2026.3.1.58288) | no Edge; sintetizador Vozes Windows OneCore, voz Microsoft Maria (português do Brasil); modo de navegação para ler a página e modo de foco nos campos de formulário |
 | Edge | 157.0.4341.42 | navegador de todas as ferramentas; a versão é anotada no início de cada rodada |
 
 Para o axe, a contagem oficial do trabalho é a do script. A extensão axe DevTools serve apenas para encontrar onde, no template, está o problema apontado. O ambiente usa Python 3.13.15 e Django 6.0.3, e as bibliotecas da avaliação estão fixadas em `requirements-avaliacao.txt`.
