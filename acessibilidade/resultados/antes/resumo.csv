@@ -1,0 +1,17 @@
+pagina,regra,impacto,criterios,ocorrencias,descricao
+P01,color-contrast,serious,1.4.3,4,Elements must meet minimum color contrast ratio thresholds
+P02,color-contrast,serious,1.4.3,4,Elements must meet minimum color contrast ratio thresholds
+P03,color-contrast,serious,1.4.3,10,Elements must meet minimum color contrast ratio thresholds
+P05,color-contrast,serious,1.4.3,32,Elements must meet minimum color contrast ratio thresholds
+P05,target-size,serious,2.5.8,18,"All touch targets must be 24px large, or leave sufficient space"
+P06,select-name,critical,4.1.2,1,Select element must have an accessible name
+P07,button-name,critical,4.1.2,2,Buttons must have discernible text
+P07,color-contrast,serious,1.4.3,5,Elements must meet minimum color contrast ratio thresholds
+P08,aria-hidden-focus,serious,4.1.2,1,ARIA hidden element must not be focusable or contain focusable elements
+P08,document-title,serious,2.4.2,1,Documents must have <title> element to aid in navigation
+P08,html-has-lang,serious,3.1.1,1,<html> element must have a lang attribute
+P09,button-name,critical,4.1.2,1,Buttons must have discernible text
+P10,button-name,critical,4.1.2,1,Buttons must have discernible text
+P10,link-name,serious,2.4.4 4.1.2,1,Links must have discernible text
+P11,color-contrast,serious,1.4.3,3,Elements must meet minimum color contrast ratio thresholds
+P12,label,critical,4.1.2,1,Form elements must have labels
