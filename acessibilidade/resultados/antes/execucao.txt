@@ -1,0 +1,12 @@
+rotulo: antes
+data: 09/11/2026 18:56
+sistema: Windows-11-10.0.26300-SP0
+python: 3.13.15
+django: 6.0.3
+playwright: 1.63.0
+axe-playwright-python: 0.1.8
+axe-core: 4.12.1
+navegador: msedge (Chromium 157.0.4341.42)
+resolucao: 1366x768
+tags: wcag2a wcag2aa wcag21a wcag21aa wcag22aa
+observacao: arquivo recriado em 10/11/2026 a partir da saída do terminal da rodada de 09/11/2026

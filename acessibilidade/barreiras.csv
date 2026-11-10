@@ -20,7 +20,7 @@ B18,Link de voltar da conversa só com ícone,2.4.4 Finalidade do link (A); 4.1.
 B19,Campo de mensagem do chat sem rótulo,1.3.1 (A); 3.3.2 (A),6.2,P07 / P09 / P10,Local,item_detail.html:303; chats_list.html:173; chat_detail.html:77-79,WAVE / ASES,não se aplica,B19_antes.png,Aberta
 B20,Campo de busca por texto só com placeholder,3.3.2 (A); 4.1.2 (A),6.2,P05 / P06,Local,menu.html:29; menu.html:118; item_list.html:40-44,WAVE / ASES,não se aplica,B20_antes.png,Aberta
 B21,Páginas sem título de primeiro nível,1.3.1 (A); 2.4.6 (AA),1.3 Utilizar corretamente os níveis de cabeçalho,P07 / P09 / P10 / P12,Local,item_detail.html:37; chats_list.html:21; chat_detail.html:21; visual_search.html:517,WAVE / ASES / Lighthouse,não se aplica,B21_antes.png,Aberta
-B22,Título vazio com o nome do usuário,1.3.1 (A); 2.4.6 (AA),1.3,P11,Local,user.html:36,WAVE,não se aplica,B22_antes.png,Aberta
+B22,Título vazio com o nome do usuário quando a conta não tem nome (o servidor não exige nome no cadastro nem na edição),1.3.1 (A); 2.4.6 (AA),1.3,P11,Local,user.html:36,WAVE,não se aplica,B22_antes.png,Aberta
 B23,Níveis de título pulados,1.3.1 (A),1.3,P01 / P05 / P07 / P11,Local,index.html:525; menu.html:54; item_detail.html:121 176; user.html:139,WAVE / Lighthouse / ASES,não se aplica,B23_antes.png,Aberta
 B24,Pontos do carrossel menores que 24 px,2.5.8 Tamanho do alvo (AA),—,P05,Local,menu.html:357 479 694,axe / Lighthouse,sério,B24_antes.png,Aberta
 B25,Página inicial sem a região main,1.3.1 (A),1.8 Dividir as áreas de informação,P01,Local,index.html (sem main),Lighthouse / ASES,não se aplica,B25_antes.png,Aberta
@@ -29,3 +29,4 @@ B27,"Botão ""+"" do menu de baixo do celular só com ícone",2.4.4 (A); 4.1.2 (
 B28,Botão de fechar do modal Editar perfil sem nome,4.1.2 (A),2.2,P05 a P12,Global,edit_profile.html:19,WAVE,não se aplica,B28_antes.png,Aberta
 B29,Botão de filtro e link da câmera da busca de celular sem nome,2.4.4 (A); 4.1.2 (A),3.5; 2.2,P05,Local,menu.html:119 125,WAVE,não se aplica,B29_antes.png,Aberta
 B30,Contraste insuficiente no rótulo do status ativo (Perdido) do detalhe do item,1.4.3 (AA),4.1,P07,Local,item_detail.css:435-436; item_detail.html:216 236 256,axe,sério,B30_antes.png,Aberta
+B31,Diálogo do chat da lista de conversas sem nome acessível e exposto mesmo fechado,"4.1.2 Nome, função, valor (A)",2.2 Garantir que os objetos programáveis sejam acessíveis,P09,Local,chats_list.html:129; chats.css:403-423,Lighthouse,sério,B31_antes.png,Aberta

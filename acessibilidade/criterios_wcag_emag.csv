@@ -1,0 +1,56 @@
+﻿criterio,nome,nivel,emag
+1.1.1,Conteúdo não textual,A,3.6; 6.1
+1.2.1,Somente áudio e somente vídeo (pré-gravado),A,5.1; 5.2
+1.2.2,Legendas (pré-gravadas),A,5.1
+1.2.3,Audiodescrição ou mídia alternativa (pré-gravada),A,5.3
+1.2.4,Legendas (ao vivo),AA,5.1
+1.2.5,Audiodescrição (pré-gravada),AA,5.3
+1.3.1,Informações e relações,A,1.2; 1.3; 3.9; 3.10; 6.2; 6.7
+1.3.2,Sequência significativa,A,1.4; 6.3
+1.3.3,Características sensoriais,A,4.2
+1.3.4,Orientação,AA,—
+1.3.5,Identificar a finalidade da entrada,AA,—
+1.4.1,Uso de cor,A,4.2
+1.4.2,Controle de áudio,A,5.4
+1.4.3,Contraste (mínimo),AA,4.1
+1.4.4,Redimensionar texto,AA,4.3
+1.4.5,Imagens de texto,AA,—
+1.4.10,Refluxo,AA,4.3
+1.4.11,Contraste de conteúdo não textual,AA,—
+1.4.12,Espaçamento de texto,AA,—
+1.4.13,Conteúdo em foco ou hover,AA,—
+2.1.1,Teclado,A,2.1
+2.1.2,Sem bloqueio de teclado,A,2.1
+2.1.4,Atalhos de tecla de caractere,A,—
+2.2.1,Tempo ajustável,A,2.3; 2.4; 2.5
+2.2.2,"Pausar, parar, ocultar",A,2.7; 5.5
+2.3.1,Três flashes ou abaixo do limite,A,2.6
+2.4.1,Contornar blocos,A,1.5; 1.8
+2.4.2,Página com título,A,3.3
+2.4.3,Ordem do foco,A,1.4; 6.3
+2.4.4,Finalidade do link (em contexto),A,3.5
+2.4.5,Várias formas,AA,—
+2.4.6,Cabeçalhos e rótulos,AA,1.3; 6.2
+2.4.7,Foco visível,AA,4.4
+2.4.11,Foco não obscurecido,AA,4.4 (aprox.)
+2.5.1,Gestos de ponteiro,A,—
+2.5.2,Cancelamento de ponteiro,A,—
+2.5.3,Rótulo no nome,A,—
+2.5.4,Ativação por movimento,A,—
+2.5.7,Movimentos de arrastar,AA,2.1 (aprox.)
+2.5.8,Tamanho do alvo,AA,—
+3.1.1,Idioma da página,A,3.1
+3.1.2,Idioma das partes,AA,3.2
+3.2.1,Em foco,A,6.4
+3.2.2,Em entrada,A,6.4
+3.2.3,Navegação consistente,AA,—
+3.2.4,Identificação consistente,AA,—
+3.2.6,Ajuda consistente,A,—
+3.3.1,Identificação do erro,A,6.6
+3.3.2,Rótulos ou instruções,A,6.2; 6.5
+3.3.3,Sugestão de erro,AA,6.6
+3.3.4,"Prevenção de erros (jurídico, financeiro, dados)",AA,6.6
+3.3.7,Entrada redundante,A,—
+3.3.8,Autenticação acessível,AA,6.8 (aprox.)
+4.1.2,"Nome, função, valor",A,2.2; 3.5; 6.2
+4.1.3,Mensagens de status,AA,—
