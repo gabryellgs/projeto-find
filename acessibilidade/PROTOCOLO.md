@@ -38,15 +38,15 @@ A avaliação usa as ferramentas abaixo, com as versões e configurações indic
 | axe-core, pelo script `avaliar_axe.py` | 4.12.1 (axe-playwright-python 0.1.8, Playwright 1.63.0) | tags wcag2a, wcag2aa, wcag21a, wcag21aa e wcag22aa |
 | axe DevTools | 4.138.0 (axe-core 4.13.0) | usado só para localizar o elemento no template |
 | WAVE | 3.3.1.0 | registro de Errors, Contrast Errors, Alerts e AIM Score |
-| Lighthouse | 13.4.1 | janela anônima sem extensões, modo Navegação, Desktop e só a categoria Acessibilidade |
-| ASES Web | sem versão numerada, com a data de acesso anotada | páginas com login avaliadas pelo código-fonte |
+| Lighthouse | 13.4.1 | linha de comando (`avaliar_lighthouse.py`), perfil novo do Edge sem extensões, modo Navegação, preset Desktop e só a categoria Acessibilidade; nas páginas com login, o cookie de sessão é enviado junto |
+| ASES Web | sem versão numerada, com a data de acesso anotada | todas as páginas avaliadas pelo código-fonte, salvo por `salvar_html_ases.py`, porque o ASES Web não alcança o servidor local |
 | Edge | 157.0.4341.42 | navegador de todas as ferramentas |
 
 Para o axe, a contagem oficial do trabalho é a do script. A extensão axe DevTools serve apenas para encontrar onde, no template, está o problema apontado. O ambiente usa Python 3.13.15 e Django 6.0.3, e as bibliotecas da avaliação estão fixadas em `requirements-avaliacao.txt`.
 
 ## 3. Ordem de execução, navegador e resolução
 
-Antes de começar, os dados são recriados e o servidor local é iniciado. Primeiro roda-se o script do axe em todas as páginas de uma vez (`python acessibilidade/avaliar_axe.py --rotulo antes`). Depois, em cada página, usa-se o WAVE, o Lighthouse, o ASES Web e, por último, o checklist de teclado.
+Antes de começar, os dados são recriados e o servidor local é iniciado. Primeiro roda-se o script do axe em todas as páginas de uma vez (`python acessibilidade/avaliar_axe.py --rotulo antes`) e, na sequência, o do Lighthouse (`python acessibilidade/avaliar_lighthouse.py --rotulo antes`) e o que salva o código-fonte das páginas para o ASES Web (`python acessibilidade/salvar_html_ases.py --rotulo antes`). Depois, em cada página, usa-se o WAVE, o ASES Web e, por último, o checklist de teclado.
 
 Tudo é feito no Edge, com resolução de 1366 x 768. O script usa o canal `msedge` do Playwright.
 
