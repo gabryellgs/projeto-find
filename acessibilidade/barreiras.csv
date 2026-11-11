@@ -1,6 +1,6 @@
 ﻿ID,Descrição,Critério WCAG,Recomendação eMAG,Páginas afetadas,Escopo,Arquivo e linha,Detectada por,Impacto (axe),Evidência,Situação
 B01,Links do cabeçalho (Início a Chat) sem indicador de foco,2.4.7 Foco visível (AA),4.4 Possibilitar que o elemento com foco seja visualmente evidente,P05 a P12,Global,navbar.css:167-172,Teclado,não se aplica,B01_antes.png,Aberta
-B02,Campos e botões do cadastro sem indicador de foco,2.4.7 Foco visível (AA),4.4,P03,Local,register.css:589; register.css:344,Teclado,não se aplica,B02_antes.png,Aberta
+B02,"Campos e botões do cadastro sem indicador de foco (o contorno só existe com a classe keyboard-nav, que a página não aplica)",2.4.7 Foco visível (AA),4.4,P03,Local,register.css:584-589; register.css:344; register.html (sem o script que aplica keyboard-nav),Teclado,não se aplica,B02_antes.png,Aberta
 B03,Campo de arquivo da busca visual sem rótulo,4.1.2 Nome função valor (A); 1.3.1 (A),6.2 Associar etiquetas aos seus campos,P12,Local,visual_search.html:600,axe / WAVE / Lighthouse / ASES,crítico,B03_antes.png,Aberta
 B04,Select de status sem nome acessível,4.1.2 (A),6.2,P06,Local,item_list.html:55,axe / WAVE / Lighthouse / ASES,crítico,B04_antes.png,Aberta
 B05,Botão de enviar mensagem só com ícone,4.1.2 (A),2.2 Garantir que os objetos programáveis sejam acessíveis,P07 / P09 / P10,Local,item_detail.html:304; chats_list.html:178; chat_detail.html:83,axe / WAVE / Lighthouse,crítico,B05_antes.png,Aberta
@@ -30,3 +30,4 @@ B28,Botão de fechar do modal Editar perfil sem nome,4.1.2 (A),2.2,P05 a P12,Glo
 B29,Botão de filtro e link da câmera da busca de celular sem nome,2.4.4 (A); 4.1.2 (A),3.5; 2.2,P05,Local,menu.html:119 125,WAVE,não se aplica,B29_antes.png,Aberta
 B30,Contraste insuficiente no rótulo do status ativo (Perdido) do detalhe do item,1.4.3 (AA),4.1,P07,Local,item_detail.css:435-436; item_detail.html:216 236 256,axe,sério,B30_antes.png,Aberta
 B31,Diálogo do chat da lista de conversas sem nome acessível e exposto mesmo fechado,"4.1.2 Nome, função, valor (A)",2.2 Garantir que os objetos programáveis sejam acessíveis,P09,Local,chats_list.html:129; chats.css:403-423,Lighthouse,sério,B31_antes.png,Aberta
+B32,Controle de notificações do cabeçalho não abre com a tecla Espaço,"2.1.1 Teclado (A); 4.1.2 Nome, função, valor (A)",2.1 Disponibilizar todas as funções da página via teclado,P05 a P12,Global,base.html:173,Teclado,não se aplica,B32_antes.png,Aberta
