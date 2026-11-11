@@ -611,7 +611,14 @@ input:-webkit-autofill:focus {
   outline-offset: 3px;
   border-radius: 6px;
 }
-*:focus { outline: none; }
+:focus-visible {
+  outline: 3px solid #0B5FFF;
+  outline-offset: 2px;
+}
+.field-input-wrap:focus-within {
+  outline: 3px solid #0B5FFF;
+  outline-offset: 2px;
+}
 
 /* ─── RESPONSIVO ─────────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
