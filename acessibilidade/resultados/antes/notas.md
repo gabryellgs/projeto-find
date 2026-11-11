@@ -42,6 +42,10 @@ No FIND, o elemento que cobre o foco do teclado é o banner de cookies, fixo na 
 
 O axe DevTools da extensão avalia a WCAG 2.1 AA e não detecta o tamanho do alvo, que é da 2.2. O B24 foi detectado pelo axe com as tags da 2.2 e pelo Lighthouse.
 
+## B32 e o item K7 do checklist
+
+O K7 diz que os controles abrem com Enter ou Espaço. O sino de notificações abre com Enter, por isso o K7 continua como "Atende". A B32 (o sino não abre com a tecla Espaço) apareceu em um teste complementar de teclado feito em 10/11/2026, fora do checklist: com o foco no sino, em `/menu/`, foi apertada a tecla Espaço e o painel não abriu. Esse teste não altera a marcação do K7.
+
 ## Título vazio na P11 (B22)
 
 O título vazio aparece porque o usuário `avaliadora` foi criado sem nome. Uma conta real também pode ficar sem nome: o servidor não valida o nome no cadastro nem na edição de perfil (a obrigatoriedade existe só no HTML, e o formulário de cadastro tem `novalidate`), e o login social depende do nome devolvido pelo provedor.
