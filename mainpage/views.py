@@ -964,29 +964,50 @@ def busca_visual(request):
             except Exception as e:
                 messages.error(request, f"Erro ao processar imagem: {str(e)}")
 
-    # 2. Match Automático (Smart Match) para os itens perdidos do usuário
+    # 2. Match Automático com estratégia F do TCC (com fallback para B0 se necessário)
     matches_automaticos = []
-    meus_perdidos = Item.objects.filter(usuario=request.user, status="perdido")
-    # Busca itens que foram achados ou estão sob custódia
-    todos_achados = Item.objects.filter(status__in=["achado", "pendente_confirmacao", "confirmado"]).exclude(usuario=request.user)
+    meus_perdidos = list(Item.objects.filter(usuario=request.user, status="perdido"))
+    todos_achados = list(Item.objects.filter(status__in=["achado", "pendente_confirmacao", "confirmado"]).exclude(usuario=request.user))
     
-    for perdido in meus_perdidos:
-        lista_matches = []
-        for achado in todos_achados:
-            score = _calcular_match_score(perdido, achado)
-            if score >= 30:  # Filtra apenas quem tem no mínimo 30% de similaridade
-                lista_matches.append({
-                    "item": achado,
-                    "score": score
-                })
-        
-        # Ordena os matches pelo maior score primeiro
-        lista_matches.sort(key=lambda x: x['score'], reverse=True)
-        
-        matches_automaticos.append({
-            "perdido": perdido,
-            "sugestoes": lista_matches[:6] # Pega até os 6 melhores matches
-        })
+    if meus_perdidos and todos_achados:
+        try:
+            from correspondencia.estrategias import F
+            estrategia_f = F(usar_foto=True)
+            estrategia_f.preparar(todos_achados)
+            usar_tcc = True
+        except Exception:
+            usar_tcc = False
+
+        for perdido in meus_perdidos:
+            lista_matches = []
+            if usar_tcc:
+                partes = estrategia_f.partes(perdido)
+                for achado in todos_achados:
+                    info = partes.get(achado.id)
+                    if info:
+                        score_pct = int(round(info["final"] * 100))
+                        if score_pct >= 30:
+                            lista_matches.append({
+                                "item": achado,
+                                "score": score_pct,
+                                "detalhes": info
+                            })
+            else:
+                for achado in todos_achados:
+                    score = _calcular_match_score(perdido, achado)
+                    if score >= 30:
+                        lista_matches.append({
+                            "item": achado,
+                            "score": score
+                        })
+            
+            # Ordena os matches pelo maior score primeiro
+            lista_matches.sort(key=lambda x: x['score'], reverse=True)
+            
+            matches_automaticos.append({
+                "perdido": perdido,
+                "sugestoes": lista_matches[:6] # Pega até os 6 melhores matches
+            })
 
     return render(request, "mainpage/visual_search.html", {
         "resultados": resultados,
