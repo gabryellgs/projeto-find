@@ -1,0 +1,52 @@
+{
+  "carregador": [
+    "fonte",
+    "cabo de carregar",
+    "carregador de celular"
+  ],
+  "celular": [
+    "smartphone",
+    "telefone",
+    "aparelho celular"
+  ],
+  "fone de ouvido": [
+    "fone",
+    "headphone",
+    "auricular"
+  ],
+  "garrafa": [
+    "garrafinha",
+    "squeeze",
+    "garrafa de água"
+  ],
+  "chaveiro": [
+    "chaves",
+    "chave",
+    "molho de chaves"
+  ],
+  "carteira": [
+    "porta-cartão",
+    "porta-cédulas",
+    "carteira de mão"
+  ],
+  "livro": [
+    "obra",
+    "exemplar",
+    "volume"
+  ],
+  "presilha": [
+    "piranha",
+    "garra de cabelo",
+    "prendedor de cabelo"
+  ],
+  "shaker": [
+    "coqueteleira",
+    "mixer",
+    "garrafa de academia"
+  ],
+  "cubo mágico": [
+    "cubo",
+    "rubik",
+    "cubo de rubik"
+  ]
+}
