@@ -52,7 +52,8 @@
         <i class="bi bi-camera-fill"></i>
       </a>
 
-      <select class="filter-select" name="status">
+      <label for="id_status_filtro" class="visually-hidden">Filtrar por status</label>
+      <select class="filter-select" name="status" id="id_status_filtro">
         <option value="">Todos os status</option>
         <option value="perdido"  {% if request.GET.status == "perdido"  %}selected{% endif %}>Perdidos</option>
         <option value="achado"   {% if request.GET.status == "achado"   %}selected{% endif %}>Encontrados</option>
