@@ -46,6 +46,14 @@ O axe DevTools da extensão avalia a WCAG 2.1 AA e não detecta o tamanho do alv
 
 O K7 diz que os controles abrem com Enter ou Espaço. O sino de notificações abre com Enter, por isso o K7 continua como "Atende". A B32 (o sino não abre com a tecla Espaço) apareceu em um teste complementar de teclado feito em 10/11/2026, fora do checklist: com o foco no sino, em `/menu/`, foi apertada a tecla Espaço e o painel não abriu. Esse teste não altera a marcação do K7.
 
+## Lighthouse
+
+Os relatórios gerados pela linha de comando em 09/11/2026 (Lighthouse 13.4.1) foram substituídos em 10/11/2026 pelos gerados no DevTools do Edge (Lighthouse 13.5.0), na versão da tag `a11y-antes` e com os mesmos dados. A pontuação e os itens reprovados das 12 páginas ficaram iguais, e por isso o `indicadores.xlsx` e o `barreiras.csv` não mudaram.
+
+## ASES Web
+
+O código colado no ASES Web na rodada "antes" foi a resposta do servidor a cada página, que é o mesmo conteúdo do Ctrl+U. Por isso o ASES não foi refeito.
+
 ## Título vazio na P11 (B22)
 
 O título vazio aparece porque o usuário `avaliadora` foi criado sem nome. Uma conta real também pode ficar sem nome: o servidor não valida o nome no cadastro nem na edição de perfil (a obrigatoriedade existe só no HTML, e o formulário de cadastro tem `novalidate`), e o login social depende do nome devolvido pelo provedor.
