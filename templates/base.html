@@ -556,6 +556,13 @@
     drawer?.classList.contains('open') ? closeDrawer() : openDrawer()
   );
   closeBtn?.addEventListener('click', closeDrawer);
+
+  document.getElementById('notifDropdown')?.addEventListener('keydown', (e) => {
+    if (e.key === ' ') {
+      e.preventDefault();
+      e.currentTarget.click();
+    }
+  });
   overlay?.addEventListener('click', closeDrawer);
 
   // Fecha ao navegar
