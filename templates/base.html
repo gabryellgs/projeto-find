@@ -743,13 +743,25 @@
   const STORAGE_KEY = 'find_cookie_consent';
 
   /* ── Helpers ────────────────────────────────────────────── */
+  function ajustarFolgaBanner() {
+    const alt = banner.classList.contains('cookie-visible') ? (banner.offsetHeight + (parseFloat(getComputedStyle(banner).bottom) || 0)) + 'px' : '';
+    document.documentElement.style.scrollPaddingBottom = alt;
+    document.body.style.paddingBottom = alt;
+    document.documentElement.style.setProperty('--folga-banner', alt || '0px');
+  }
+
   function showBanner() {
     banner.classList.add('cookie-visible');
+    ajustarFolgaBanner();
   }
 
   function hideBanner() {
     banner.classList.remove('cookie-visible');
+    ajustarFolgaBanner();
   }
+
+  if (window.ResizeObserver) new ResizeObserver(ajustarFolgaBanner).observe(banner);
+  window.addEventListener('resize', ajustarFolgaBanner);
 
   function openModal() {
     overlay.classList.add('cookie-modal-open');

@@ -365,7 +365,7 @@ section[id], .items-section, .section-pad {
    ══════════════════════════════════════════════════════════ */
 .btn-cadastrar-item {
   position: fixed;
-  bottom: 28px;
+  bottom: calc(28px + var(--folga-banner, 0px));
   left: 50%;
   transform: translateX(-50%);
   z-index: 999;
@@ -410,7 +410,7 @@ section[id], .items-section, .section-pad {
 
 @media (max-width: 767.98px) {
   .btn-cadastrar-item {
-    bottom: 20px;
+    bottom: calc(20px + var(--folga-banner, 0px));
     padding: 12px 22px;
     font-size: 0.8rem;
     height: 48px;
