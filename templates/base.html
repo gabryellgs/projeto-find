@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
   {# CSS base existente do projeto #}
-  <link rel="stylesheet" href="{% static 'mainpage/css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'mainpage/css/base.css' %}?v=2">
   {# CSS novo da navbar #}
   <link rel="stylesheet" href="{% static 'mainpage/css/navbar.css' %}?v=10">
   {# CSS Mobile App Adaptation #}
@@ -30,7 +30,7 @@
 
   {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body><a href="#conteudo-principal" class="pular-conteudo">Pular para o conteúdo</a>
 
 <!-- ══════════════════════════════════════════════════════
      NAVBAR
@@ -394,7 +394,7 @@
 {% endif %}
 
 <!-- CONTEÚDO -->
-<main>
+<main id="conteudo-principal" tabindex="-1">
   {% block content %}{% endblock %}
 </main>
 

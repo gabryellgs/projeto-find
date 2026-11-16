@@ -586,3 +586,23 @@ main {
     gap: 48px;
   }
 }
+.pular-conteudo {
+  position: absolute;
+  left: -9999px;
+}
+.pular-conteudo:focus {
+  left: 1rem;
+  top: 1rem;
+  z-index: 10000;
+  padding: .7rem 1.4rem;
+  background: #0B3A4A;
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .9rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 99px;
+  box-shadow: 0 8px 24px rgba(11, 58, 74, .25);
+  outline: 3px solid #90dbf4;
+  outline-offset: 2px;
+}

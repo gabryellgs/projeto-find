@@ -8,7 +8,7 @@
     <title>FIND — Entrar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Entre na sua conta FIND — plataforma de achados e perdidos.">
-    <link rel="stylesheet" href="{% static 'mainpage/css/login.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'mainpage/css/login.css' %}?v=3">
     <link rel="stylesheet" href="{% static 'mainpage/css/mobile.css' %}?v=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded" rel="stylesheet">
     <link rel="icon" type="image/webp" href="{% static 'mainpage/img/find.webp' %}">
 </head>
-<body>
+<body><a href="#conteudo-principal" class="pular-conteudo">Pular para o conteúdo</a>
 
 <!-- Decorative blobs -->
 <div class="blob blob-1"></div>
@@ -40,7 +40,7 @@
     </header>
 
     <!-- Main card -->
-    <main class="login-main">
+    <main class="login-main" id="conteudo-principal" tabindex="-1">
 
         <!-- Logo -->
         <div class="logo-wrap">
