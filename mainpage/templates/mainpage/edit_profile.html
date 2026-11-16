@@ -1,6 +1,6 @@
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'mainpage/css/edit_profile.css' %}" />
+<link rel="stylesheet" href="{% static 'mainpage/css/edit_profile.css' %}?v=2" />
 
 <!-- MODAL EDITAR PERFIL -->
 <div
@@ -47,7 +47,7 @@
                 >
                   Alterar Foto
                 </label>
-                <input id="file-upload" type="file" name="image" hidden />
+                <input id="file-upload" type="file" name="image" class="visually-hidden" />
               </div>
             </div>
           </div>

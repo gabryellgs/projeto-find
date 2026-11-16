@@ -44,6 +44,11 @@
   color: white;
 }
 
+.edit-profile-upload-label:has(+ input:focus-visible) {
+  outline: 3px solid #0B3A4A;
+  outline-offset: 3px;
+}
+
 .edit-profile-input, .edit-profile-cep, .edit-profile-cidade, .edit-profile-estado {
   border-radius: 12px;
   padding: 10px 15px;
