@@ -4,7 +4,7 @@
 {% block title %}Início - FIND{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'mainpage/css/menu.css' %}?v=2.8">
+  <link rel="stylesheet" href="{% static 'mainpage/css/menu.css' %}?v=2.9">
 {% endblock %}
 
 {% block content %}
@@ -208,22 +208,22 @@
           <div class="filter-section-title">Status do Objeto</div>
           <div class="options-row">
             <label class="option-chip {% if status == 'todos' or not status %}selected{% endif %}">
-              <input type="radio" name="status" value="todos" {% if status == 'todos' or not status %}checked{% endif %} class="d-none" onchange="updateChipSelection(this)">
+              <input type="radio" name="status" value="todos" {% if status == 'todos' or not status %}checked{% endif %} class="visually-hidden" onchange="updateChipSelection(this)">
               <i class="bi bi-grid-3x3-gap chip-icon"></i>
               <span>Todos</span>
             </label>
             <label class="option-chip {% if status == 'perdido' %}selected{% endif %}">
-              <input type="radio" name="status" value="perdido" {% if status == 'perdido' %}checked{% endif %} class="d-none" onchange="updateChipSelection(this)">
+              <input type="radio" name="status" value="perdido" {% if status == 'perdido' %}checked{% endif %} class="visually-hidden" onchange="updateChipSelection(this)">
               <i class="bi bi-exclamation-circle chip-icon"></i>
               <span>Perdido</span>
             </label>
             <label class="option-chip {% if status == 'achado' %}selected{% endif %}">
-              <input type="radio" name="status" value="achado" {% if status == 'achado' %}checked{% endif %} class="d-none" onchange="updateChipSelection(this)">
+              <input type="radio" name="status" value="achado" {% if status == 'achado' %}checked{% endif %} class="visually-hidden" onchange="updateChipSelection(this)">
               <i class="bi bi-box-seam chip-icon"></i>
               <span>Na COAPAC</span>
             </label>
             <label class="option-chip {% if status == 'devolvido' %}selected{% endif %}">
-              <input type="radio" name="status" value="devolvido" {% if status == 'devolvido' %}checked{% endif %} class="d-none" onchange="updateChipSelection(this)">
+              <input type="radio" name="status" value="devolvido" {% if status == 'devolvido' %}checked{% endif %} class="visually-hidden" onchange="updateChipSelection(this)">
               <i class="bi bi-arrow-counterclockwise chip-icon"></i>
               <span>Devolvido</span>
             </label>

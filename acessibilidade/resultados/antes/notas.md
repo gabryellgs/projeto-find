@@ -61,3 +61,7 @@ O título vazio aparece porque o usuário `avaliadora` foi criado sem nome. Uma 
 ## B33 e o item K1 do checklist
 
 A B33 (os botões Perdido e Achado do modal Cadastrar item não recebem foco pelo teclado, porque os rádios estão com `display: none`) foi encontrada em 16/11/2026, durante a correção da B10, fora da rodada inicial. A inspeção por teclado da rodada "antes" não a identificou, e por isso o K1 ficou como "Atende". A B33 não entra nos números da avaliação inicial. A evidência `B33_antes.png` foi tirada na versão da tag `a11y-antes`.
+
+## B34 e o item K8 do checklist
+
+A B34 (os rádios do modal de filtros da `/menu/`, Todos, Perdido, Achado e Devolvido, não recebem foco pelo teclado, porque estão com `display: none`) foi encontrada em 16/11/2026, durante as correções, fora da rodada inicial. A inspeção por teclado da rodada "antes" não a identificou, e por isso o K8 ficou como "Atende" na P05. A B34 não entra nos números da avaliação inicial. A evidência `B34_antes.png` foi tirada na versão da tag `a11y-antes`.

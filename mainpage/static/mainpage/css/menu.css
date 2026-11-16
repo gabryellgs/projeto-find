@@ -882,6 +882,12 @@ section[id], .items-section, .section-pad {
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 12px rgba(11, 58, 74, 0.02);
+  position: relative;
+}
+
+#filterModal .option-chip:has(input:focus-visible) {
+  outline: 3px solid #0B3A4A;
+  outline-offset: 2px;
 }
 
 #filterModal .option-chip:hover {
