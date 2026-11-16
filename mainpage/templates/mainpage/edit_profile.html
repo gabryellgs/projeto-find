@@ -54,11 +54,12 @@
           <!-- NOME E SOBRENOME -->
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold small text-muted text-uppercase">
+              <label for="editarPerfilNome" class="form-label fw-bold small text-muted text-uppercase">
                 Nome
               </label>
               <input
                 type="text"
+                id="editarPerfilNome"
                 name="first_name"
                 class="form-control border-info-subtle shadow-sm edit-profile-input"
                 value="{{ user.first_name }}"
@@ -66,11 +67,12 @@
               />
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold small text-muted text-uppercase">
+              <label for="editarPerfilSobrenome" class="form-label fw-bold small text-muted text-uppercase">
                 Sobrenome
               </label>
               <input
                 type="text"
+                id="editarPerfilSobrenome"
                 name="last_name"
                 class="form-control border-info-subtle shadow-sm edit-profile-input"
                 value="{{ user.last_name }}"
@@ -81,7 +83,7 @@
 
           <!-- EMAIL -->
           <div class="mb-3">
-            <label class="form-label fw-bold small text-muted text-uppercase">
+            <label for="editarPerfilEmail" class="form-label fw-bold small text-muted text-uppercase">
               E-mail
             </label>
             <div class="input-group">
@@ -90,6 +92,7 @@
               </span>
               <input
                 type="email"
+                id="editarPerfilEmail"
                 class="form-control bg-light text-muted border-info-subtle edit-profile-input-readonly"
                 value="{{ user.email }}"
                 readonly
@@ -102,7 +105,7 @@
 
           <!-- TELEFONE -->
           <div class="mb-3">
-            <label class="form-label fw-bold small text-muted text-uppercase">
+            <label for="telefone_mask" class="form-label fw-bold small text-muted text-uppercase">
               Telefone / WhatsApp
             </label>
             <input
@@ -118,7 +121,7 @@
           <!-- ENDEREÇO -->
           <div class="row">
             <div class="col-md-4 mb-3">
-              <label class="form-label fw-bold small text-muted text-uppercase">
+              <label for="cep" class="form-label fw-bold small text-muted text-uppercase">
                 CEP
               </label>
               <input
@@ -133,7 +136,7 @@
             </div>
 
             <div class="col-md-5 mb-3">
-              <label class="form-label fw-bold small text-muted text-uppercase">
+              <label for="cidade" class="form-label fw-bold small text-muted text-uppercase">
                 Cidade
               </label>
               <input
@@ -146,7 +149,7 @@
             </div>
 
             <div class="col-md-3 mb-3">
-              <label class="form-label fw-bold small text-muted text-uppercase">
+              <label for="estado" class="form-label fw-bold small text-muted text-uppercase">
                 UF
               </label>
               <input
