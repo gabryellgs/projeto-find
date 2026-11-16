@@ -388,6 +388,8 @@
   inset: 0;
   z-index: 1050;
   pointer-events: none;
+  visibility: hidden;
+  transition: visibility 0s linear 0.3s;
 }
 
 .find-drawer-overlay {
@@ -418,7 +420,7 @@
   overflow-y: auto;
 }
 
-.find-drawer.open { pointer-events: all; }
+.find-drawer.open { pointer-events: all; visibility: visible; transition-delay: 0s; }
 .find-drawer.open .find-drawer-overlay { opacity: 1; }
 .find-drawer.open .find-drawer-panel   { transform: translateX(0); }
 
