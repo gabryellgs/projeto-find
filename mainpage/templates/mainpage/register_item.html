@@ -36,16 +36,16 @@
               <!-- TÍTULO + STATUS -->
               <div class="row mb-3 g-3">
                 <div class="col-md-7">
-                  <label class="form-label">O que é o objeto? *</label>
+                  <label class="form-label" for="novoItemTitulo">O que é o objeto? *</label>
                   <div class="input-group-custom">
                     <span class="input-icon"><i class="bi bi-fonts"></i></span>
-                    <input type="text" name="titulo" class="form-control" placeholder="Ex: Chaveiro com controle de portão" required>
+                    <input type="text" id="novoItemTitulo" name="titulo" class="form-control" placeholder="Ex: Chaveiro com controle de portão" required>
                   </div>
                 </div>
 
                 <div class="col-md-5">
-                  <label class="form-label">Situação *</label>
-                  <div class="options-row">
+                  <div class="form-label" id="novoItemSituacao">Situação *</div>
+                  <div class="options-row" role="radiogroup" aria-labelledby="novoItemSituacao">
                     <label class="option-chip selected">
                       <input type="radio" name="status" value="perdido" checked class="d-none" onchange="updateChipSelection(this)">
                       <i class="bi bi-megaphone chip-icon"></i>
@@ -62,8 +62,8 @@
 
               <!-- DESCRIÇÃO -->
               <div class="mb-3">
-                <label class="form-label">Detalhes da Ocorrência *</label>
-                <textarea name="descricao"
+                <label class="form-label" for="novoItemDescricao">Detalhes da Ocorrência *</label>
+                <textarea id="novoItemDescricao" name="descricao"
                           class="form-control"
                           rows="4"
                           placeholder="Descreva as características do objeto e qualquer detalhe relevante sobre como ou onde ocorreu."
@@ -73,10 +73,10 @@
               <!-- CATEGORIA + DATA -->
               <div class="row mb-3 g-3">
                 <div class="col-md-6">
-                  <label class="form-label">Categoria *</label>
+                  <label class="form-label" for="novoItemCategoria">Categoria *</label>
                   <div class="input-group-custom">
                     <span class="input-icon"><i class="bi bi-tag"></i></span>
-                    <select name="categoria" class="form-select" required>
+                    <select id="novoItemCategoria" name="categoria" class="form-select" required>
                       <option value="">Selecione a categoria</option>
                       {% for cat in categorias %}
                         <option value="{{ cat.id }}">{{ cat.nome }}</option>
@@ -86,20 +86,21 @@
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label">Data da Ocorrência *</label>
+                  <label class="form-label" for="novoItemData">Data da Ocorrência *</label>
                   <div class="input-group-custom">
                     <span class="input-icon"><i class="bi bi-calendar3"></i></span>
-                    <input type="date" name="data" class="form-control" required>
+                    <input type="date" id="novoItemData" name="data" class="form-control" required>
                   </div>
                 </div>
               </div>
 
               <!-- LOCAL -->
               <div class="mb-3">
-                <label class="form-label">Local Aproximado *</label>
+                <label class="form-label" for="novoItemLocal">Local Aproximado *</label>
                 <div class="input-group-custom">
                   <span class="input-icon"><i class="bi bi-geo-alt"></i></span>
                   <input type="text"
+                         id="novoItemLocal"
                          name="local"
                          class="form-control"
                          placeholder="Onde o objeto foi perdido ou localizado"
@@ -109,9 +110,9 @@
 
               <!-- MAPA EXATO -->
               <div class="mb-3">
-                <label class="form-label" style="color:var(--brand-500); font-weight:600;">
+                <div class="form-label" id="novoItemMapaLabel" style="color:var(--brand-500); font-weight:600;">
                   <i class="bi bi-geo-alt-fill me-1"></i>Pino no Mapa (Opcional)
-                </label>
+                </div>
                 <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: -6px; margin-bottom: 8px;">
                   Clique no mapa para marcar o local exato no IFRN onde perdeu ou achou o item.
                 </div>
@@ -124,7 +125,7 @@
               <!-- RFID (apenas bolsistas/admins) -->
               <div class="mb-2">
                 <div class="d-flex align-items-center justify-content-between mb-1">
-                  <label class="form-label mb-0">
+                  <label class="form-label mb-0" for="rfidUidInput">
                     <i class="bi bi-broadcast" style="color:#1eaed4; margin-right:5px;"></i>
                     Etiqueta RFID
                     <span style="font-size:.68rem; color:#94a3b8; font-weight:400; margin-left:4px;">(opcional)</span>
@@ -172,7 +173,7 @@
 
               <!-- IMAGEM -->
               <div class="mb-2">
-                <label class="form-label">Foto do item (opcional)</label>
+                <label class="form-label" for="itemImageInput">Foto do item (opcional)</label>
                 <div class="input-group-custom mb-1">
                   <span class="input-icon"><i class="bi bi-image"></i></span>
                   <input type="file"
@@ -184,7 +185,7 @@
 
                 <!-- CROPPER CONTAINER -->
                 <div id="cropperContainer" class="mt-3 d-none">
-                  <label class="form-label d-block text-muted" style="font-size: 0.68rem;">Ajustar e Cortar Imagem</label>
+                  <div class="form-label d-block text-muted" style="font-size: 0.68rem;">Ajustar e Cortar Imagem</div>
                   <div class="cropper-wrapper">
                     <img id="cropperImage" src="" alt="Imagem para cortar">
                   </div>
