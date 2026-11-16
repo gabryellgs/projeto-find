@@ -57,3 +57,7 @@ O código colado no ASES Web na rodada "antes" foi a resposta do servidor a cada
 ## Título vazio na P11 (B22)
 
 O título vazio aparece porque o usuário `avaliadora` foi criado sem nome. Uma conta real também pode ficar sem nome: o servidor não valida o nome no cadastro nem na edição de perfil (a obrigatoriedade existe só no HTML, e o formulário de cadastro tem `novalidate`), e o login social depende do nome devolvido pelo provedor.
+
+## B33 e o item K1 do checklist
+
+A B33 (os botões Perdido e Achado do modal Cadastrar item não recebem foco pelo teclado, porque os rádios estão com `display: none`) foi encontrada em 16/11/2026, durante a correção da B10, fora da rodada inicial. A inspeção por teclado da rodada "antes" não a identificou, e por isso o K1 ficou como "Atende". A B33 não entra nos números da avaliação inicial. A evidência `B33_antes.png` foi tirada na versão da tag `a11y-antes`.
