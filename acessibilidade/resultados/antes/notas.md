@@ -65,3 +65,11 @@ A B33 (os botões Perdido e Achado do modal Cadastrar item não recebem foco pel
 ## B34 e o item K8 do checklist
 
 A B34 (os rádios do modal de filtros da `/menu/`, Todos, Perdido, Achado e Devolvido, não recebem foco pelo teclado, porque estão com `display: none`) foi encontrada em 16/11/2026, durante as correções, fora da rodada inicial. A inspeção por teclado da rodada "antes" não a identificou, e por isso o K8 ficou como "Atende" na P05. A B34 não entra nos números da avaliação inicial. A evidência `B34_antes.png` foi tirada na versão da tag `a11y-antes`.
+
+## B35 a B38
+
+As barreiras B35 (select de categoria do modal de filtros sem rótulo), B36 (foto do modal Editar perfil sem texto alternativo), B37 (envio da foto de perfil na P11 sem acesso pelo teclado) e B38 (campo de arquivo escondido do modal Editar perfil) foram encontradas em 16/11/2026, durante as correções, fora da rodada inicial. Todas estão em janelas que ficam fechadas quando a página carrega, e por isso as ferramentas e a inspeção da rodada "antes" não as identificaram. Elas não entram nos números da avaliação inicial.
+
+## Achado fora da amostra
+
+O campo de arquivo escondido de `item_edit.html:25` (troca da foto do item) tem o mesmo problema da B37, mas fica na página `/item/editar/`, que não faz parte das 12 páginas da amostra. Por isso não virou barreira.

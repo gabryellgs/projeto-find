@@ -4,7 +4,7 @@
 {% block title %}Perfil do Usuário{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'mainpage/css/user.css' %}?v=3">
+  <link rel="stylesheet" href="{% static 'mainpage/css/user.css' %}?v=4">
 {% endblock %}
 
 {% block content %}
@@ -27,9 +27,10 @@
             <form action="{% url 'upload_photo' %}" method="POST" enctype="multipart/form-data" id="form-foto">
               {% csrf_token %}
               <label for="input-foto" class="upload-badge shadow" style="position: absolute; bottom: 0; right: -5px; background: #0B3A4A; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid #90dbf4;">
-                <i class="bi bi-camera-fill text-white" style="font-size: 13px;"></i>
+                <i class="bi bi-camera-fill text-white" style="font-size: 13px;" aria-hidden="true"></i>
+                <span class="visually-hidden">Alterar foto de perfil</span>
               </label>
-              <input type="file" name="image" id="input-foto" hidden onchange="document.getElementById('form-foto').submit();">
+              <input type="file" name="image" id="input-foto" class="visually-hidden" onchange="document.getElementById('form-foto').submit();">
             </form>
           </div>
           

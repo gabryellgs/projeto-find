@@ -55,6 +55,11 @@
     border: 2px solid white;
 }
 
+.upload-badge:has(+ input:focus-visible) {
+    outline: 3px solid #0B3A4A;
+    outline-offset: 3px;
+}
+
 .upload-badge:hover {
     transform: scale(1.08);
     background: var(--c-brand-accent);
