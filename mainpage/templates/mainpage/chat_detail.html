@@ -11,8 +11,8 @@
   <!-- HEADER -->
   <div class="chat-detail-header">
     <div class="chat-detail-header-left">
-      <a href="{% url 'chats_list' %}" class="text-white me-2" style="font-size:1.2rem;">
-        <i class="bi bi-arrow-left"></i>
+      <a href="{% url 'chats_list' %}" class="text-white me-2" style="font-size:1.2rem;" aria-label="Voltar para a lista de conversas">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i>
       </a>
       <div class="chat-detail-avatar">
         {{ other_user.username|slice:':1'|upper }}
