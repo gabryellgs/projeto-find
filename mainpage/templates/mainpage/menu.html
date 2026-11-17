@@ -233,7 +233,7 @@
 
         <!-- Seção: Categoria -->
         <div class="mb-4">
-          <div class="filter-section-title">Categoria</div>
+          <label for="filterCategorySelect" class="filter-section-title d-block">Categoria</label>
           <select name="categoria" id="filterCategorySelect" class="form-select custom-premium-select">
             <option value="todas" {% if categoria == 'todas' %}selected{% endif %}>Todas as categorias</option>
             {% for cat in categorias %}

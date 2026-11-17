@@ -823,7 +823,7 @@ section[id], .items-section, .section-pad {
 
 #filterModal .modal-subtitle-premium {
   font-size: 0.82rem;
-  color: rgba(11, 58, 74, 0.65);
+  color: #4a6772;
   font-weight: 600;
   margin: 2px 0 0 0;
 }
@@ -887,7 +887,7 @@ section[id], .items-section, .section-pad {
   background: #FFFFFF;
   border: 1px solid rgba(0, 0, 0, 0.02);
   border-radius: 16px;
-  color: rgba(11, 58, 74, 0.65);
+  color: #4a6772;
   font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
