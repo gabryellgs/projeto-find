@@ -628,6 +628,7 @@ input:-webkit-autofill:focus {
 .pular-conteudo {
   position: absolute;
   left: -9999px;
+  color: #0B3A4A;
 }
 .pular-conteudo:focus {
   left: 1rem;
