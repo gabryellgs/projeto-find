@@ -28,6 +28,7 @@
           <input
             id="menuSearchInput"
             type="text"
+            aria-label="Buscar itens"
             class="search-input-field"
             name="q"
             value="{{ q|default:'' }}"
@@ -115,7 +116,7 @@
         <div class="search-container-modern flex-grow-1" style="background: white; border-radius: 16px; padding: 0 16px; height: 48px; display: flex; align-items: center; box-shadow: 0 4px 16px rgba(11,58,74,0.05); border: none; position: relative;">
           <form method="GET" class="w-100 d-flex align-items-center m-0">
             <i class="bi bi-search" style="color: #64748B; font-size: 16px;"></i>
-            <input id="menuSearchInputMobile" type="text" name="q" value="{{ q|default:'' }}" placeholder="Buscar itens..." autocomplete="off" style="border: none; background: transparent; outline: none; width: 100%; padding: 0 12px; font-size: 15px; font-weight: 500; color: #0B0F1A;">
+            <input id="menuSearchInputMobile" type="text" aria-label="Buscar itens" name="q" value="{{ q|default:'' }}" placeholder="Buscar itens..." autocomplete="off" style="border: none; background: transparent; outline: none; width: 100%; padding: 0 12px; font-size: 15px; font-weight: 500; color: #0B0F1A;">
             <button type="button" data-bs-toggle="modal" data-bs-target="#filterModal" style="background: transparent; border: none; color: #0B3A4A; padding: 0;">
               <i class="bi bi-funnel-fill" style="font-size: 18px;"></i>
             </button>
