@@ -526,7 +526,7 @@
             <i class="bi bi-radar"></i>
           </div>
           <div>
-            <h3 class="fw-bold text-dark mb-1" style="font-size: 1.6rem; letter-spacing: -0.5px;">Seus Matches</h3>
+            <h2 class="fw-bold text-dark mb-1" style="font-size: 1.6rem; letter-spacing: -0.5px;">Seus Matches</h2>
             <span class="text-muted" style="font-size: 0.95rem;">Análise em tempo real do nosso acervo com o seu perfil.</span>
           </div>
         </div>
@@ -551,7 +551,7 @@
                   <div class="result-body justify-content-center">
                     <div class="result-top mb-1">
                       <div>
-                        <h5 class="result-item-title mb-0" style="font-size: 1.1rem;">{{ match.item.titulo }}</h5>
+                        <h3 class="result-item-title mb-0" style="font-size: 1.1rem;">{{ match.item.titulo }}</h3>
                       </div>
                       <div class="similarity-badge {% if match.score >= 70 %}match-score-high{% else %}match-score-medium{% endif %}" title="Probabilidade de ser o seu item">
                         <i class="bi bi-bullseye"></i> {{ match.score }}% Match
@@ -615,14 +615,14 @@
         <img id="scanPreviewImg" src="" alt="Escaneando..." class="scan-preview-img-overlay">
       </div>
       <div class="spinner-ai"></div>
-      <h4 class="fw-bold">Analisando Imagem com IA...</h4>
+      <h2 class="fw-bold">Analisando Imagem com IA...</h2>
       <p class="text-white-50 small">Gerando hashes e calculando similaridade estrutural e de cores...</p>
     </div>
 
     <!-- RESULTADOS -->
     {% if request.method == "POST" %}
       <div class="results-title-row">
-        <h3 class="results-title">Resultados similares</h3>
+        <h2 class="results-title">Resultados similares</h2>
         <span class="text-muted small">Ordenado por nível de similaridade</span>
       </div>
 
@@ -640,7 +640,7 @@
             <div class="result-body">
               <div class="result-top">
                 <div>
-                  <h4 class="result-item-title">{{ item.titulo }}</h4>
+                  <h3 class="result-item-title">{{ item.titulo }}</h3>
                   <span class="result-category">{{ item.categoria.nome|default:"Objeto" }}</span>
                 </div>
                 <div class="similarity-badge" title="Taxa de correspondência visual">
@@ -667,7 +667,7 @@
         {% empty %}
           <div class="empty-results">
             <i class="bi bi-search empty-icon"></i>
-            <h4 class="empty-title">Nenhum item similar encontrado</h4>
+            <h2 class="empty-title">Nenhum item similar encontrado</h2>
             <p class="empty-desc">Tente cadastrar o item para que a comunidade possa te ajudar a encontrá-lo.</p>
           </div>
         {% endfor %}

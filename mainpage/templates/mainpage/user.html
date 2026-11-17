@@ -137,7 +137,7 @@
       <div class="card shadow-sm items-card border-0">
 
         <div class="card-header d-flex justify-content-between align-items-center border-0 py-3">
-          <h5 class="fw-bold mb-0" style="color: #0B3A4A;">Meus itens</h5>
+          <h2 class="h5 fw-bold mb-0" style="color: #0B3A4A;">Meus itens</h2>
 
           <button
             class="btn btn-sm rounded-pill shadow-sm"
@@ -170,7 +170,7 @@
 
                   <!-- INFO -->
                   <div class="item-col-info">
-                    <h6 class="fw-bold mb-0 text-truncate">{{ item.titulo }}</h6>
+                    <h3 class="h6 fw-bold mb-0 text-truncate">{{ item.titulo }}</h3>
                     <p class="text-muted small mb-1">
                       {% if item.categoria %}
                         {{ item.categoria }}
@@ -254,7 +254,7 @@
 <div class="row mt-4">
   <div class="col-12">
     <div class="card stats-card shadow-sm border-0 p-4">
-      <h6 class="fw-bold mb-3">📊 Estatísticas</h6>
+      <h2 class="h6 fw-bold mb-3">📊 Estatísticas</h2>
 
       <div class="row g-3 text-center">
         <div class="col-6 col-md-3">
@@ -307,7 +307,7 @@
           {% csrf_token %}
 
           <div class="modal-header bg-danger text-white">
-            <h5 class="modal-title">Excluir Item</h5>
+            <h2 class="modal-title h5">Excluir Item</h2>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 

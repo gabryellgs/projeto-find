@@ -52,7 +52,7 @@
         <a href="{% url 'item_list' %}" class="status-link">
           <div class="card status-card">
             <i class="bi bi-box-seam icon-total"></i>
-            <h3>{{ total_itens }}</h3>
+            <div class="status-card-num">{{ total_itens }}</div>
             <p>TOTAL</p>
           </div>
         </a>
@@ -61,7 +61,7 @@
         <a href="{% url 'items_perdidos' %}" class="status-link">
           <div class="card status-card">
             <i class="bi bi-exclamation-triangle icon-perdidos"></i>
-            <h3>{{ perdidos }}</h3>
+            <div class="status-card-num">{{ perdidos }}</div>
             <p>PERDIDOS</p>
           </div>
         </a>
@@ -70,7 +70,7 @@
         <a href="{% url 'items_encontrados' %}" class="status-link">
           <div class="card status-card">
             <i class="bi bi-box-seam icon-encontrados"></i>
-            <h3>{{ encontrados }}</h3>
+            <div class="status-card-num">{{ encontrados }}</div>
             <p>NA COAPAC</p>
           </div>
         </a>
@@ -79,7 +79,7 @@
         <a href="{% url 'items_devolvidos' %}" class="status-link">
           <div class="card status-card">
             <i class="bi bi-arrow-repeat icon-corresp"></i>
-            <h3>{{ devolvidos }}</h3>
+            <div class="status-card-num">{{ devolvidos }}</div>
             <p>DEVOLVIDOS</p>
           </div>
         </a>
@@ -194,7 +194,7 @@
       
       <div class="modal-header pb-0 border-0">
         <div class="text-start">
-          <h5 class="modal-title-premium" id="filterModalLabel">Filtrar</h5>
+          <h2 class="modal-title-premium" id="filterModalLabel">Filtrar</h2>
           <p class="modal-subtitle-premium">Escolha o que deseja encontrar</p>
         </div>
         <button type="button" class="btn-clear-filters" onclick="resetFilterForm()">Limpar tudo</button>
@@ -290,7 +290,7 @@
                 </div>
 
                 <div class="menu-item-body">
-                  <h6 class="menu-item-title">{{ item.titulo }}</h6>
+                  <h3 class="menu-item-title">{{ item.titulo }}</h3>
 
                   <p class="menu-item-desc">
                     {{ item.descricao|truncatechars:85 }}
@@ -418,7 +418,7 @@
                 </div>
 
                 <div class="menu-item-body">
-                  <h6 class="menu-item-title">{{ item.titulo }}</h6>
+                  <h3 class="menu-item-title">{{ item.titulo }}</h3>
                   <p class="menu-item-desc">
                     {{ item.descricao|truncatechars:85 }}
                   </p>
@@ -512,7 +512,7 @@
                     {% endif %}
                   </div>
                   <div class="menu-item-body">
-                    <h6 class="menu-item-title">{{ item.titulo }}</h6>
+                    <h3 class="menu-item-title">{{ item.titulo }}</h3>
                     <p class="menu-item-desc">{{ item.descricao|truncatechars:85 }}</p>
                     <div class="menu-item-meta">
                       <div class="menu-item-meta-line">
@@ -570,7 +570,7 @@
                     {% endif %}
                   </div>
                   <div class="menu-item-body">
-                    <h6 class="menu-item-title">{{ item.titulo }}</h6>
+                    <h3 class="menu-item-title">{{ item.titulo }}</h3>
                     <p class="menu-item-desc">{{ item.descricao|truncatechars:85 }}</p>
                     <div class="menu-item-meta">
                       <div class="menu-item-meta-line">
@@ -639,7 +639,7 @@
                   </div>
 
                   <div class="menu-item-body">
-                    <h6 class="menu-item-title">{{ item.titulo }}</h6>
+                    <h3 class="menu-item-title">{{ item.titulo }}</h3>
 
                     <p class="menu-item-desc">
                       {{ item.descricao|truncatechars:85 }}

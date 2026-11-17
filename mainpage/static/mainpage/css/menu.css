@@ -326,7 +326,7 @@ section[id], .items-section, .section-pad {
   transition: transform 0.3s ease;
 }
 
-.status-card h3 {
+.status-card .status-card-num {
   font-size: 2rem; font-weight: 800;
   color: var(--f-dark);
   margin: 0 0 8px;
