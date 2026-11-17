@@ -17,7 +17,7 @@
   --bg:       #D3F0FC;   /* fundo suave azul céu um pouco mais forte */
   --surface:  #ffffff;
   --text:     #06101f;
-  --muted:    #5a7a8d;
+  --muted:    #506d7d;
   --border:   rgba(30,174,212,0.18);
   --border-focus: rgba(30,174,212,0.55);
   --error:    #e8514a;
@@ -134,7 +134,7 @@ body {
   text-decoration: none;
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--blue-1);
+  color: #14718a;
   transition: color var(--transition);
 }
 .top-bar-register:hover { color: var(--blue-2); }
@@ -269,7 +269,7 @@ body {
 }
 
 .field-group:focus-within .field-lbl {
-  color: var(--blue-1);
+  color: #14718a;
 }
 
 /* ─── INPUT WRAP ─────────────────────────────────────────────────────────────── */
@@ -346,10 +346,10 @@ body {
   letter-spacing: 0.1px;
 }
 
-.field-input::placeholder { color: #a0bcc8; }
+.field-input::placeholder { color: #62737a; }
 
 .field-input[type="date"] {
-  color: #a0bcc8;
+  color: #62737a;
   cursor: pointer;
 }
 
@@ -563,7 +563,7 @@ body {
 
 .register-link {
   font-weight: 700;
-  color: var(--blue-1);
+  color: #14718a;
   text-decoration: none;
   margin-left: 3px;
   transition: color var(--transition);
