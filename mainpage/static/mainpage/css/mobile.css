@@ -170,7 +170,7 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    color: #9AA3BB; /* Inactive color do App */
+    color: #6d7485; /* Inactive color do App */
     flex: 1;
     height: 100%;
     transition: all 0.2s ease;

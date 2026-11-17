@@ -336,7 +336,7 @@ section[id], .items-section, .section-pad {
 .status-card p {
   font-size: 0.8rem; font-weight: 700;
   letter-spacing: 0.08em;
-  color: rgba(11, 58, 74, 0.55);
+  color: #536f7a;
   text-transform: uppercase;
   margin: 0;
 }
@@ -588,7 +588,7 @@ section[id], .items-section, .section-pad {
 }
 .meta-left, .meta-right {
   display: flex; align-items: center; gap: 4px;
-  color: var(--f-text-muted);
+  color: #5a687d;
   font-size: 0.65rem; font-weight: 700;
   white-space: nowrap; overflow: hidden;
   text-overflow: ellipsis; max-width: 55%;

@@ -312,7 +312,7 @@
 }
 .nav-avatar-sub {
   font-size: 0.65rem;
-  color: rgba(11, 58, 74, 0.55);
+  color: #3d5a64;
   font-weight: 500;
 }
 
@@ -537,7 +537,7 @@
 }
 .drawer-profile-sub {
   font-size: 0.7rem;
-  color: rgba(11, 58, 74, 0.5);
+  color: #5c7079;
 }
 
 /* ── Responsivo ─────────────────────────────────────────── */

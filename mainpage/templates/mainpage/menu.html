@@ -4,7 +4,7 @@
 {% block title %}Início - FIND{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'mainpage/css/menu.css' %}?v=2.9">
+  <link rel="stylesheet" href="{% static 'mainpage/css/menu.css' %}?v=3.6">
 {% endblock %}
 
 {% block content %}
@@ -101,7 +101,7 @@
     <!-- Greeting -->
     <div class="d-flex justify-content-between align-items-center px-4 mb-3">
       <div class="text-start">
-        <div style="font-size: 13px; font-weight: 600; color: rgba(11,58,74,0.7); margin-bottom: 2px;">Olá, bem-vindo(a) 👋</div>
+        <div style="font-size: 13px; font-weight: 600; color: #395d6b; margin-bottom: 2px;">Olá, bem-vindo(a) 👋</div>
         <div style="font-size: 22px; font-weight: 800; color: #0B3A4A; letter-spacing: -0.5px; line-height: 1;">{{ user.first_name|default:user.username }}</div>
       </div>
       <a href="{% url 'screen_user' %}" class="d-block shadow-sm" style="border-radius: 50%; border: 2px solid rgba(255,255,255,0.6); overflow: hidden; width: 46px; height: 46px; background: #D1E4EC;">
@@ -153,12 +153,12 @@
         <a href="{% url 'item_list' %}" class="flex-grow-1 text-center text-decoration-none" style="background: #DDF2FC; border-radius: 14px; padding: 12px 10px; border: 1px solid rgba(30, 174, 212, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center;">
           <i class="bi bi-box" style="font-size: 20px; color: #F59E0B;"></i>
           <div style="font-size: 19px; font-weight: 800; color: #0B3A4A; line-height: 1; letter-spacing: -0.5px; margin-top: 4px; margin-bottom: 2px;">{{ total_itens }}</div>
-          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; letter-spacing: 0.6px; text-transform: uppercase;">Total</div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #5d6c81; letter-spacing: 0.6px; text-transform: uppercase;">Total</div>
         </a>
         <a href="{% url 'items_perdidos' %}" class="flex-grow-1 text-center text-decoration-none" style="background: #DDF2FC; border-radius: 14px; padding: 12px 10px; border: 1px solid rgba(30, 174, 212, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center;">
           <i class="bi bi-exclamation-triangle" style="font-size: 20px; color: #E8514A;"></i>
           <div style="font-size: 19px; font-weight: 800; color: #0B3A4A; line-height: 1; letter-spacing: -0.5px; margin-top: 4px; margin-bottom: 2px;">{{ perdidos }}</div>
-          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; letter-spacing: 0.6px; text-transform: uppercase;">Perdidos</div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #5d6c81; letter-spacing: 0.6px; text-transform: uppercase;">Perdidos</div>
         </a>
       </div>
       <!-- SEGUNDA LINHA -->
@@ -166,12 +166,12 @@
         <a href="{% url 'items_encontrados' %}" class="flex-grow-1 text-center text-decoration-none" style="background: #DDF2FC; border-radius: 14px; padding: 12px 10px; border: 1px solid rgba(30, 174, 212, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center;">
           <i class="bi bi-box-seam" style="font-size: 20px; color: #10B981;"></i>
           <div style="font-size: 19px; font-weight: 800; color: #0B3A4A; line-height: 1; letter-spacing: -0.5px; margin-top: 4px; margin-bottom: 2px;">{{ encontrados }}</div>
-          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; letter-spacing: 0.6px; text-transform: uppercase;">Na COAPAC</div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #5d6c81; letter-spacing: 0.6px; text-transform: uppercase;">Na COAPAC</div>
         </a>
         <a href="{% url 'items_devolvidos' %}" class="flex-grow-1 text-center text-decoration-none" style="background: #DDF2FC; border-radius: 14px; padding: 12px 10px; border: 1px solid rgba(30, 174, 212, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center;">
           <i class="bi bi-arrow-repeat" style="font-size: 20px; color: #185FA5;"></i>
           <div style="font-size: 19px; font-weight: 800; color: #0B3A4A; line-height: 1; letter-spacing: -0.5px; margin-top: 4px; margin-bottom: 2px;">{{ devolvidos }}</div>
-          <div style="font-size: 9.5px; font-weight: 700; color: #64748B; letter-spacing: 0.6px; text-transform: uppercase;">Devolvidos</div>
+          <div style="font-size: 9.5px; font-weight: 700; color: #5d6c81; letter-spacing: 0.6px; text-transform: uppercase;">Devolvidos</div>
         </a>
       </div>
     </div>
