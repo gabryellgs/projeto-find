@@ -117,14 +117,14 @@
           <form method="GET" class="w-100 d-flex align-items-center m-0">
             <i class="bi bi-search" style="color: #64748B; font-size: 16px;"></i>
             <input id="menuSearchInputMobile" type="text" aria-label="Buscar itens" name="q" value="{{ q|default:'' }}" placeholder="Buscar itens..." autocomplete="off" style="border: none; background: transparent; outline: none; width: 100%; padding: 0 12px; font-size: 15px; font-weight: 500; color: #0B0F1A;">
-            <button type="button" data-bs-toggle="modal" data-bs-target="#filterModal" style="background: transparent; border: none; color: #0B3A4A; padding: 0;">
-              <i class="bi bi-funnel-fill" style="font-size: 18px;"></i>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#filterModal" aria-label="Filtrar itens" style="background: transparent; border: none; color: #0B3A4A; padding: 0;">
+              <i class="bi bi-funnel-fill" style="font-size: 18px;" aria-hidden="true"></i>
             </button>
           </form>
           <ul class="autocomplete-list" id="searchSuggestionsListMobile" role="listbox" style="top: 56px;"></ul>
         </div>
-        <a href="{% url 'busca_visual' %}" class="d-flex justify-content-center align-items-center shadow-sm" style="width: 48px; height: 48px; border-radius: 16px; background: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.5); color: #0B3A4A;">
-          <i class="bi bi-camera-fill" style="font-size: 20px;"></i>
+        <a href="{% url 'busca_visual' %}" aria-label="Busca por imagem" class="d-flex justify-content-center align-items-center shadow-sm" style="width: 48px; height: 48px; border-radius: 16px; background: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.5); color: #0B3A4A;">
+          <i class="bi bi-camera-fill" style="font-size: 20px;" aria-hidden="true"></i>
         </a>
       </div>
     </div>
