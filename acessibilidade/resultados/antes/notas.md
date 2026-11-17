@@ -58,6 +58,10 @@ O código colado no ASES Web na rodada "antes" foi a resposta do servidor a cada
 
 O título vazio aparece porque o usuário `avaliadora` foi criado sem nome. Uma conta real também pode ficar sem nome: o servidor não valida o nome no cadastro nem na edição de perfil (a obrigatoriedade existe só no HTML, e o formulário de cadastro tem `novalidate`), e o login social depende do nome devolvido pelo provedor.
 
+## Omissões da consolidação (B36, B39, B40 e B41)
+
+A B36 (foto do modal Editar perfil sem texto alternativo), a B39 (campo de busca da P09 sem rótulo), a B40 (P11 sem título de primeiro nível) e a B41 (aviso de cookies salvos, escondido com opacidade zero, contado pelo WAVE como erro de contraste) foram apontadas pelo WAVE na rodada inicial, mas ficaram fora da planilha na consolidação. As evidências são os prints da própria rodada: `WAVE_P05.png` a `WAVE_P12.png` mostram "1 Missing alternative text" em todas as páginas com o modal (B36), `WAVE_P09.png` mostra o campo "Buscar conversa" com o ícone de rótulo ausente (B39) `WAVE_P11.png` mostra o alerta de título de primeiro nível ausente (B40) e `WAVE_P06.png`, `WAVE_P10.png` e `WAVE_P12.png` mostram 1 erro de contraste que não pertence a nenhuma outra barreira (B41). Foram incluídas em 16/11/2026 e entram nos números da avaliação inicial.
+
 ## B33 e o item K1 do checklist
 
 A B33 (os botões Perdido e Achado do modal Cadastrar item não recebem foco pelo teclado, porque os rádios estão com `display: none`) foi encontrada em 16/11/2026, durante a correção da B10, fora da rodada inicial. A inspeção por teclado da rodada "antes" não a identificou, e por isso o K1 ficou como "Atende". A B33 não entra nos números da avaliação inicial. A evidência `B33_antes.png` foi tirada na versão da tag `a11y-antes`.
@@ -66,9 +70,9 @@ A B33 (os botões Perdido e Achado do modal Cadastrar item não recebem foco pel
 
 A B34 (os rádios do modal de filtros da `/menu/`, Todos, Perdido, Achado e Devolvido, não recebem foco pelo teclado, porque estão com `display: none`) foi encontrada em 16/11/2026, durante as correções, fora da rodada inicial. A inspeção por teclado da rodada "antes" não a identificou, e por isso o K8 ficou como "Atende" na P05. A B34 não entra nos números da avaliação inicial. A evidência `B34_antes.png` foi tirada na versão da tag `a11y-antes`.
 
-## B35 a B38
+## B35, B37 e B38
 
-As barreiras B35 (select de categoria do modal de filtros sem rótulo), B36 (foto do modal Editar perfil sem texto alternativo), B37 (envio da foto de perfil na P11 sem acesso pelo teclado) e B38 (campo de arquivo escondido do modal Editar perfil) foram encontradas em 16/11/2026, durante as correções, fora da rodada inicial. Todas estão em janelas que ficam fechadas quando a página carrega, e por isso as ferramentas e a inspeção da rodada "antes" não as identificaram. Elas não entram nos números da avaliação inicial.
+As barreiras B35 (select de categoria do modal de filtros sem rótulo), B37 (envio da foto de perfil na P11 sem acesso pelo teclado) e B38 (campo de arquivo escondido do modal Editar perfil) foram encontradas em 16/11/2026, durante as correções, fora da rodada inicial. Nenhuma ferramenta nem a inspeção da rodada "antes" as identificaram, e elas não entram nos números da avaliação inicial. Para a B35, foi feito um teste na versão da tag `a11y-antes`: com um `aria-label` temporário no select, o WAVE continuou mostrando 14 "Missing form label" na P05, ou seja, o select não era contado na rodada inicial. O teste foi desfeito.
 
 ## Achado fora da amostra
 
