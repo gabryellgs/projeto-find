@@ -703,16 +703,27 @@ section[id], .items-section, .section-pad {
 
 /* Bolinhas de paginação */
 .swiper-pagination-bullet {
-  background: var(--f-text-muted) !important;
-  opacity: 0.28 !important;
-  width: 6px !important; height: 6px !important;
-  transition: var(--f-transition) !important;
-}
-.swiper-pagination-bullet-active {
-  background: var(--f-dark) !important;
+  background: transparent !important;
   opacity: 1 !important;
-  width: 18px !important;
-  border-radius: 3px !important;
+  width: 24px !important; height: 24px !important;
+  position: relative;
+}
+.swiper-pagination-bullet::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 6px; height: 6px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--f-text-muted);
+  opacity: 0.28;
+  transition: var(--f-transition);
+}
+.swiper-pagination-bullet-active::before {
+  background: var(--f-dark);
+  opacity: 1;
+  width: 18px;
+  border-radius: 3px;
 }
 
 /* Destaque azul nos devolvidos — igual ao app (info color) */
