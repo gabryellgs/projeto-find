@@ -11,7 +11,7 @@
   --c-surface-deep: #e0f2fe;
   --c-text:         #0f172a;
   --c-text-muted:   #475569;
-  --c-text-light:   #0284c7;
+  --c-text-light:   #0270a9;
   
   --c-primary:      #0ea5e9;
   --c-primary-light:#e0f2fe;
@@ -653,7 +653,7 @@ body {
   font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 800;
-  color: var(--c-text-light);
+  color: #0275b1;
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -1176,7 +1176,7 @@ body {
   justify-content: center;
   border: 1.5px solid var(--c-border-strong);
 }
-.mockup-avatar-initials { font-size: 0.6rem; font-weight: 800; color: var(--c-button-deep); }
+.mockup-avatar-initials { font-size: 0.6rem; font-weight: 800; color: #03679e; }
 .mockup-search-container {
   display: flex;
   align-items: center;
@@ -1296,7 +1296,7 @@ body {
   letter-spacing: 0.1px;
 }
 .nav-tab.active {
-  color: var(--c-primary);
+  color: #0a7caf;
 }
 .nav-tab-add .add-button-circle {
   width: 32px;
@@ -1697,7 +1697,7 @@ body {
   position: relative; z-index: 1;
 }
 .btn-final-cta i:first-child { font-size: 1.25rem; color: var(--c-text-light); }
-.btn-final-cta-text { font-family: var(--font-body); font-size: 1.1rem; font-weight: 800; color: var(--c-text-light); }
+.btn-final-cta-text { font-family: var(--font-body); font-size: 1.1rem; font-weight: 800; color: #0275b1; }
 .btn-final-arrow {
   width: 30px; height: 30px; border-radius: 50%;
   background-color: var(--c-surface-deep); border: 1px solid var(--c-border-strong);
