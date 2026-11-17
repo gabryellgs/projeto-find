@@ -573,7 +573,8 @@
   font-weight: 600;
   z-index: 10002;
   opacity: 0;
-  transition: all 0.3s ease;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
   white-space: nowrap;
   display: flex;
   align-items: center;
@@ -582,6 +583,8 @@
 }
 
 .cookie-saved-toast.show {
+  visibility: visible;
+  transition-delay: 0s;
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
