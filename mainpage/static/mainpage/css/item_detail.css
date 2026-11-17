@@ -433,7 +433,7 @@
 .status-option.opt-perdido input:checked ~ label,
 .status-option.opt-perdido.is-current label {
   background: #fc0000;
-  color: #52040a;
+  color: #1a0000;
   box-shadow: 0 3px 12px rgba(252, 0, 0, 0.30);
 }
 
