@@ -18,7 +18,7 @@
         {{ other_user.username|slice:':1'|upper }}
       </div>
       <div class="chat-detail-info">
-        <h5>{{ other_user.username }}</h5>
+        <h1>{{ other_user.username }}</h1>
         <small>
           <i class="bi bi-tag-fill"></i> {% if chat.item %}{{ chat.item.titulo }}{% else %}Item removido{% endif %}
           · {{ chat.get_status_display }}
