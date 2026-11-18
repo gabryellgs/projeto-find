@@ -97,5 +97,5 @@ Cada ferramenta mede de um jeito, e os números só se comparam dentro da mesma 
 ## Observações
 
 - A P08 (cadastro de item) é um modal. O WAVE e a inspeção por teclado foram feitos com o modal aberto sobre `/menu/`, e o axe, o Lighthouse e o ASES usaram a URL do fragmento (`/perfil/item/novo/`). A nota do Lighthouse da P08 não é comparável com a das outras páginas.
-- A planilha `barreiras.csv` tem 45 barreiras, todas "Corrigida". A avaliação inicial tem 36 delas, e as outras 9 foram encontradas durante as correções e a rodada "depois" (veja `resultados/antes/notas.md` e `resultados/depois/notas.md`).
+- A planilha `barreiras.csv` tem 45 linhas: 44 barreiras, todas "Corrigida", e a B43, "Descartada" porque não se confirmou (veja `resultados/antes/notas.md`). A avaliação inicial tem 36 barreiras, e as outras 8 foram encontradas durante as correções e a rodada "depois" (veja `resultados/antes/notas.md` e `resultados/depois/notas.md`).
 - Os 3 testes automatizados de autenticação que já falhavam antes (`pytest`) não fazem parte desta avaliação e não foram alterados.

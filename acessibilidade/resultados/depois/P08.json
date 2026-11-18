@@ -13,7 +13,7 @@
     "orientationAngle": 0,
     "orientationType": "landscape-primary"
   },
-  "timestamp": "2026-11-17T17:32:33.478Z",
+  "timestamp": "2026-11-18T15:02:19.491Z",
   "url": "http://127.0.0.1:8000/perfil/item/novo/",
   "toolOptions": {
     "runOnly": {
@@ -1180,6 +1180,24 @@
           "any": [
             {
               "id": "duplicate-id-aria",
+              "data": "modalNovoItemLabel",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title-premium\" id=\"modalNovoItemLabel\">Cadastrar Item</h2>",
+          "target": [
+            "#modalNovoItemLabel"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
               "data": "novoItemTitulo",
               "relatedNodes": [],
               "impact": "critical",
@@ -2156,7 +2174,7 @@
           "all": [],
           "none": [],
           "impact": "serious",
-          "html": "<span id=\"previewDate\">17/11/2026</span>",
+          "html": "<span id=\"previewDate\">18/11/2026</span>",
           "target": [
             "#previewDate"
           ],
@@ -2187,7 +2205,7 @@
           "all": [],
           "none": [],
           "impact": "serious",
-          "html": "<span id=\"previewTime\">14:32</span>",
+          "html": "<span id=\"previewTime\">12:02</span>",
           "target": [
             "#previewTime"
           ],
@@ -2400,7 +2418,7 @@
           ],
           "none": [],
           "impact": "serious",
-          "html": "<div class=\"modal fade\" id=\"modalNovoItem\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalNovoItem\" tabindex=\"-1\" aria-labelledby=\"modalNovoItemLabel\" aria-hidden=\"true\">",
           "target": [
             "#modalNovoItem"
           ],

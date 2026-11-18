@@ -78,10 +78,30 @@ As barreiras B35 (select de categoria do modal de filtros sem rótulo), B37 (env
 
 A B42 (os modais Cadastrar item, Editar perfil e Excluir item ficam com `role="dialog"` sem nome quando abertos) foi encontrada em 17/11/2026, na rodada "depois", pelo Lighthouse da P08 feito com o modal aberto sobre `/menu/` (regra `aria-dialog-name`, nota 97). Na rodada "antes", a P08 foi avaliada pelo fragmento `/perfil/item/novo/`, sem o JavaScript do Bootstrap, que é quem acrescenta o `role="dialog"` ao abrir o modal. Por isso a ferramenta não podia apontar o problema, e nas outras páginas os modais estavam fechados. A B42 foi confirmada na versão da tag `a11y-antes`, com o axe aplicado à regra `aria-dialog-name` e cada modal aberto: Cadastrar item, Editar perfil e Excluir item apontaram o problema, e o filtro de `/menu/`, que já tinha `aria-labelledby`, não. A B42 não entra nos números da avaliação inicial.
 
-## B43, B44 e B45
+## B44, B45 e a B43 descartada
 
-As barreiras B43 (o botão flutuante Cadastrar item cobre os chips de categoria da P05 quando recebem o foco), B44 (o banner de cookies cobre os botões do rodapé e o mapa dos modais, testado na P08, quando recebem o foco) e B45 (o campo de foto da P12 tem opacidade zero e o foco não aparece) foram encontradas em 17/11/2026, na rodada "depois", pela inspeção por teclado. As três já existiam na versão da tag `a11y-antes`, mas a inspeção da rodada "antes" não as identificou, e por isso não entram nos números da avaliação inicial. As evidências `B43_antes.png`, `B44_antes.png` e `B45_antes.png` foram tiradas na versão da tag.
+As barreiras B44 (o banner de cookies cobre os botões do rodapé e o mapa dos modais, testado na P08, quando recebem o foco) e B45 (o campo de foto da P12 tem opacidade zero e o foco não aparece) foram encontradas em 17/11/2026, na rodada "depois", pela inspeção por teclado. As duas já existiam na versão da tag `a11y-antes`, mas a inspeção da rodada "antes" não as identificou, e por isso não entram nos números da avaliação inicial. As evidências `B44_antes.png` e `B45_antes.png` foram tiradas na versão da tag.
+
+A B43 (o botão flutuante Cadastrar item cobre os chips de categoria da P05 quando recebem o foco) foi registrada na mesma inspeção, mas não se confirmou e ficou como "Descartada" na planilha. O critério 2.4.11 só reprova quando o elemento com foco fica totalmente escondido, e o chip nunca ficou totalmente escondido pelo botão (veja a seção abaixo). O `B43_antes.png` fica como registro.
 
 ## Achado fora da amostra
 
 O campo de arquivo escondido de `item_edit.html:25` (troca da foto do item) tem o mesmo problema da B37, mas fica na página `/item/editar/`, que não faz parte das 12 páginas da amostra. Por isso não virou barreira.
+
+## Critério 2.5.7 (movimentos de arrastar)
+
+O critério foi verificado em 18/11/2026 na versão da tag `a11y-antes`, em 1366 x 768. As funções da amostra que aceitam arrastar também funcionam com cliques simples:
+
+- P05, carrosséis de itens: os botões de anterior e próximo e os pontos de paginação mudam de slide com um clique.
+- P08, mapa do cadastro de item: um clique no mapa marca o local e preenche latitude e longitude. O marcador não é arrastável.
+- P12, foto da busca visual: o clique na área de envio abre o seletor de arquivo, e a escolha do arquivo envia a imagem. O arrastar e soltar é apenas uma alternativa.
+
+Nas demais páginas não há função que dependa de arrastar. O critério foi atendido nas 12 páginas. A rolagem e o deslocamento do mapa por arraste não são funções da amostra, e o mapa tem botões de zoom.
+
+## Foco inteiro atrás do banner (B09, B43 e B44)
+
+O critério 2.4.11 só reprova quando o elemento com foco fica inteiramente escondido. Na versão da tag `a11y-antes`, em 1366 x 768, com o banner de cookies aberto:
+
+- B09: links do rodapé, como "Itens Perdidos" na P06, recebem o foco e ficam inteiros atrás do banner. A evidência é `B09_antes_oculto.png`. O `B09_antes.png` mostra um caso de cobertura parcial.
+- B44: os botões "Cancelar" e "Cadastrar item" do modal da P08 ficam inteiros atrás do banner quando recebem o foco. A evidência é `B44_antes_oculto.png`. O mapa fica coberto em parte (76%).
+- B43 (descartada): o botão flutuante cobre os chips de categoria apenas em parte. No `B43_antes.png`, o chip focado aparece com a borda superior visível acima do botão. Com o banner fechado e a janela de 1366 px de largura e altura entre 600 e 768 px, o chip focado por Tab teve cobertura de no máximo 1% pelo botão. Com o banner aberto, os chips ficam inteiros atrás do banner, que é o caso da B09.

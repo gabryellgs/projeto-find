@@ -13,7 +13,7 @@
     "orientationAngle": 0,
     "orientationType": "landscape-primary"
   },
-  "timestamp": "2026-11-17T17:32:46.366Z",
+  "timestamp": "2026-11-18T15:02:33.947Z",
   "url": "http://127.0.0.1:8000/tela/",
   "toolOptions": {
     "runOnly": {
@@ -1208,7 +1208,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalDeletarItem12\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalDeletarItem12\" tabindex=\"-1\" aria-labelledby=\"modalDeletarItemLabel12\" aria-hidden=\"true\">",
           "target": [
             "#modalDeletarItem12"
           ]
@@ -1240,7 +1240,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalDeletarItem11\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalDeletarItem11\" tabindex=\"-1\" aria-labelledby=\"modalDeletarItemLabel11\" aria-hidden=\"true\">",
           "target": [
             "#modalDeletarItem11"
           ]
@@ -1272,7 +1272,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalDeletarItem10\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalDeletarItem10\" tabindex=\"-1\" aria-labelledby=\"modalDeletarItemLabel10\" aria-hidden=\"true\">",
           "target": [
             "#modalDeletarItem10"
           ]
@@ -1304,7 +1304,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalDeletarItem9\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalDeletarItem9\" tabindex=\"-1\" aria-labelledby=\"modalDeletarItemLabel9\" aria-hidden=\"true\">",
           "target": [
             "#modalDeletarItem9"
           ]
@@ -1336,7 +1336,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalDeletarItem8\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalDeletarItem8\" tabindex=\"-1\" aria-labelledby=\"modalDeletarItemLabel8\" aria-hidden=\"true\">",
           "target": [
             "#modalDeletarItem8"
           ]
@@ -1368,7 +1368,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalDeletarItem7\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalDeletarItem7\" tabindex=\"-1\" aria-labelledby=\"modalDeletarItemLabel7\" aria-hidden=\"true\">",
           "target": [
             "#modalDeletarItem7"
           ]
@@ -1400,7 +1400,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalDeletarItem6\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalDeletarItem6\" tabindex=\"-1\" aria-labelledby=\"modalDeletarItemLabel6\" aria-hidden=\"true\">",
           "target": [
             "#modalDeletarItem6"
           ]
@@ -1432,7 +1432,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalDeletarItem5\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalDeletarItem5\" tabindex=\"-1\" aria-labelledby=\"modalDeletarItemLabel5\" aria-hidden=\"true\">",
           "target": [
             "#modalDeletarItem5"
           ]
@@ -1464,7 +1464,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalDeletarItem4\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalDeletarItem4\" tabindex=\"-1\" aria-labelledby=\"modalDeletarItemLabel4\" aria-hidden=\"true\">",
           "target": [
             "#modalDeletarItem4"
           ]
@@ -1496,7 +1496,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalDeletarItem3\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalDeletarItem3\" tabindex=\"-1\" aria-labelledby=\"modalDeletarItemLabel3\" aria-hidden=\"true\">",
           "target": [
             "#modalDeletarItem3"
           ]
@@ -1528,7 +1528,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalDeletarItem2\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalDeletarItem2\" tabindex=\"-1\" aria-labelledby=\"modalDeletarItemLabel2\" aria-hidden=\"true\">",
           "target": [
             "#modalDeletarItem2"
           ]
@@ -1560,7 +1560,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalDeletarItem1\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalDeletarItem1\" tabindex=\"-1\" aria-labelledby=\"modalDeletarItemLabel1\" aria-hidden=\"true\">",
           "target": [
             "#modalDeletarItem1"
           ]
@@ -1592,7 +1592,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade edit-profile-modal\" id=\"modalEditarPerfil\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade edit-profile-modal\" id=\"modalEditarPerfil\" tabindex=\"-1\" aria-labelledby=\"modalEditarPerfilLabel\" aria-hidden=\"true\">",
           "target": [
             "#modalEditarPerfil"
           ]
@@ -1624,7 +1624,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalNovoItem\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalNovoItem\" tabindex=\"-1\" aria-labelledby=\"modalNovoItemLabel\" aria-hidden=\"true\">",
           "target": [
             "#modalNovoItem"
           ]
@@ -2203,7 +2203,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px; scroll-padding-bottom: 209px;\">",
+          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px;\">",
           "target": [
             "html"
           ]
@@ -4156,7 +4156,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px; scroll-padding-bottom: 209px;\">",
+          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px;\">",
           "target": [
             "html"
           ]
@@ -5132,7 +5132,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px; scroll-padding-bottom: 209px;\">",
+          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px;\">",
           "target": [
             "html"
           ]
@@ -5189,6 +5189,240 @@
           "html": "<input type=\"file\" name=\"image\" id=\"input-foto\" class=\"visually-hidden\" onchange=\"document.getElementById('form-foto').submit();\">",
           "target": [
             "#input-foto"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalDeletarItemLabel12",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5\" id=\"modalDeletarItemLabel12\">Excluir Item</h2>",
+          "target": [
+            "#modalDeletarItemLabel12"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalDeletarItemLabel11",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5\" id=\"modalDeletarItemLabel11\">Excluir Item</h2>",
+          "target": [
+            "#modalDeletarItemLabel11"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalDeletarItemLabel10",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5\" id=\"modalDeletarItemLabel10\">Excluir Item</h2>",
+          "target": [
+            "#modalDeletarItemLabel10"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalDeletarItemLabel9",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5\" id=\"modalDeletarItemLabel9\">Excluir Item</h2>",
+          "target": [
+            "#modalDeletarItemLabel9"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalDeletarItemLabel8",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5\" id=\"modalDeletarItemLabel8\">Excluir Item</h2>",
+          "target": [
+            "#modalDeletarItemLabel8"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalDeletarItemLabel7",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5\" id=\"modalDeletarItemLabel7\">Excluir Item</h2>",
+          "target": [
+            "#modalDeletarItemLabel7"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalDeletarItemLabel6",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5\" id=\"modalDeletarItemLabel6\">Excluir Item</h2>",
+          "target": [
+            "#modalDeletarItemLabel6"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalDeletarItemLabel5",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5\" id=\"modalDeletarItemLabel5\">Excluir Item</h2>",
+          "target": [
+            "#modalDeletarItemLabel5"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalDeletarItemLabel4",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5\" id=\"modalDeletarItemLabel4\">Excluir Item</h2>",
+          "target": [
+            "#modalDeletarItemLabel4"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalDeletarItemLabel3",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5\" id=\"modalDeletarItemLabel3\">Excluir Item</h2>",
+          "target": [
+            "#modalDeletarItemLabel3"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalDeletarItemLabel2",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5\" id=\"modalDeletarItemLabel2\">Excluir Item</h2>",
+          "target": [
+            "#modalDeletarItemLabel2"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalDeletarItemLabel1",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5\" id=\"modalDeletarItemLabel1\">Excluir Item</h2>",
+          "target": [
+            "#modalDeletarItemLabel1"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalEditarPerfilLabel",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5 fw-bold\" id=\"modalEditarPerfilLabel\">Editar Perfil</h2>",
+          "target": [
+            "#modalEditarPerfilLabel"
           ]
         },
         {
@@ -5333,6 +5567,24 @@
           "html": "<input type=\"text\" id=\"estado\" name=\"estado\" class=\"form-control border-info-subtle text-center edit-profile-estado\" value=\"\" maxlength=\"2\">",
           "target": [
             "#estado"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalNovoItemLabel",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title-premium\" id=\"modalNovoItemLabel\">Cadastrar Item</h2>",
+          "target": [
+            "#modalNovoItemLabel"
           ]
         },
         {
@@ -5540,7 +5792,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px; scroll-padding-bottom: 209px;\">",
+          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px;\">",
           "target": [
             "html"
           ]
@@ -5579,7 +5831,7 @@
             }
           ],
           "impact": null,
-          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px; scroll-padding-bottom: 209px;\">",
+          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px;\">",
           "target": [
             "html"
           ]

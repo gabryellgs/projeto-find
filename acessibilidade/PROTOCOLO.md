@@ -52,7 +52,7 @@ Tudo é feito no Edge, com resolução de 1366 x 768. O script usa o canal `msed
 
 ## 4. Inspeção por teclado
 
-A inspeção manual começa pelo teclado, sem o mouse. Em cada página, cada item abaixo é marcado como Atende, Não atende ou Não se aplica.
+A inspeção por teclado é feita sem o mouse. Em cada página, cada item abaixo é marcado como Atende, Não atende ou Não se aplica.
 
 | # | Verificação | Critério WCAG |
 |---|---|---|
@@ -60,10 +60,10 @@ A inspeção manual começa pelo teclado, sem o mouse. Em cada página, cada ite
 | K2 | Nenhum componente prende o foco | 2.1.2 |
 | K3 | A ordem do foco segue a ordem visual | 2.4.3 |
 | K4 | O foco é visível | 2.4.7 |
-| K5 | O foco não fica escondido atrás da barra fixa ou do banner | 2.4.11 |
+| K5 | O elemento com foco não fica totalmente escondido atrás da barra fixa ou do banner | 2.4.11 |
 | K6 | Existe link para pular ao conteúdo | 2.4.1 |
 | K7 | Menus e modais abrem com Enter ou Espaço e fecham com Esc | 2.1.1 |
-| K8 | Mostrar senha, abas, upload e filtros funcionam pelo teclado | 2.1.1 e 2.5.7 |
+| K8 | Mostrar senha, abas, upload e filtros funcionam pelo teclado | 2.1.1 |
 | K9 | Com zoom de 200% nada fica cortado | 1.4.4 |
 | K10 | Com 320 px de largura não há rolagem horizontal | 1.4.10 |
 | K11 | O título da aba identifica a página | 2.4.2 |

@@ -13,7 +13,7 @@
     "orientationAngle": 0,
     "orientationType": "landscape-primary"
   },
-  "timestamp": "2026-11-17T17:32:50.606Z",
+  "timestamp": "2026-11-18T15:02:38.776Z",
   "url": "http://127.0.0.1:8000/itens/busca-visual/",
   "toolOptions": {
     "runOnly": {
@@ -1176,7 +1176,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade edit-profile-modal\" id=\"modalEditarPerfil\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade edit-profile-modal\" id=\"modalEditarPerfil\" tabindex=\"-1\" aria-labelledby=\"modalEditarPerfilLabel\" aria-hidden=\"true\">",
           "target": [
             "#modalEditarPerfil"
           ]
@@ -1208,7 +1208,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div class=\"modal fade\" id=\"modalNovoItem\" tabindex=\"-1\" aria-hidden=\"true\">",
+          "html": "<div class=\"modal fade\" id=\"modalNovoItem\" tabindex=\"-1\" aria-labelledby=\"modalNovoItemLabel\" aria-hidden=\"true\">",
           "target": [
             "#modalNovoItem"
           ]
@@ -1787,7 +1787,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px; scroll-padding-bottom: 209px;\">",
+          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px;\">",
           "target": [
             "html"
           ]
@@ -2084,7 +2084,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px; scroll-padding-bottom: 209px;\">",
+          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px;\">",
           "target": [
             "html"
           ]
@@ -2528,7 +2528,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px; scroll-padding-bottom: 209px;\">",
+          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px;\">",
           "target": [
             "html"
           ]
@@ -2585,6 +2585,24 @@
           "html": "<input type=\"file\" name=\"imagem_busca\" id=\"id_imagem_busca\" accept=\"image/*\" required=\"\">",
           "target": [
             "#id_imagem_busca"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalEditarPerfilLabel",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title h5 fw-bold\" id=\"modalEditarPerfilLabel\">Editar Perfil</h2>",
+          "target": [
+            "#modalEditarPerfilLabel"
           ]
         },
         {
@@ -2729,6 +2747,24 @@
           "html": "<input type=\"text\" id=\"estado\" name=\"estado\" class=\"form-control border-info-subtle text-center edit-profile-estado\" value=\"\" maxlength=\"2\">",
           "target": [
             "#estado"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "modalNovoItemLabel",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"modal-title-premium\" id=\"modalNovoItemLabel\">Cadastrar Item</h2>",
+          "target": [
+            "#modalNovoItemLabel"
           ]
         },
         {
@@ -2936,7 +2972,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px; scroll-padding-bottom: 209px;\">",
+          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px;\">",
           "target": [
             "html"
           ]
@@ -2975,7 +3011,7 @@
             }
           ],
           "impact": null,
-          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px; scroll-padding-bottom: 209px;\">",
+          "html": "<html lang=\"pt-br\" style=\"--folga-banner: 209px;\">",
           "target": [
             "html"
           ]
