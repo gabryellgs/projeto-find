@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
   {# CSS base existente do projeto #}
-  <link rel="stylesheet" href="{% static 'mainpage/css/base.css' %}?v=3">
+  <link rel="stylesheet" href="{% static 'mainpage/css/base.css' %}?v=4">
   {# CSS novo da navbar #}
   <link rel="stylesheet" href="{% static 'mainpage/css/navbar.css' %}?v=13">
   {# CSS Mobile App Adaptation #}
@@ -752,7 +752,6 @@
   /* ── Helpers ────────────────────────────────────────────── */
   function ajustarFolgaBanner() {
     const alt = banner.classList.contains('cookie-visible') ? (banner.offsetHeight + (parseFloat(getComputedStyle(banner).bottom) || 0)) + 'px' : '';
-    document.documentElement.style.scrollPaddingBottom = alt;
     document.body.style.paddingBottom = alt;
     document.documentElement.style.setProperty('--folga-banner', alt || '0px');
   }

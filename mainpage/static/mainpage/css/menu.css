@@ -408,6 +408,10 @@ section[id], .items-section, .section-pad {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+html {
+  scroll-padding-bottom: calc(var(--folga-banner, 0px) + 96px);
+}
+
 @media (max-width: 767.98px) {
   .btn-cadastrar-item {
     bottom: calc(20px + var(--folga-banner, 0px));
