@@ -1,0 +1,10 @@
+﻿Indicador,Antes,Depois
+axe: regras violadas (soma),16,3
+axe: ocorrências (soma),86,3
+WAVE: Errors (soma),141,0
+WAVE: Contrast Errors (soma),58,0
+WAVE: AIM Score (média),6.4,9.64
+Lighthouse: pontuação (média),88.92,95.08
+ASES: percentual (média),82.33,88.82
+ASES: erros (soma),434,306
+Teclado: itens atendidos (média),7.67,11.0

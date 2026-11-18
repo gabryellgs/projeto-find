@@ -1,0 +1,4 @@
+pagina,regra,impacto,criterios,ocorrencias,descricao
+P08,aria-hidden-focus,serious,4.1.2,1,ARIA hidden element must not be focusable or contain focusable elements
+P08,document-title,serious,2.4.2,1,Documents must have <title> element to aid in navigation
+P08,html-has-lang,serious,3.1.1,1,<html> element must have a lang attribute
