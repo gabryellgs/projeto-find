@@ -299,7 +299,7 @@
 
 <!-- MODAIS DE EXCLUSÃO -->
 {% for item in itens %}
-  <div class="modal fade" id="modalDeletarItem{{ item.id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal fade" id="modalDeletarItem{{ item.id }}" tabindex="-1" aria-labelledby="modalDeletarItemLabel{{ item.id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg" style="border-radius:20px; overflow:hidden;">
 
@@ -307,7 +307,7 @@
           {% csrf_token %}
 
           <div class="modal-header bg-danger text-white">
-            <h2 class="modal-title h5">Excluir Item</h2>
+            <h2 class="modal-title h5" id="modalDeletarItemLabel{{ item.id }}">Excluir Item</h2>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 

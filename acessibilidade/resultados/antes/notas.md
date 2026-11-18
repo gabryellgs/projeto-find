@@ -74,6 +74,10 @@ A B34 (os rádios do modal de filtros da `/menu/`, Todos, Perdido, Achado e Devo
 
 As barreiras B35 (select de categoria do modal de filtros sem rótulo), B37 (envio da foto de perfil na P11 sem acesso pelo teclado) e B38 (campo de arquivo escondido do modal Editar perfil) foram encontradas em 16/11/2026, durante as correções, fora da rodada inicial. Nenhuma ferramenta nem a inspeção da rodada "antes" as identificaram, e elas não entram nos números da avaliação inicial. Para a B35, foi feito um teste na versão da tag `a11y-antes`: com um `aria-label` temporário no select, o WAVE continuou mostrando 14 "Missing form label" na P05, ou seja, o select não era contado na rodada inicial. O teste foi desfeito.
 
+## B42 e a P08 no Lighthouse
+
+A B42 (os modais Cadastrar item, Editar perfil e Excluir item ficam com `role="dialog"` sem nome quando abertos) foi encontrada em 17/11/2026, na rodada "depois", pelo Lighthouse da P08 feito com o modal aberto sobre `/menu/` (regra `aria-dialog-name`, nota 97). Na rodada "antes", a P08 foi avaliada pelo fragmento `/perfil/item/novo/`, sem o JavaScript do Bootstrap, que é quem acrescenta o `role="dialog"` ao abrir o modal. Por isso a ferramenta não podia apontar o problema, e nas outras páginas os modais estavam fechados. A B42 foi confirmada na versão da tag `a11y-antes`, com o axe aplicado à regra `aria-dialog-name` e cada modal aberto: Cadastrar item, Editar perfil e Excluir item apontaram o problema, e o filtro de `/menu/`, que já tinha `aria-labelledby`, não. A B42 não entra nos números da avaliação inicial.
+
 ## Achado fora da amostra
 
 O campo de arquivo escondido de `item_edit.html:25` (troca da foto do item) tem o mesmo problema da B37, mas fica na página `/item/editar/`, que não faz parte das 12 páginas da amostra. Por isso não virou barreira.
