@@ -51,6 +51,11 @@
     position: relative;
   }
 
+  .upload-area:has(input:focus-visible) {
+    outline: 3px solid #0B3A4A;
+    outline-offset: 4px;
+  }
+
   .upload-area:hover {
     border-color: var(--find-primary);
     background: rgba(144, 219, 244, 0.04);
