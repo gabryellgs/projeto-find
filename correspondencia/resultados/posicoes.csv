@@ -1,0 +1,201 @@
+estrategia,perdido_id,posicao,pontuacao_correto,variacao,objeto_parecido
+B0,1718,1,0.71,sinonimo,False
+B0,1721,1,0.91,sem_acento,True
+B0,1724,1,0.79,erro_digitacao,True
+B0,1727,1,0.93,nenhuma,False
+B0,1730,1,0.7,sinonimo,True
+B0,1733,1,0.72,erro_digitacao,True
+B0,1736,1,0.95,nenhuma,True
+B0,1739,1,0.69,erro_digitacao,True
+B0,1742,1,0.92,sem_acento,True
+B0,1745,1,0.89,sem_acento,True
+B0,1748,1,0.91,sem_acento,True
+B0,1751,1,0.7,sinonimo,True
+B0,1754,1,0.93,nenhuma,False
+B0,1757,1,0.93,nenhuma,True
+B0,1760,1,0.92,sem_acento,True
+B0,1763,1,0.79,sem_acento,False
+B0,1766,1,0.79,erro_digitacao,True
+B0,1769,1,0.71,sinonimo,False
+B0,1772,1,0.79,erro_digitacao,False
+B0,1775,1,0.94,nenhuma,True
+B0,1778,1,0.79,sinonimo,True
+B0,1781,1,0.94,nenhuma,True
+B0,1784,1,0.95,nenhuma,True
+B0,1787,1,0.95,nenhuma,True
+B0,1790,1,0.95,sinonimo,True
+B0,1793,1,0.92,sem_acento,True
+B0,1796,1,0.75,erro_digitacao,False
+B0,1799,1,0.81,sinonimo,False
+B0,1802,1,0.75,sinonimo,False
+B0,1805,1,0.94,nenhuma,False
+B0,1808,1,0.8,erro_digitacao,False
+B0,1811,1,0.64,sinonimo,True
+B0,1814,1,0.73,erro_digitacao,False
+B0,1817,1,0.8,erro_digitacao,False
+B0,1820,1,0.81,erro_digitacao,False
+B0,1823,1,0.78,sem_acento,False
+B0,1826,1,0.81,sinonimo,False
+B0,1829,1,0.95,nenhuma,False
+B0,1832,1,0.93,sem_acento,True
+B0,1835,1,0.9,sem_acento,False
+T1,1718,1,0.779,sinonimo,False
+T1,1721,1,0.945,sem_acento,True
+T1,1724,1,0.891,erro_digitacao,True
+T1,1727,1,0.949,nenhuma,False
+T1,1730,1,0.673,sinonimo,True
+T1,1733,1,0.835,erro_digitacao,True
+T1,1736,1,0.954,nenhuma,True
+T1,1739,1,0.879,erro_digitacao,True
+T1,1742,1,0.928,sem_acento,True
+T1,1745,1,0.913,sem_acento,True
+T1,1748,1,0.937,sem_acento,True
+T1,1751,1,0.852,sinonimo,True
+T1,1754,1,0.949,nenhuma,False
+T1,1757,1,0.951,nenhuma,True
+T1,1760,1,0.952,sem_acento,True
+T1,1763,1,0.968,sem_acento,False
+T1,1766,1,0.935,erro_digitacao,True
+T1,1769,1,0.674,sinonimo,False
+T1,1772,1,0.901,erro_digitacao,False
+T1,1775,1,0.941,nenhuma,True
+T1,1778,1,0.95,sinonimo,True
+T1,1781,1,0.937,nenhuma,True
+T1,1784,1,0.949,nenhuma,True
+T1,1787,1,0.961,nenhuma,True
+T1,1790,1,0.831,sinonimo,True
+T1,1793,1,0.962,sem_acento,True
+T1,1796,1,0.908,erro_digitacao,False
+T1,1799,1,0.849,sinonimo,False
+T1,1802,1,0.952,sinonimo,False
+T1,1805,1,0.976,nenhuma,False
+T1,1808,1,0.914,erro_digitacao,False
+T1,1811,1,0.667,sinonimo,True
+T1,1814,1,0.863,erro_digitacao,False
+T1,1817,1,0.931,erro_digitacao,False
+T1,1820,1,0.928,erro_digitacao,False
+T1,1823,1,0.975,sem_acento,False
+T1,1826,1,0.908,sinonimo,False
+T1,1829,1,0.97,nenhuma,False
+T1,1832,1,0.963,sem_acento,True
+T1,1835,1,0.938,sem_acento,False
+V,1718,2,0.539,sinonimo,False
+V,1721,27,0.506,sem_acento,True
+V,1724,26,0.495,erro_digitacao,True
+V,1727,1,0.64,nenhuma,False
+V,1730,36,0.378,sinonimo,True
+V,1733,1,0.583,erro_digitacao,True
+V,1736,29,0.488,nenhuma,True
+V,1739,25,0.457,erro_digitacao,True
+V,1742,40,0.395,sem_acento,True
+V,1745,13,0.52,sem_acento,True
+V,1748,1,0.625,sem_acento,True
+V,1751,1,0.605,sinonimo,True
+V,1754,6,0.539,nenhuma,False
+V,1757,1,0.617,nenhuma,True
+V,1760,13,0.512,sem_acento,True
+V,1763,9,0.531,sem_acento,False
+V,1766,2,0.502,erro_digitacao,True
+V,1769,34,0.4,sinonimo,False
+V,1772,23,0.45,erro_digitacao,False
+V,1775,39,0.413,nenhuma,True
+V,1778,19,0.513,sinonimo,True
+V,1781,34,0.45,nenhuma,True
+V,1784,17,0.501,nenhuma,True
+V,1787,39,0.455,nenhuma,True
+V,1790,20,0.534,sinonimo,True
+V,1793,4,0.567,sem_acento,True
+V,1796,7,0.562,erro_digitacao,False
+V,1799,1,0.565,sinonimo,False
+V,1802,1,0.607,sinonimo,False
+V,1805,2,0.633,nenhuma,False
+V,1808,3,0.576,erro_digitacao,False
+V,1811,4,0.58,sinonimo,True
+V,1814,12,0.535,erro_digitacao,False
+V,1817,2,0.579,erro_digitacao,False
+V,1820,8,0.53,erro_digitacao,False
+V,1823,15,0.542,sem_acento,False
+V,1826,17,0.496,sinonimo,False
+V,1829,3,0.56,nenhuma,False
+V,1832,12,0.5,sem_acento,True
+V,1835,9,0.573,sem_acento,False
+F,1718,1,0.729,sinonimo,False
+F,1721,1,0.819,sem_acento,True
+F,1724,1,0.783,erro_digitacao,True
+F,1727,1,0.861,nenhuma,False
+F,1730,1,0.617,sinonimo,True
+F,1733,1,0.776,erro_digitacao,True
+F,1736,1,0.819,nenhuma,True
+F,1739,1,0.765,erro_digitacao,True
+F,1742,1,0.775,sem_acento,True
+F,1745,1,0.804,sem_acento,True
+F,1748,1,0.85,sem_acento,True
+F,1751,1,0.792,sinonimo,True
+F,1754,1,0.831,nenhuma,False
+F,1757,1,0.856,nenhuma,True
+F,1760,1,0.825,sem_acento,True
+F,1763,1,0.84,sem_acento,False
+F,1766,1,0.812,erro_digitacao,True
+F,1769,1,0.624,sinonimo,False
+F,1772,1,0.775,erro_digitacao,False
+F,1775,1,0.788,nenhuma,True
+F,1778,1,0.824,sinonimo,True
+F,1781,1,0.797,nenhuma,True
+F,1784,1,0.819,nenhuma,True
+F,1787,1,0.813,nenhuma,True
+F,1790,1,0.759,sinonimo,True
+F,1793,1,0.848,sem_acento,True
+F,1796,1,0.814,erro_digitacao,False
+F,1799,1,0.779,sinonimo,False
+F,1802,1,0.853,sinonimo,False
+F,1805,1,0.875,nenhuma,False
+F,1808,1,0.821,erro_digitacao,False
+F,1811,1,0.674,sinonimo,True
+F,1814,1,0.778,erro_digitacao,False
+F,1817,1,0.832,erro_digitacao,False
+F,1820,1,0.816,erro_digitacao,False
+F,1823,1,0.848,sem_acento,False
+F,1826,1,0.794,sinonimo,False
+F,1829,1,0.85,nenhuma,False
+F,1832,1,0.828,sem_acento,True
+F,1835,1,0.835,sem_acento,False
+F (sem foto),1718,1,0.811,sinonimo,False
+F (sem foto),1721,1,0.953,sem_acento,True
+F (sem foto),1724,1,0.906,erro_digitacao,True
+F (sem foto),1727,1,0.956,nenhuma,False
+F (sem foto),1730,1,0.72,sinonimo,True
+F (sem foto),1733,1,0.859,erro_digitacao,True
+F (sem foto),1736,1,0.96,nenhuma,True
+F (sem foto),1739,1,0.896,erro_digitacao,True
+F (sem foto),1742,1,0.938,sem_acento,True
+F (sem foto),1745,1,0.925,sem_acento,True
+F (sem foto),1748,1,0.946,sem_acento,True
+F (sem foto),1751,1,0.873,sinonimo,True
+F (sem foto),1754,1,0.956,nenhuma,False
+F (sem foto),1757,1,0.958,nenhuma,True
+F (sem foto),1760,1,0.959,sem_acento,True
+F (sem foto),1763,1,0.972,sem_acento,False
+F (sem foto),1766,1,0.945,erro_digitacao,True
+F (sem foto),1769,1,0.721,sinonimo,False
+F (sem foto),1772,1,0.915,erro_digitacao,False
+F (sem foto),1775,1,0.949,nenhuma,True
+F (sem foto),1778,1,0.957,sinonimo,True
+F (sem foto),1781,1,0.946,nenhuma,True
+F (sem foto),1784,1,0.956,nenhuma,True
+F (sem foto),1787,1,0.966,nenhuma,True
+F (sem foto),1790,1,0.855,sinonimo,True
+F (sem foto),1793,1,0.968,sem_acento,True
+F (sem foto),1796,1,0.922,erro_digitacao,False
+F (sem foto),1799,1,0.871,sinonimo,False
+F (sem foto),1802,1,0.959,sinonimo,False
+F (sem foto),1805,1,0.979,nenhuma,False
+F (sem foto),1808,1,0.926,erro_digitacao,False
+F (sem foto),1811,1,0.715,sinonimo,True
+F (sem foto),1814,1,0.882,erro_digitacao,False
+F (sem foto),1817,1,0.94,erro_digitacao,False
+F (sem foto),1820,1,0.938,erro_digitacao,False
+F (sem foto),1823,1,0.978,sem_acento,False
+F (sem foto),1826,1,0.921,sinonimo,False
+F (sem foto),1829,1,0.974,nenhuma,False
+F (sem foto),1832,1,0.968,sem_acento,True
+F (sem foto),1835,1,0.947,sem_acento,False

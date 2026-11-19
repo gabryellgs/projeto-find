@@ -1,0 +1,21 @@
+estrategia,variacao,consultas,recall_1,recall_6,mrr
+B0,sinonimo,10,1.0,1.0,1.0
+B0,sem_acento,10,1.0,1.0,1.0
+B0,erro_digitacao,10,1.0,1.0,1.0
+B0,nenhuma,10,1.0,1.0,1.0
+T1,sinonimo,10,1.0,1.0,1.0
+T1,sem_acento,10,1.0,1.0,1.0
+T1,erro_digitacao,10,1.0,1.0,1.0
+T1,nenhuma,10,1.0,1.0,1.0
+V,sinonimo,10,0.3,0.5,0.397
+V,sem_acento,10,0.1,0.2,0.184
+V,erro_digitacao,10,0.1,0.4,0.281
+V,nenhuma,10,0.2,0.5,0.317
+F,sinonimo,10,1.0,1.0,1.0
+F,sem_acento,10,1.0,1.0,1.0
+F,erro_digitacao,10,1.0,1.0,1.0
+F,nenhuma,10,1.0,1.0,1.0
+F (sem foto),sinonimo,10,1.0,1.0,1.0
+F (sem foto),sem_acento,10,1.0,1.0,1.0
+F (sem foto),erro_digitacao,10,1.0,1.0,1.0
+F (sem foto),nenhuma,10,1.0,1.0,1.0

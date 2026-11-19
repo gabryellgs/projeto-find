@@ -81,5 +81,9 @@ pytest correspondencia
 
 ## Computador usado
 
-*(Preencha com o processador e a memória do computador em que os tempos foram medidos.)*
+Os tempos foram medidos em:
+
+- **Sistema operacional:** Windows 11 Pro (10.0.26300)
+- **Processador:** Intel Core i7-3770 (3ª geração), 4 núcleos / 8 threads
+- **Memória:** 16 GB de RAM
 
